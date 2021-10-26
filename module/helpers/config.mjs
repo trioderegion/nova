@@ -1,23 +1,29 @@
-export const BOILERPLATE = {};
+export const NOVA = {};
+
+// Define constants here, such as:
+NOVA.foobar = {
+  'bas': 'NOVA.bas',
+  'bar': 'NOVA.bar'
+};
 
 /**
  * The set of Ability Scores used within the sytem.
  * @type {Object}
  */
- BOILERPLATE.abilities = {
-  "str": "BOILERPLATE.AbilityStr",
-  "dex": "BOILERPLATE.AbilityDex",
-  "con": "BOILERPLATE.AbilityCon",
-  "int": "BOILERPLATE.AbilityInt",
-  "wis": "BOILERPLATE.AbilityWis",
-  "cha": "BOILERPLATE.AbilityCha"
+ NOVA.abilities = {
+  "str": "NOVA.AbilityStr",
+  "dex": "NOVA.AbilityDex",
+  "con": "NOVA.AbilityCon",
+  "int": "NOVA.AbilityInt",
+  "wis": "NOVA.AbilityWis",
+  "cha": "NOVA.AbilityCha"
 };
 
-BOILERPLATE.abilityAbbreviations = {
-  "str": "BOILERPLATE.AbilityStrAbbr",
-  "dex": "BOILERPLATE.AbilityDexAbbr",
-  "con": "BOILERPLATE.AbilityConAbbr",
-  "int": "BOILERPLATE.AbilityIntAbbr",
-  "wis": "BOILERPLATE.AbilityWisAbbr",
-  "cha": "BOILERPLATE.AbilityChaAbbr"
+NOVA.abilityAbbreviations = {
+  "str": "NOVA.AbilityStrAbbr",
+  "dex": "NOVA.AbilityDexAbbr",
+  "con": "NOVA.AbilityConAbbr",
+  "int": "NOVA.AbilityIntAbbr",
+  "wis": "NOVA.AbilityWisAbbr",
+  "cha": "NOVA.AbilityChaAbbr"
 };

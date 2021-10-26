@@ -1,7 +1,7 @@
 {
-  "name": "boilerplate",
+  "name": "nova",
   "version": "1.0.0",
-  "description": "CSS compiler for the Boilerplate system",
+  "description": "CSS compiler for the Nova system",
   "scripts": {
     "build": "gulp build",
     "compile": "gulp css",
@@ -11,13 +11,13 @@
   "browserslist": [
     "last 3 versions"
   ],
-  "author": "John Doe",
+  "author": "Trioderegion",
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "gulp": "^4.0.2",
-    "gulp-autoprefixer": "^7.0.1",
-    "gulp-sass": "^4.1.0",
-    "gulp-sourcemaps": "^2.6.5"
+    "gulp": "^4",
+    "gulp-autoprefixer": "^8",
+    "gulp-sass": "^4",
+    "gulp-sourcemaps": "^3"
   }
 }

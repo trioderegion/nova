@@ -1,22 +1,22 @@
 {
-  "BOILERPLATE.AbilityStr": "Strength",
-  "BOILERPLATE.AbilityCon": "Constitution",
-  "BOILERPLATE.AbilityDex": "Dexterity",
-  "BOILERPLATE.AbilityInt": "Intelligence",
-  "BOILERPLATE.AbilityWis": "Wisdom",
-  "BOILERPLATE.AbilityCha": "Charisma",
+  "NOVA.AbilityStr": "Strength",
+  "NOVA.AbilityCon": "Constitution",
+  "NOVA.AbilityDex": "Dexterity",
+  "NOVA.AbilityInt": "Intelligence",
+  "NOVA.AbilityWis": "Wisdom",
+  "NOVA.AbilityCha": "Charisma",
 
-  "BOILERPLATE.AbilityStrAbbr": "str",
-  "BOILERPLATE.AbilityConAbbr": "con",
-  "BOILERPLATE.AbilityDexAbbr": "dex",
-  "BOILERPLATE.AbilityIntAbbr": "int",
-  "BOILERPLATE.AbilityWisAbbr": "wis",
-  "BOILERPLATE.AbilityChaAbbr": "cha",
+  "NOVA.AbilityStrAbbr": "str",
+  "NOVA.AbilityConAbbr": "con",
+  "NOVA.AbilityDexAbbr": "dex",
+  "NOVA.AbilityIntAbbr": "int",
+  "NOVA.AbilityWisAbbr": "wis",
+  "NOVA.AbilityChaAbbr": "cha",
 
-  "BOILERPLATE.EffectCreate": "Create Effect",
-  "BOILERPLATE.EffectToggle": "Toggle Effect",
-  "BOILERPLATE.EffectEdit": "Edit Effect",
-  "BOILERPLATE.EffectDelete": "Delete Effect",
+  "NOVA.EffectCreate": "Create Effect",
+  "NOVA.EffectToggle": "Toggle Effect",
+  "NOVA.EffectEdit": "Edit Effect",
+  "NOVA.EffectDelete": "Delete Effect",
 
-  "BOILERPLATE.Add": "Add"
+  "NOVA.Add": "Add"
 }
