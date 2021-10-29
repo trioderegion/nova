@@ -22,7 +22,7 @@ export class NovaItemSheet extends ItemSheet {
 
     // Alternatively, you could use the following return statement to do a
     // unique item sheet by type, like `weapon-sheet.html`.
-    return `${path}/item-${this.item.data.type}-sheet.html`;
+    return `${path}/item-power-sheet.html`;
   }
 
   /* -------------------------------------------- */
@@ -37,15 +37,38 @@ export class NovaItemSheet extends ItemSheet {
 
     // Retrieve the roll data for TinyMCE editors.
     context.rollData = {};
+    context.modInfo = {
+      "None": "",
+    }
+
+    /* insert the appropriate item sub-type */
+    context.subTypes = {'flare': CONFIG.NOVA.flareType,
+                               'power': CONFIG.NOVA.powerType}[itemData.type]
+
+    context.canAttachFlare = false;
+
     let actor = this.object?.parent ?? null;
     if (actor) {
       context.rollData = actor.getRollData();
+      
+      /* need an actor to grab any possible flare mods to attach */
+      if(itemData.data.type == 'active') {
+        const compatibleMods = actor.items.filter( item => item.type == 'flare' && item.data.data.type == 'power' )
+
+        /* populate information for display */
+        compatibleMods.forEach( (mod) => {
+          context.modInfo[mod.name] = mod.id;
+        });
+
+        context.canAttachFlare = true;
+      }
     }
 
     // Add the actor's data to context.data for easier access, as well as flags.
     context.data = itemData.data;
     context.flags = itemData.flags;
 
+    context.config = CONFIG.NOVA;
     return context;
   }
 

@@ -7,8 +7,8 @@
   return loadTemplates([
 
     // Actor partials.
-    "systems/nova/templates/actor/parts/actor-features.html",
-    "systems/nova/templates/actor/parts/actor-items.html",
+    "systems/nova/templates/actor/parts/actor-flare.html",
     "systems/nova/templates/actor/parts/actor-effects.html",
+    "systems/nova/templates/actor/parts/actor-powers.html",
   ]);
 };

@@ -8,7 +8,7 @@
       {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
       use both the "grid" and "grid-Ncol" class where "N" can be any number
       from 1 to 12 and will create that number of columns.  --}}
-      <div class="resources grid grid-3col">
+      <div class="resources grid grid-2col">
 
         {{!-- "flex-group-center" is also defined in the _grid.scss file
         and it will add a small amount of padding, a border, and will
@@ -23,18 +23,11 @@
         </div>
 
         <div class="resource flex-group-center">
-          <label for="data.power.value" class="resource-label">Power</label>
+          <label for="data.fuel.value" class="resource-label">Fuel</label>
           <div class="resource-content flexrow flex-center flex-between">
-          <input type="text" name="data.power.value" value="{{data.power.value}}" data-dtype="Number"/>
+          <input type="text" name="data.fuel.value" value="{{data.fuel.value}}" data-dtype="Number"/>
           <span> / </span>
-          <input type="text" name="data.power.max" value="{{data.power.max}}" data-dtype="Number"/>
-          </div>
-        </div>
-
-        <div class="resource flex-group-center">
-          <label for="data.attributes.level.value" class="resource-label">Level</label>
-          <div class="resource-content flexrow flex-center flex-between">
-          <input type="text" name="data.attributes.level.value" value="{{data.attributes.level.value}}" data-dtype="Number"/>
+          <input type="text" name="data.fuel.max" value="{{data.fuel.max}}" data-dtype="Number"/>
           </div>
         </div>
 
@@ -45,10 +38,10 @@
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     {{!-- Default tab is specified in actor-sheet.mjs --}}
-    <a class="item" data-tab="features">Features</a>
-    <a class="item" data-tab="description">Description</a>
-    <a class="item" data-tab="items">Items</a>
+    <a class="item" data-tab="features">Spark</a>
+    <a class="item" data-tab="items">Flare Mods</a>
     <a class="item" data-tab="effects">Effects</a>
+    <a class="item" data-tab="description">Description</a>
   </nav>
 
   {{!-- Sheet Body --}}
@@ -63,11 +56,10 @@
           use both the "grid" and "grid-Ncol" class where "N" can be any number
           from 1 to 12 and will create that number of columns.  --}}
           <div class="abilities flexcol">
-            {{#each data.abilities as |ability key|}}
+            {{#each data.attributes as |attribute key|}}
             <div class="ability flexrow flex-group-center">
-              <label for="data.abilities.{{key}}.value" class="resource-label rollable flexlarge align-left" data-roll="d20+@abilities.{{key}}.mod" data-label="{{ability.label}}">{{ability.label}}</label>
-              <input type="text" name="data.abilities.{{key}}.value" value="{{ability.value}}" data-dtype="Number"/>
-              <span class="ability-mod rollable" data-roll="d20+@abilities.{{key}}.mod" data-label="{{ability.label}}">{{numberFormat ability.mod decimals=0 sign=true}}</span>
+              <label for="data.attributes.{{key}}.value" class="resource-label rollable flexlarge align-left" data-attribute="{{key}}" data-roll-type="attribute" data-label="{{attribute.label}}">{{attribute.label}}</label>
+              <input type="text" name="data.attributes.{{key}}.value" value="{{attribute.value}}" data-dtype="Number"/>
             </div>
             {{/each}}
           </div>
@@ -76,7 +68,7 @@
         {{!-- For the main features list, span the right two columns --}}
         <section class="main grid-span-2">
           {{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and defined in module/helpers/templates.mjs --}}
-          {{> "systems/nova/templates/actor/parts/actor-features.html"}}
+          {{> "systems/nova/templates/actor/parts/actor-powers.html"}}
         </section>
 
       </section>
@@ -90,7 +82,7 @@
 
     {{!-- Owned Items Tab --}}
     <div class="tab items" data-group="primary" data-tab="items">
-       {{> "systems/nova/templates/actor/parts/actor-items.html"}}
+       {{> "systems/nova/templates/actor/parts/actor-flare.html"}}
     </div>
 
     {{!-- Active Effects Tab --}}

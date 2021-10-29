@@ -38,13 +38,25 @@ export class NovaItem extends Item {
     const rollMode = game.settings.get('core', 'rollMode');
     const label = `[${item.type}] ${item.name}`;
 
+    let content = item.data.description ?? '';
+
+    /* if attached to an actor, see if we can find the mods too */
+    if (this.actor && this.type == 'power') {
+      this.data.data.mods.forEach( modId => {
+        const mod = this.actor.items.get(modId);
+        if (mod) {
+          content += `<hr/>${mod.data.data.description}`
+        }
+      });
+    }
+
     // If there's no roll data, send a chat message.
     if (!this.data.data.formula) {
       ChatMessage.create({
         speaker: speaker,
         rollMode: rollMode,
         flavor: label,
-        content: item.data.description ?? ''
+        content
       });
     }
     // Otherwise, create a roll and send a chat message from it.

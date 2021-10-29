@@ -1,4 +1,5 @@
 import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
+import {attributeRoll} from '../helpers/dice.mjs'
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -40,7 +41,7 @@ export class NovaActorSheet extends ActorSheet {
     context.flags = actorData.flags;
 
     // Prepare character data and items.
-    if (actorData.type == 'character') {
+    if (actorData.type == 'spark') {
       this._prepareItems(context);
       this._prepareCharacterData(context);
     }
@@ -68,8 +69,8 @@ export class NovaActorSheet extends ActorSheet {
    */
   _prepareCharacterData(context) {
     // Handle ability scores.
-    for (let [k, v] of Object.entries(context.data.abilities)) {
-      v.label = game.i18n.localize(CONFIG.NOVA.abilities[k]) ?? k;
+    for (let [k, v] of Object.entries(context.data.attributes)) {
+      v.label = game.i18n.localize(CONFIG.NOVA.attributes[k]) ?? k;
     }
   }
 
@@ -82,25 +83,25 @@ export class NovaActorSheet extends ActorSheet {
    */
   _prepareItems(context) {
     // Initialize containers.
-    const gear = [];
-    const features = [];
+    const flare = [];
+    const power = [];
 
     // Iterate through items, allocating to containers
     for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
       // Append to gear.
-      if (i.type === 'item') {
-        gear.push(i);
+      if (i.type === 'flare') {
+        flare.push(i);
       }
       // Append to features.
-      else if (i.type === 'feature') {
-        features.push(i);
+      else if (i.type === 'power') {
+        power.push(i);
       }
     }
 
     // Assign and return
-    context.gear = gear;
-    context.features = features;
+    context.flare = flare;
+    context.power = power;
    }
 
   /* -------------------------------------------- */
@@ -138,7 +139,7 @@ export class NovaActorSheet extends ActorSheet {
     html.find('.rollable').click(this._onRoll.bind(this));
 
     // Drag events for macros.
-    if (this.actor.owner) {
+    if (this.actor.isOwner) {
       let handler = ev => this._onDragStart(ev);
       html.find('li.item').each((i, li) => {
         if (li.classList.contains("inventory-header")) return;
@@ -185,25 +186,15 @@ export class NovaActorSheet extends ActorSheet {
     const element = event.currentTarget;
     const dataset = element.dataset;
 
-    // Handle item rolls.
+    // Handle rolls.
     if (dataset.rollType) {
       if (dataset.rollType == 'item') {
         const itemId = element.closest('.item').dataset.itemId;
         const item = this.actor.items.get(itemId);
         if (item) return item.roll();
+      } else if (dataset.rollType == "attribute") {
+        return attributeRoll( dataset.attribute, this.actor );  
       }
-    }
-
-    // Handle rolls that supply the formula directly.
-    if (dataset.roll) {
-      let label = dataset.label ? `[roll] ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData()).roll();
-      roll.toMessage({
-        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: label,
-        rollMode: game.settings.get('core', 'rollMode'),
-      });
-      return roll;
     }
   }
 

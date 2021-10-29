@@ -287,6 +287,9 @@
   height: 100%;
 }
 
+.nova .sheet-body .editor {
+  height: 100%;
+}
 .nova .tox .tox-editor-container {
   background: #fff;
 }

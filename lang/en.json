@@ -1,22 +1,23 @@
 {
-  "NOVA.AbilityStr": "Strength",
-  "NOVA.AbilityCon": "Constitution",
-  "NOVA.AbilityDex": "Dexterity",
-  "NOVA.AbilityInt": "Intelligence",
-  "NOVA.AbilityWis": "Wisdom",
-  "NOVA.AbilityCha": "Charisma",
+  "NOVA.AttributeSun": "Sun",
+  "NOVA.AttributeMoon": "Moon",
+  "NOVA.AttributeShade": "Shade",
 
-  "NOVA.AbilityStrAbbr": "str",
-  "NOVA.AbilityConAbbr": "con",
-  "NOVA.AbilityDexAbbr": "dex",
-  "NOVA.AbilityIntAbbr": "int",
-  "NOVA.AbilityWisAbbr": "wis",
-  "NOVA.AbilityChaAbbr": "cha",
+  "NOVA.RangeClose": "Close",
+  "NOVA.RangeNear": "Near",
+  "NOVA.RangeFar": "Far",
+  "NOVA.RangeBeyond": "Beyond",
+
+  "NOVA.PowerPassive": "Passive",
+  "NOVA.PowerActive": "Active",
+  "NOVA.PowerSupernova": "Supernova",
 
   "NOVA.EffectCreate": "Create Effect",
   "NOVA.EffectToggle": "Toggle Effect",
   "NOVA.EffectEdit": "Edit Effect",
   "NOVA.EffectDelete": "Delete Effect",
 
-  "NOVA.Add": "Add"
+  "NOVA.Add": "Add",
+  "NOVA.None": "None"
+
 }

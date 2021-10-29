@@ -1,29 +1,43 @@
 export const NOVA = {};
 
 // Define constants here, such as:
-NOVA.foobar = {
-  'bas': 'NOVA.bas',
-  'bar': 'NOVA.bar'
+NOVA.CONST = {
+  RANGE: {
+    NONE: 0,
+    CLOSE: 1,
+    NEAR: 2,
+    FAR: 3,
+    BEYOND: 4
+  }
+ 
 };
 
 /**
  * The set of Ability Scores used within the sytem.
  * @type {Object}
  */
- NOVA.abilities = {
-  "str": "NOVA.AbilityStr",
-  "dex": "NOVA.AbilityDex",
-  "con": "NOVA.AbilityCon",
-  "int": "NOVA.AbilityInt",
-  "wis": "NOVA.AbilityWis",
-  "cha": "NOVA.AbilityCha"
+NOVA.attributes = {
+  sun: "NOVA.AttributeSun",
+  moon: "NOVA.AttributeMoon",
+  shade: "NOVA.AttributeShade",
 };
 
-NOVA.abilityAbbreviations = {
-  "str": "NOVA.AbilityStrAbbr",
-  "dex": "NOVA.AbilityDexAbbr",
-  "con": "NOVA.AbilityConAbbr",
-  "int": "NOVA.AbilityIntAbbr",
-  "wis": "NOVA.AbilityWisAbbr",
-  "cha": "NOVA.AbilityChaAbbr"
-};
+NOVA.range = {
+  none: "NOVA.None",
+  close: "NOVA.RangeClose",
+  near: "NOVA.RangeNear",
+  far: "NOVA.RangeFar",
+  beyond: "NOVA.RangeBeyond"
+}
+
+NOVA.powerType = {
+  passive: "NOVA.PowerPassive",
+  active: "NOVA.PowerActive",
+  supernova: "NOVA.PowerSupernova"
+}
+
+NOVA.flareType = {
+  persistent: "NOVA.FlarePersistent",
+  power: "NOVA.FlarePower"
+}
+
