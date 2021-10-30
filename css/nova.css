@@ -224,6 +224,12 @@
 }
 
 /* Styles limited to nova sheets */
+.nova .small-input {
+  max-width: 30px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
 .nova .item-form {
   font-family: "Roboto", sans-serif;
 }
@@ -365,13 +371,31 @@
   overflow-x: hidden;
 }
 
+.nova .items-list .item-header-controls {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 136px;
+  flex: 0 0 136px;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+.nova .items-list .item-header-controls a {
+  font-size: 12px;
+  text-align: center;
+  margin: 0 6px;
+}
+
 .nova .items-list .item-controls {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 150px;
-  flex: 0 0 150px;
+  -ms-flex: 0 0 50px;
+  flex: 0 0 50px;
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   justify-content: flex-end;

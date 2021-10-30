@@ -31,13 +31,16 @@
       },
       "attributes": {
         "sun": {
-          "value": 1
+          "value": 1,
+          "bonus": 0
         },
         "moon": {
-          "value": 1
+          "value": 1,
+          "bonus": 0
         },
         "shade": {
-          "value": 1
+          "value": 1,
+          "bonus": 0
         }
       },
       "details": {
