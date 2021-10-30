@@ -67,6 +67,14 @@ Handlebars.registerHelper('toLowerCase', function(str) {
   return str.toLowerCase();
 });
 
+Handlebars.registerHelper('imgFromId', function(collection, id) {
+  const result = collection.find( entry => entry.id === id )
+  if (result) {
+    return result.img
+  }
+
+  return null;
+});
 /* -------------------------------------------- */
 /*  Ready Hook                                  */
 /* -------------------------------------------- */

@@ -49,8 +49,8 @@
 
     {{!-- Owned Features Tab --}}
     <div class="tab features" data-group="primary" data-tab="features">
-      <section class="grid grid-3col">
-        <aside class="sidebar">
+      <section class="grid grid-5col">
+        <aside class="sidebar grid-span-2">
 
           {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
           use both the "grid" and "grid-Ncol" class where "N" can be any number
@@ -63,10 +63,30 @@
             </div>
             {{/each}}
           </div>
+          <hr>
+          <div class="flexrow align-center">
+            <label for="data.mods" class="resource-label">Persistent Mods</label>
+          </div>
+          <br>
+          <section class="grid grid-4col">
+          {{#each data.mods}}
+          <div class="flexrow item-image align-center item" data-item-id="{{this}}">
+              {{#if (imgFromId ../persistentInfo this)}}
+              <a class="rollable" data-roll-type="item"><img src="{{imgFromId ../persistentInfo this}}" title="roll" width="24" height="24"/></a>
+              {{/if}}
+            </div>
+            <div class="flexrow grid-span-3">
+              <select name="data.mods">
+                {{selectOptions ../persistentInfo selected=this nameAttr="id" labelAttr="name"}}
+              </select>
+            </div>
+          {{/each}}
+          </section>
+
         </aside>
 
         {{!-- For the main features list, span the right two columns --}}
-        <section class="main grid-span-2">
+        <section class="main grid-span-3">
           {{!-- This is a Handlebars partial. They're stored in the `/parts` folder next to this sheet, and defined in module/helpers/templates.mjs --}}
           {{> "systems/nova/templates/actor/parts/actor-powers.html"}}
         </section>

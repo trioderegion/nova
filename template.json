@@ -44,7 +44,8 @@
         "class": "",
         "pilotname": "",
         "pronouns": ""
-      }
+      },
+      "mods": [null, null, null, null]
     },
     "elite": {
       "templates": ["base", "npc"]

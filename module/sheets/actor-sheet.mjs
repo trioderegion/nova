@@ -102,6 +102,33 @@ export class NovaActorSheet extends ActorSheet {
     // Assign and return
     context.flare = flare;
     context.power = power;
+
+    /* grab all compatible flare mods (persistent) */
+    context.persistentInfo = [{
+      id: "",
+      name: "None",
+      img: false
+    }];
+
+    /* sort the power mods into a list as well */
+    context.powerModInfo = [{
+      id: "",
+      name: "None",
+      img: false
+    }];
+
+    context.flare.forEach( (mod) => {
+      if (mod.data.type == 'persistent') {
+        context.persistentInfo.push({id: mod._id, img: mod.img, name: mod.name})
+      }
+    });
+
+    context.flare.forEach( (mod) => {
+      if (mod.data.type == 'power') {
+        context.powerModInfo.push({id: mod._id, img: mod.img, name: mod.name});
+      }
+    });
+
    }
 
   /* -------------------------------------------- */
@@ -158,7 +185,7 @@ export class NovaActorSheet extends ActorSheet {
     event.preventDefault();
     const header = event.currentTarget;
     // Get the type of item to create.
-    const type = header.dataset.type;
+    const type = header.dataset.itemType;
     // Grab any data associated with this control.
     const data = duplicate(header.dataset);
     // Initialize a default name.
@@ -169,8 +196,8 @@ export class NovaActorSheet extends ActorSheet {
       type: type,
       data: data
     };
-    // Remove the type from the dataset since it's in the itemData.type prop.
-    delete itemData.data["type"];
+
+    delete itemData.data["itemType"];
 
     // Finally, create the item!
     return await Item.create(itemData, {parent: this.actor});

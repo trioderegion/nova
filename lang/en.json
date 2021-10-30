@@ -12,6 +12,9 @@
   "NOVA.PowerActive": "Active",
   "NOVA.PowerSupernova": "Supernova",
 
+  "NOVA.FlarePower": "Power",
+  "NOVA.FlarePersistent": "Persistent",
+
   "NOVA.EffectCreate": "Create Effect",
   "NOVA.EffectToggle": "Toggle Effect",
   "NOVA.EffectEdit": "Edit Effect",
