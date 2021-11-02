@@ -1,16 +1,10 @@
 export const NOVA = {};
 
 // Define constants here, such as:
-NOVA.CONST = {
-  RANGE: {
-    NONE: 0,
-    CLOSE: 1,
-    NEAR: 2,
-    FAR: 3,
-    BEYOND: 4
+NOVA.DEFAULTS = {
+    harm: "0 Harm",
+    moves: "New Move"
   }
- 
-};
 
 /**
  * The set of Ability Scores used within the sytem.
@@ -39,5 +33,10 @@ NOVA.powerType = {
 NOVA.flareType = {
   persistent: "NOVA.FlarePersistent",
   power: "NOVA.FlarePower"
+}
+
+NOVA.npcActions = {
+  harm: "NOVA.Harm",
+  moves: "NOVA.Moves"
 }
 

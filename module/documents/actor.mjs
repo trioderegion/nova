@@ -62,8 +62,8 @@ export class NovaActor extends Actor {
     if (actorData.type !== 'npc') return;
 
     // Make modifications to data here. For example:
-    const data = actorData.data;
-    data.xp = (data.cr * data.cr) * 100;
+    //const data = actorData.data;
+    //data.xp = (data.cr * data.cr) * 100;
   }
 
   /**
@@ -94,6 +94,23 @@ export class NovaActor extends Actor {
     }
   }
 
+  /* @override */
+  update(data, options) {
+
+    /* check for mangled harm/moves for NPCs */
+    const ensureArray = (path) => {
+      const value = data[path];
+      if (!!value && typeof value == 'string') {
+        data[path] = [value];
+      }
+    }
+
+    ensureArray('data.harm');
+    ensureArray('data.moves');
+
+    return super.update(data, options);
+  }
+
   /**
    * Prepare NPC roll data.
    */
@@ -101,6 +118,21 @@ export class NovaActor extends Actor {
     if (this.data.type !== 'npc') return;
 
     // Process additional NPC data here.
+  }
+
+  _addNpcAction(type) {
+    /* get current list */
+    let current = duplicate(this.data.data[type]);
+    if ( current instanceof Array) {
+      current.push(CONFIG.NOVA.DEFAULTS[type]);
+    } else current = [current, CONFIG.NOVA.DEFAULTS[type]]
+    return this.update({[`data.${type}`]: current});
+  }
+
+  _deleteNpcAction(type, index) {
+    let current = duplicate(this.data.data[type]);
+    current.splice(index, 1);
+    return this.update({[`data.${type}`]: current});
   }
 
 }

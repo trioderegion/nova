@@ -21,6 +21,9 @@
   "NOVA.EffectDelete": "Delete Effect",
 
   "NOVA.Add": "Add",
-  "NOVA.None": "None"
+  "NOVA.None": "None",
+
+  "NOVA.Harm": "Harm",
+  "NOVA.Moves": "Moves"
 
 }

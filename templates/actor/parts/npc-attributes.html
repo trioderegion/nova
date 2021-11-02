@@ -1,0 +1,45 @@
+<section class="grid grid-2col">
+  <ol class="items-list">
+    <li class="item flexrow items-header">
+      <div class="item-name">Harm</div>
+      <div class="item header-controls">
+        <a class="item-control item-create" title="Add Harm" data-item-type="harm"><i class="fas fa-plus"></i> Add Harm</a>
+      </div>
+    </li>
+    {{#each data.harm}}
+    <li class="item flexrow" data-npc-item="harm" data-index="{{@index}}">
+      <div class="item-name">
+        <div class="item-image">
+          <a class="rollable" data-roll-type="harm"><img src="icons/svg/d20-black.svg" title="Roll Harm" width="24" height="24"/></a>
+        </div>
+        <input type="text" name="data.harm" value="{{this}}" data-dtype="String"/>
+      </div>
+      <div class="item-controls">
+        <a class="item-control item-delete" title="Delete Harm"><i class="fas fa-trash"></i></a>
+      </div>
+    </li>
+    {{/each}}
+  </ol>
+  <ol class="items-list">
+    <li class="item flexrow items-header">
+      <div class="item-name">Moves</div>
+      <div class="item header-controls">
+        <a class="item-control item-create" title="Add Move" data-item-type="moves"><i class="fas fa-plus"></i> Add Move</a>
+      </div>
+    </li>
+    {{#each data.moves}}
+    <li class="item flexrow" data-npc-item="moves" data-index="{{@index}}">
+      <div class="item-name">
+        <div class="item-image">
+          <a class="rollable" data-roll-type="moves"><img src="icons/svg/d20-black.svg" title="Show Move" width="24" height="24"/></a>
+        </div>
+        <input type="text" name="data.moves" value="{{this}}" data-dtype="String"/>
+      </div>
+      <div class="item-controls">
+        <a class="item-control item-delete" title="Delete Move"><i class="fas fa-trash"></i></a>
+      </div>
+    </li>
+    {{/each}}
+  </ol>
+
+</section>

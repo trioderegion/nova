@@ -1,5 +1,5 @@
 import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
-import {attributeRoll} from '../helpers/dice.mjs'
+import {attributeRoll, harmRoll, moveRoll} from '../helpers/dice.mjs'
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -48,7 +48,7 @@ export class NovaActorSheet extends ActorSheet {
 
     // Prepare NPC data and items.
     if (actorData.type == 'npc') {
-      this._prepareItems(context);
+      this._prepareNpcData(context);
     }
 
     // Add roll data for TinyMCE editors.
@@ -58,6 +58,9 @@ export class NovaActorSheet extends ActorSheet {
     context.effects = prepareActiveEffectCategories(this.actor.effects);
 
     return context;
+  }
+
+  _prepareNpcData(context) {
   }
 
   /**
@@ -152,12 +155,7 @@ export class NovaActorSheet extends ActorSheet {
     html.find('.item-create').click(this._onItemCreate.bind(this));
 
     // Delete Inventory Item
-    html.find('.item-delete').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.items.get(li.data("itemId"));
-      item.delete();
-      li.slideUp(200, () => this.render(false));
-    });
+    html.find('.item-delete').click(this._onItemDelete.bind(this));
 
     // Active Effect management
     html.find(".effect-control").click(ev => onManageActiveEffect(ev, this.actor));
@@ -176,6 +174,24 @@ export class NovaActorSheet extends ActorSheet {
     }
   }
 
+  async _onItemDelete(event) {
+    const li = $(event.currentTarget).parents(".item");
+
+    /* is proper item? or npc synthetic? */
+    const isItem = !!li.data("itemId") ? true : false;
+
+    if (isItem) {
+      const item = this.actor.items.get(li.data("itemId"));
+      await item.delete();
+    } else {
+      /* npc synthetic */
+      const actionType = li.data("npcItem");
+      const index = li.data("index");
+      await this.actor._deleteNpcAction(actionType, index);
+    }
+    li.slideUp(200, () => this.render(false));
+  }
+
   /**
    * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
    * @param {Event} event   The originating click event
@@ -186,6 +202,11 @@ export class NovaActorSheet extends ActorSheet {
     const header = event.currentTarget;
     // Get the type of item to create.
     const type = header.dataset.itemType;
+
+    /* Handle NPC psuedo-items */
+    if (NovaActorSheet._isNpcAction(type)){
+      return await this.actor._addNpcAction(type);
+    }
     // Grab any data associated with this control.
     const data = duplicate(header.dataset);
     // Initialize a default name.
@@ -203,6 +224,11 @@ export class NovaActorSheet extends ActorSheet {
     return await Item.create(itemData, {parent: this.actor});
   }
 
+  static _isNpcAction(type) {
+    return !!(CONFIG.NOVA.npcActions[type] ?? false)
+  }
+
+
   /**
    * Handle clickable rolls.
    * @param {Event} event   The originating click event
@@ -213,6 +239,8 @@ export class NovaActorSheet extends ActorSheet {
     const element = event.currentTarget;
     const dataset = element.dataset;
 
+    const npcData = $(event.currentTarget).parents(".item");
+
     // Handle rolls.
     if (dataset.rollType) {
       if (dataset.rollType == 'item') {
@@ -221,6 +249,12 @@ export class NovaActorSheet extends ActorSheet {
         if (item) return item.roll();
       } else if (dataset.rollType == "attribute") {
         return attributeRoll( dataset.attribute, this.actor );  
+      } else if (dataset.rollType == "moves") {
+        const movesIndex = npcData.data('index');
+        return moveRoll(movesIndex, this.actor);
+      } else if (dataset.rollType == "harm") {
+        const harmIndex = npcData.data('index');
+        return harmRoll(harmIndex, this.actor);
       }
     }
   }

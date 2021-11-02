@@ -1,6 +1,6 @@
 {
   "Actor": {
-    "types": ["spark", "npc", "elite"],
+    "types": ["spark", "npc"],
     "templates": {
       "base": {
         "health": {
@@ -11,15 +11,6 @@
         "details": {
           "biography": ""
         }
-      },
-      "npc": {
-        "templates": ["base"],
-        "harm": {
-          "value": 0,
-          "range": "",
-          "keywords": ""
-        },
-        "keywords": ""
       }
     },
     "spark": {
@@ -50,8 +41,15 @@
       },
       "mods": [null, null, null, null]
     },
-    "elite": {
-      "templates": ["base", "npc"]
+    "npc": {
+      "templates": ["base"],
+      "harm": [],
+      "moves": [],
+      "keywords": "",
+      "elite": false,
+      "followers": [],
+      "lair": [],
+      "commands": []
     }
   },
   "Item": {
