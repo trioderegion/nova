@@ -15,17 +15,12 @@ export async function attributeRoll(attribute, actor) {
 
 }
 
-export function harmRoll(index, actor) {
-  const content = actor.data.data.harm[index];
-  return npcRoll(content, "inflicts harm", ChatMessage.getSpeaker({ actor }) );
+export function npcRoll(index, actor, actionList, rollFlavor) {
+  const content = actionList[index];
+  return npcRollMessage(content, rollFlavor, ChatMessage.getSpeaker({ actor }) );
 }
 
-export function moveRoll(index, actor) {
-  const content = actor.data.data.moves[index];
-  return npcRoll(content, "uses a move", ChatMessage.getSpeaker({actor}));
-}
-
-function npcRoll(content, flavor, speaker){
+function npcRollMessage(content, flavor, speaker){
   return ChatMessage.create({
     content,
     flavor,

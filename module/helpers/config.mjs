@@ -37,6 +37,10 @@ NOVA.flareType = {
 
 NOVA.npcActions = {
   harm: "NOVA.Harm",
-  moves: "NOVA.Moves"
+  moves: "NOVA.Moves",
+  variants: "NOVA.Variants",
+  followers: "NOVA.Followers",
+  lair: "NOVA.Lair",
+  commands: "NOVA.Commands"
 }
 

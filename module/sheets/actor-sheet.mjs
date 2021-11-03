@@ -1,5 +1,5 @@
 import {onManageActiveEffect, prepareActiveEffectCategories} from "../helpers/effects.mjs";
-import {attributeRoll, harmRoll, moveRoll} from '../helpers/dice.mjs'
+import {attributeRoll, npcRoll} from '../helpers/dice.mjs'
 
 /**
  * Extend the basic ActorSheet with some very simple modifications
@@ -61,6 +61,34 @@ export class NovaActorSheet extends ActorSheet {
   }
 
   _prepareNpcData(context) {
+    let npcActions = [];
+
+    /* all npcs have harm and move */
+    npcActions.push(NovaActorSheet._createNpcActionSet(context.data.harm, "harm", "Harm", "Inflicts harm"));
+    npcActions.push(NovaActorSheet._createNpcActionSet(context.data.moves, "moves", "Move", "Uses a move"));
+    npcActions.push(NovaActorSheet._createNpcActionSet(context.data.variants, "variants", "Variants", "Reveals its variant"));
+
+    /* elites have a few more */
+    if (context.data.elite) {
+      npcActions.push(NovaActorSheet._createNpcActionSet(context.data.followers, "followers", "Followers", "Reveals its follower"));
+      npcActions.push(NovaActorSheet._createNpcActionSet(context.data.lair, "lair", "Lair", "Reveals a lair property"));
+      npcActions.push(NovaActorSheet._createNpcActionSet(context.data.commands, "commands", "Commands", "Gives a command"));
+    }
+
+    context.npcActions = npcActions;
+    return;
+  }
+
+  static _createNpcActionSet(stringList, listField, label, flavor) {
+    return {
+      entries: stringList,
+      listField,
+      label,
+      //addLabel: `Add ${label}`,
+      deleteLabel: `Delete ${label}`,
+      rollLabel: `Show ${label}`,
+      flavor
+    }
   }
 
   /**
@@ -249,12 +277,11 @@ export class NovaActorSheet extends ActorSheet {
         if (item) return item.roll();
       } else if (dataset.rollType == "attribute") {
         return attributeRoll( dataset.attribute, this.actor );  
-      } else if (dataset.rollType == "moves") {
-        const movesIndex = npcData.data('index');
-        return moveRoll(movesIndex, this.actor);
-      } else if (dataset.rollType == "harm") {
-        const harmIndex = npcData.data('index');
-        return harmRoll(harmIndex, this.actor);
+      } else {
+        /* it must be a 'plain' action */
+        const index = npcData.data('index');
+        const flavor = npcData.data('flavor'); 
+        return npcRoll(index, this.actor, this.actor.data.data[dataset.rollType], flavor);
       }
     }
   }

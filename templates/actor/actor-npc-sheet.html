@@ -4,7 +4,16 @@
   <header class="sheet-header">
     <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
     <div class="header-fields">
-      <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+      <section class="grid grid-5col">
+        <h1 class="charname grid-span-4"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+        <div class="resource flex-group-center">
+          <label for="data.elite" class="resource-label">Elite</label>
+          <div class="resource-content flexrow align-center">
+            <input type="checkbox" name="data.elite" data-dtype="Boolean" {{checked data.elite}}/>
+          </div>
+        </div>
+
+
       {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
       use both the "grid" and "grid-Ncol" class where "N" can be any number
       from 1 to 12 and will create that number of columns.  --}}
@@ -44,7 +53,7 @@
 
     {{!-- Attributes Tab --}}
     <div class="tab features" data-group="primary" data-tab="features">
-      {{> "systems/nova/templates/actor/parts/npc-attributes.html"}}
+      {{> "systems/nova/templates/actor/parts/npc-actions.html"}}
     </div>
 
     {{!-- Biography Tab --}}

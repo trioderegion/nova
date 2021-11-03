@@ -45,6 +45,7 @@
       "templates": ["base"],
       "harm": [],
       "moves": [],
+      "variants": [],
       "keywords": "",
       "elite": false,
       "followers": [],

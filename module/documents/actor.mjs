@@ -107,6 +107,10 @@ export class NovaActor extends Actor {
 
     ensureArray('data.harm');
     ensureArray('data.moves');
+    ensureArray('data.variants');
+    ensureArray('data.followers');
+    ensureArray('data.lair');
+    ensureArray('data.commands');
 
     return super.update(data, options);
   }

@@ -11,5 +11,6 @@
     "systems/nova/templates/actor/parts/actor-effects.html",
     "systems/nova/templates/actor/parts/actor-powers.html",
     "systems/nova/templates/actor/parts/npc-attributes.html",
+    "systems/nova/templates/actor/parts/npc-actions.html",
   ]);
 };
