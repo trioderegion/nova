@@ -1,4 +1,15 @@
 {
+  "NOVA.Health": "Health",
+  "NOVA.Fuel": "Fuel",
+  "NOVA.PilotName": "Pilot Name",
+  "NOVA.Pronouns": "Pronouns",
+
+  "NOVA.Spark": "Spark",
+  "NOVA.Elite": "Elite",
+  "NOVA.Description": "Description",
+  "NOVA.Name": "Name",
+
+  "NOVA.Attributes": "Attributes",
   "NOVA.AttributeSun": "Sun",
   "NOVA.AttributeMoon": "Moon",
   "NOVA.AttributeShade": "Shade",
@@ -12,18 +23,47 @@
   "NOVA.PowerActive": "Active",
   "NOVA.PowerSupernova": "Supernova",
 
+  "NOVA.FlareMods": "Flare Mods",
   "NOVA.FlarePower": "Power",
   "NOVA.FlarePersistent": "Persistent",
+  "NOVA.PersistentMods": "Persistent Mods",
 
+  "NOVA.Effects": "Effects",
   "NOVA.EffectCreate": "Create Effect",
   "NOVA.EffectToggle": "Toggle Effect",
   "NOVA.EffectEdit": "Edit Effect",
   "NOVA.EffectDelete": "Delete Effect",
 
   "NOVA.Add": "Add",
+  "NOVA.AddEntry": "Add Entry",
+  "NOVA.AddPower": "Add Power",
+  "NOVA.AddPersistentFlare": "Add Persistent Flare",
+  "NOVA.AddPowerFlare": "Add Power Flare",
   "NOVA.None": "None",
 
-  "NOVA.Harm": "Harm",
-  "NOVA.Moves": "Moves"
+  "NOVA.Keywords": "Keywords",
+
+  "NOVA.Harm.Label": "Harm",
+  "NOVA.Harm.Use": "Inflicts harm",
+
+  "NOVA.Moves.Label": "Moves",
+  "NOVA.Move.Use": "Uses a move",
+
+  "NOVA.Variants.Label": "Variants",
+  "NOVA.Variant.Use": "Reveals its variant",
+
+  "NOVA.Followers.Label": "Followers",
+  "NOVA.Follower.Use": "Reveals its follower",
+
+  "NOVA.Lair.Label": "Lair",
+  "NOVA.Lair.Use": "Reveals a lair property",
+
+  "NOVA.Commands.Label": "Commands",
+  "NOVA.Command.Use": "Gives a command",
+
+  "NOVA.ActionList.Add": "Add {label}",
+  "NOVA.ActionList.Delete": "Delete {label}",
+  "NOVA.ActionList.Show": "Show {label}"
+
 
 }

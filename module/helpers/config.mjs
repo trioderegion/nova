@@ -2,9 +2,13 @@ export const NOVA = {};
 
 // Define constants here, such as:
 NOVA.DEFAULTS = {
-    harm: "0 Harm",
-    moves: "New Move"
-  }
+  harm: "0 Harm",
+  moves: "New Move",
+  variants: "New Variant",
+  followers: "New Follower",
+  lair: "New Property",
+  commands: "New Command"
+}
 
 /**
  * The set of Ability Scores used within the sytem.

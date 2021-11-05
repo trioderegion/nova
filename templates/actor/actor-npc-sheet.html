@@ -7,7 +7,7 @@
       <section class="grid grid-5col">
         <h1 class="charname grid-span-4"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
         <div class="resource flex-group-center">
-          <label for="data.elite" class="resource-label">Elite</label>
+          <label for="data.elite" class="resource-label">{{localize "NOVA.Elite"}}</label>
           <div class="resource-content flexrow align-center">
             <input type="checkbox" name="data.elite" data-dtype="Boolean" {{checked data.elite}}/>
           </div>
@@ -23,7 +23,7 @@
         and it will add a small amount of padding, a border, and will
         center all of its child elements content and text. --}}
         <div class="resource flex-group-center">
-          <label for="data.health.value" class="resource-label">Health</label>
+          <label for="data.health.value" class="resource-label">{{localize "NOVA.Health"}}</label>
           <div class="resource-content flexrow align-center">
             <input class="small-input" type="text" name="data.health.value" value="{{data.health.value}}" data-dtype="Number"/>
             /
@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="resource flex-group-center grid-span-4">
-          <label for="data.keywords" class="resource-label">Keywords</label>
+          <label for="data.keywords" class="resource-label">{{localize "NOVA.Keywords"}}</label>
           <div class="resource-content align-center">
             <input type="text" name="data.keywords" value="{{data.keywords}}" data-dtype="String">
           </div>
@@ -43,9 +43,9 @@
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     {{!-- Default tab is specified in actor-sheet.mjs --}}
-    <a class="item" data-tab="features">Attributes</a>
-    <a class="item" data-tab="description">Description</a>
-    <a class="item" data-tab="effects">Effects</a>
+    <a class="item" data-tab="features">{{localize "NOVA.Attributes"}}</a>
+    <a class="item" data-tab="description">{{localize "NOVA.Description"}}</a>
+    <a class="item" data-tab="effects">{{localize "NOVA.Effects"}}</a>
   </nav>
 
   {{!-- Sheet Body --}}

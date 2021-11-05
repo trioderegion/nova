@@ -64,15 +64,15 @@ export class NovaActorSheet extends ActorSheet {
     let npcActions = [];
 
     /* all npcs have harm and move */
-    npcActions.push(NovaActorSheet._createNpcActionSet(context.data.harm, "harm", "Harm", "Inflicts harm"));
-    npcActions.push(NovaActorSheet._createNpcActionSet(context.data.moves, "moves", "Move", "Uses a move"));
-    npcActions.push(NovaActorSheet._createNpcActionSet(context.data.variants, "variants", "Variants", "Reveals its variant"));
+    npcActions.push(NovaActorSheet._createNpcActionSet(context.data.harm, "harm", "NOVA.Harm.Label", "NOVA.Harm.Use"));
+    npcActions.push(NovaActorSheet._createNpcActionSet(context.data.moves, "moves", "NOVA.Moves.Label", "NOVA.Move.Use"));
+    npcActions.push(NovaActorSheet._createNpcActionSet(context.data.variants, "variants", "NOVA.Variants.Label", "NOVA.Variant.Use"));
 
     /* elites have a few more */
     if (context.data.elite) {
-      npcActions.push(NovaActorSheet._createNpcActionSet(context.data.followers, "followers", "Followers", "Reveals its follower"));
-      npcActions.push(NovaActorSheet._createNpcActionSet(context.data.lair, "lair", "Lair", "Reveals a lair property"));
-      npcActions.push(NovaActorSheet._createNpcActionSet(context.data.commands, "commands", "Commands", "Gives a command"));
+      npcActions.push(NovaActorSheet._createNpcActionSet(context.data.followers, "followers", "NOVA.Followers.Label", "NOVA.Follower.Use"));
+      npcActions.push(NovaActorSheet._createNpcActionSet(context.data.lair, "lair", "NOVA.Lair.Label", "NOVA.Lair.Use"));
+      npcActions.push(NovaActorSheet._createNpcActionSet(context.data.commands, "commands", "NOVA.Commands.Label", "NOVA.Command.Use"));
     }
 
     context.npcActions = npcActions;
@@ -80,14 +80,15 @@ export class NovaActorSheet extends ActorSheet {
   }
 
   static _createNpcActionSet(stringList, listField, label, flavor) {
+    const localLabel = game.i18n.localize(label);
+
     return {
       entries: stringList,
       listField,
-      label,
-      //addLabel: `Add ${label}`,
-      deleteLabel: `Delete ${label}`,
-      rollLabel: `Show ${label}`,
-      flavor
+      label: localLabel,
+      deleteLabel: game.i18n.format("NOVA.ActionList.Delete", {label:localLabel}),
+      rollLabel: game.i18n.format("NOVA.ActionList.Show", {label: localLabel}),
+      flavor: game.i18n.localize(flavor)
     }
   }
 
