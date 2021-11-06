@@ -1,5 +1,3 @@
-{{!-- This template is a fallback for when items don't have more specific templates. --}}
-{{!-- Generally, you'll want to make more specific templates when possible. --}}
 <form class="{{cssClass}}" autocomplete="off">
   <header class="sheet-header">
     <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
@@ -8,23 +6,41 @@
     </div>
   </header>
 
-  {{!-- Sheet Tab Navigation --}}
-  <nav class="sheet-tabs tabs" data-group="primary">
-    <a class="item" data-tab="description">Description</a>
-    <a class="item" data-tab="attributes">Attributes</a>
-  </nav>
-
   {{!-- Sheet Body --}}
   <section class="sheet-body">
+      <section class="grid grid-5col align-center">
+          {{!-- As you add new fields, add them in here! --}}
+          <div class="flexrow">
+            <label for="data.type" class="resource-label">{{localize "NOVA.Type"}}</label>
+          </div>
+          <div class="flexrow grid-span-4">
+          {{#if canAttachFlare}}
+          <label for="data.mods" class="resource-label">{{localize "NOVA.FlareMods"}}</label>
+          {{/if}}
+          </div>
+          <div class="flexrow">
+            <select name="data.type">
+              {{#select data.type}}
+              {{#each subTypes as |name type|}}
+              <option value="{{type}}">{{localize name}}</option>
+              {{/each}}
+              {{/select}}
+            </select>
+          </div>
+          {{#each data.mods}}
+          <div class="flexrow grid-span-2">
+          {{#if ../canAttachFlare}} 
+          <select name="data.mods">
+            {{selectOptions ../modInfo selected=this inverted=true}}
+          </select>
+          {{/if}}
+          </div>
+          {{/each}}
+      </section>
 
-    {{!-- Description Tab --}}
-    <div class="tab" data-group="primary" data-tab="description">
-      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
-    </div>
-
-    {{!-- Attributes Tab --}}
-    <div class="tab attributes" data-group="primary" data-tab="attributes">
-      {{!-- As you add new fields, add them in here! --}}
-    </div>
+      <div class="editor flexrow">
+        {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+      </div>
   </section>
+
 </form>

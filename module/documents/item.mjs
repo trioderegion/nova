@@ -1,8 +1,31 @@
+import { NOVA } from '../helpers/config.mjs'
+
+const ItemData = foundry.data.ItemData;
+
+class NovaItemData extends ItemData {
+
+  static defineSchema() {
+    let schema = super.defineSchema();
+    schema.img.default = (data) => this.DEFAULT_ICON[data.type];
+    return schema;
+  }
+
+  static DEFAULT_ICON = {
+    power: 'icons/magic/symbols/symbol-lightning-bolt.webp',
+    flare: 'icons/magic/symbols/cog-glowing-green.webp'
+  }
+}
+
 /**
  * Extend the basic Item with some very simple modifications.
  * @extends {Item}
  */
 export class NovaItem extends Item {
+
+  static get schema() {
+    return NovaItemData;
+  }
+
   /**
    * Augment the basic Item data model with additional dynamic data.
    */

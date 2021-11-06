@@ -7,7 +7,7 @@ NOVA.DEFAULTS = {
   variants: "New Variant",
   followers: "New Follower",
   lair: "New Property",
-  commands: "New Command"
+  commands: "New Command",
 }
 
 /**

@@ -1,8 +1,34 @@
+const ActorData = foundry.data.ActorData
+
+class NovaActorData extends ActorData {
+  static defineSchema() {
+    let schema = super.defineSchema();
+    schema.img.default = (data) => { return data.type === 'spark' ? this.DEFAULT_SPARK_TOKEN : CONST.DEFAULT_TOKEN; };
+    const currentDefault = schema.token.default;
+    schema.token.default = (data) => { 
+      let token = currentDefault(data);
+      if (data.type === 'spark') {
+        token.vision = true;
+        token.actorLink = true;
+        token.disposition = 1;
+      }
+      return token;
+    }
+    return schema;
+  }
+
+  static DEFAULT_SPARK_TOKEN = 'systems/nova/img/nova.svg';
+}
+
 /**
  * Extend the base Actor document by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
  */
 export class NovaActor extends Actor {
+
+  static get schema() {
+    return NovaActorData;
+  }
 
   /** @override */
   prepareData() {

@@ -17,12 +17,9 @@ export class NovaItemSheet extends ItemSheet {
   /** @override */
   get template() {
     const path = "systems/nova/templates/item";
+    
     // Return a single sheet for all item types.
-    // return `${path}/item-sheet.html`;
-
-    // Alternatively, you could use the following return statement to do a
-    // unique item sheet by type, like `weapon-sheet.html`.
-    return `${path}/item-power-sheet.html`;
+    return `${path}/item-sheet.html`;
   }
 
   /* -------------------------------------------- */
