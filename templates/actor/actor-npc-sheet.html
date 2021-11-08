@@ -2,7 +2,10 @@
 
   {{!-- Sheet Header --}}
   <header class="sheet-header">
-    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
+    <div class="profile-img-col flex-group-center">
+      <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
+      <button type="drop" class="drop-button" {{#if data.health.value}}style="visibility: hidden;"{{/if}}>Roll Drop</button> 
+    </div>
     <div class="header-fields">
       <section class="grid grid-5col">
         <h1 class="charname grid-span-4"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>

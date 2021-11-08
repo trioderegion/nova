@@ -230,6 +230,10 @@
   margin-right: 5px;
 }
 
+.nova .drop-button {
+  display: flex;
+  justify-content: center;
+}
 .nova .item-form {
   font-family: "Roboto", sans-serif;
 }
@@ -252,6 +256,13 @@
   -ms-flex-pack: start;
   justify-content: flex-start;
   margin-bottom: 10px;
+}
+
+.nova .sheet-header .profile-img-col {
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 100px;
+  flex: 0 0 100px;
+  margin-right: 10px;
 }
 
 .nova .sheet-header .profile-img {
