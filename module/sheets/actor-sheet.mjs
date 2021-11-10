@@ -114,50 +114,28 @@ export class NovaActorSheet extends ActorSheet {
    * @return {undefined}
    */
   _prepareItems(context) {
-    // Initialize containers.
-    const flare = [];
-    const power = [];
 
-    // Iterate through items, allocating to containers
-    for (let i of context.items) {
-      i.img = i.img || DEFAULT_TOKEN;
-      // Append to gear.
-      if (i.type === 'flare') {
-        flare.push(i);
-      }
-      // Append to features.
-      else if (i.type === 'power') {
-        power.push(i);
-      }
-    }
+    //insert our item types at root for convienence
+    mergeObject(context, context.actor.itemTypes); 
 
-    // Assign and return
-    context.flare = flare;
-    context.power = power;
-
-    /* grab all compatible flare mods (persistent) */
     context.persistentInfo = [{
       id: "",
       name: "None",
       img: false
     }];
 
-    /* sort the power mods into a list as well */
     context.powerModInfo = [{
       id: "",
       name: "None",
       img: false
     }];
 
+    //sort the two subtypes of flare mods
     context.flare.forEach( (mod) => {
-      if (mod.data.type == 'persistent') {
-        context.persistentInfo.push({id: mod._id, img: mod.img, name: mod.name})
-      }
-    });
-
-    context.flare.forEach( (mod) => {
-      if (mod.data.type == 'power') {
-        context.powerModInfo.push({id: mod._id, img: mod.img, name: mod.name});
+      if (mod.data.data.type == 'persistent') {
+        context.persistentInfo.push({id: mod.id, img: mod.img, name: mod.name})
+      } else if (mod.data.data.type == 'power') {
+        context.powerModInfo.push({id: mod.id, img: mod.img, name: mod.name});
       }
     });
 
@@ -191,6 +169,8 @@ export class NovaActorSheet extends ActorSheet {
 
     // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));
+
+    html.find('.drop-button').click(this._onDrop.bind(this));
 
     // Drag events for macros.
     if (this.actor.isOwner) {
@@ -285,6 +265,11 @@ export class NovaActorSheet extends ActorSheet {
         return npcRoll(index, this.actor, this.actor.data.data[dataset.rollType], flavor);
       }
     }
+  }
+
+  _onDrop(event) {
+    ui.notifications.info('Dropped');
+    return (new game.nova.DropRoll('1d6')).toMessage();
   }
 
 }

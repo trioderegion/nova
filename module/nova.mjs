@@ -7,6 +7,7 @@ import { NovaItemSheet } from "./sheets/item-sheet.mjs";
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { NOVA } from "./helpers/config.mjs";
+import { DropRoll, NovaRoll } from "./helpers/dice.mjs";
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -19,7 +20,9 @@ Hooks.once('init', async function() {
   game.nova = {
     NovaActor,
     NovaItem,
-    rollItemMacro
+    rollItemMacro,
+    DropRoll,
+    NovaRoll
   };
 
   // Add custom constants for configuration.
@@ -37,6 +40,8 @@ Hooks.once('init', async function() {
   // Define custom Document classes
   CONFIG.Actor.documentClass = NovaActor;
   CONFIG.Item.documentClass = NovaItem;
+  CONFIG.Dice.rolls.push(NovaRoll);
+  CONFIG.Dice.rolls.push(DropRoll);
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
