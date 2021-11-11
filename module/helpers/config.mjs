@@ -48,3 +48,7 @@ NOVA.npcActions = {
   commands: "NOVA.Commands"
 }
 
+NOVA.chat = {
+  claim: "NOVA.ClaimText"
+}
+

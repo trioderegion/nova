@@ -49,6 +49,10 @@ Hooks.once('init', async function() {
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("nova", NovaItemSheet, { makeDefault: true });
 
+  /* init hooks */
+  Hooks.on('renderChatLog', (app, html)=>{DropRoll._claimListener(html)});
+  Hooks.on('createChatMessage', (msg) => {DropRoll._updateClaimed(msg)});
+  
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();
 });
@@ -80,10 +84,10 @@ Handlebars.registerHelper('imgFromId', function(collection, id) {
 
   return null;
 });
+
 /* -------------------------------------------- */
 /*  Ready Hook                                  */
 /* -------------------------------------------- */
-
 Hooks.once("ready", async function() {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => createItemMacro(data, slot));

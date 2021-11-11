@@ -64,7 +64,10 @@
 
   "NOVA.ActionList.Add": "Add {label}",
   "NOVA.ActionList.Delete": "Delete {label}",
-  "NOVA.ActionList.Show": "Show {label}"
+  "NOVA.ActionList.Show": "Show {label}",
+
+  "NOVA.ClaimText": "{name} claims {drop}",
+  "NOVA.ClaimNoActor": "You must claim a drop from a token or assigned character."
 
 
 }

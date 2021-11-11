@@ -8,10 +8,10 @@
         <h4 class="dice-total">{{result}}</h4>
     </div>
 </div>
-{{#if drop}}
+{{#if drop.hasDrop}}
 {{#unless claimed}}
 <div class="nova">
-  <button class="drop-button">Claim Drop</button>
+  <button class="drop-button" data-drop-type="{{drop.dropType}}" data-drop-count={{drop.dropCount}} data-drop-name="{{result}}">Claim Drop</button>
 </div>
 {{else}}
 <div class="nova">

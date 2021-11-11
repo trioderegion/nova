@@ -224,6 +224,19 @@
 }
 
 /* Styles limited to nova sheets */
+.nova .drop-claim {
+  display: flex;
+  flex: 0 auto; 
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.nova .drop-claim .drop-actor {
+  max-height: 100px;
+  border: 0;
+}
+
 .nova .small-input {
   max-width: 30px;
   margin-left: 5px;

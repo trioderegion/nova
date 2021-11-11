@@ -37,8 +37,7 @@ const novaChatData = async (roll, chatOptions) => {
     tooltip: isPrivate ? "" : await roll.getTooltip(),
     //total: isPrivate ? "?" : Math.round(this.total * 100) / 100,
     result: isPrivate ? "?" : roll.result,
-    drop: false,
-    claimed: roll.claimed ?? false,
+    drop: {hasDrop: false},
   }
 }
 
@@ -52,6 +51,12 @@ export class DropRoll extends Roll {
     if (this.total < 3) return 'No Drop';
     if (this.total < 6) return '1 Fuel';
     return '1 Health';
+  }
+
+  get dropType() {
+    if (this.total < 3) return 'none';
+    if (this.total < 6) return 'fuel';
+    return 'health';
   }
 
   /**
@@ -72,13 +77,62 @@ export class DropRoll extends Roll {
 
     // Define chat data
     let chatData = await novaChatData(this, chatOptions);
-    chatData.drop = this.total > 2;
+    chatData.drop = {
+      hasDrop: this.total > 2,
+      dropType: this.dropType,
+      dropCount: 1
+    }
 
     // Render the roll display template
     return renderTemplate(chatOptions.template, chatData);
   }
 
   static CHAT_TEMPLATE = 'systems/nova/templates/dice/roll.html'
+
+  toJSON() {
+    let data = super.toJSON();
+    data.claimed = this.claimed;
+    return data;
+  }
+
+  static _claimListener(html) {
+    html.on("click", ".drop-button", this._handleClaim.bind(this)); 
+  }
+
+  static _handleClaim(event){
+    event.preventDefault();
+    const button = event.currentTarget;
+    const dropInfo = button.dataset;
+    const messageId = button.closest(".chat-message").dataset.messageId;
+
+    if (dropInfo.dropCount > 0){
+
+      /* get best actor */
+      const actor = canvas.tokens.controlled[0]?.actor ?? game.user.character;
+
+      if(!actor){
+        ui.notifications.warn(game.i18n.localize('NOVA.ClaimNoActor'));
+        return;
+      }
+
+      /* claim the drop */
+      return actor.claimDrop(messageId, dropInfo);
+    }
+
+  }
+
+  static _updateClaimed(msg) {
+    console.log(msg); 
+    const dropId = msg.getFlag('nova','claim');
+    const dropMsg = game.messages.get(dropId)
+    if(dropMsg) {
+      console.log(dropMsg);
+      let roll = dropMsg.roll;
+      roll.claimed = true;
+      const data = {roll: JSON.stringify(roll)};
+      return dropMsg.update(data); 
+    }
+  }
 }
 
 export class NovaRoll extends Roll {

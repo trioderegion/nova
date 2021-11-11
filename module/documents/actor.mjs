@@ -120,6 +120,7 @@ export class NovaActor extends Actor {
     }
   }
 
+
   /* @override */
   update(data, options) {
 
@@ -163,6 +164,30 @@ export class NovaActor extends Actor {
     let current = duplicate(this.data.data[type]);
     current.splice(index, 1);
     return this.update({[`data.${type}`]: current});
+  }
+
+  async claimDrop(messageId, dropInfo) {
+    const updateField = {
+      'fuel': 'data.fuel',
+      'health': 'data.health',
+    }[dropInfo.dropType]
+
+    const field = this.data.data[dropInfo.dropType];
+
+    const data = {
+      img: this.img,
+      localText: game.i18n.format(CONFIG.NOVA.chat.claim, {name: this.name, drop: dropInfo.dropName})
+    }
+
+    const content = await renderTemplate('systems/nova/templates/chat/drop-claim.html', data);
+
+    await ChatMessage.create({
+      content,
+      speaker: {alias: game.user.name},
+      flags: {nova: {claim: messageId}}
+    });
+
+    return this.update({[updateField]: {value: Math.min(field.value + 1, field.max)}})
   }
 
 }
