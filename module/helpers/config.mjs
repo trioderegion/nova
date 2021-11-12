@@ -52,3 +52,9 @@ NOVA.chat = {
   claim: "NOVA.ClaimText"
 }
 
+NOVA.drops = {
+  none: 'NOVA.DropNone',
+  fuel: 'NOVA.DropFuel',
+  health: 'NOVA.DropHealth'
+}
+

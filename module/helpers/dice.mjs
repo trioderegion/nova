@@ -1,4 +1,4 @@
-
+import { MODULE } from '../helpers/module.mjs'
 
 export async function attributeRoll(attribute, actor) {
 
@@ -38,6 +38,7 @@ const novaChatData = async (roll, chatOptions) => {
     //total: isPrivate ? "?" : Math.round(this.total * 100) / 100,
     result: isPrivate ? "?" : roll.result,
     drop: {hasDrop: false},
+    claimed: roll.claimed,
   }
 }
 
@@ -48,9 +49,9 @@ export class DropRoll extends Roll {
   }
 
   get result() {
-    if (this.total < 3) return 'No Drop';
-    if (this.total < 6) return '1 Fuel';
-    return '1 Health';
+    if (this.total < 3) return game.i18n.localize(CONFIG.NOVA.drops.none);
+    if (this.total < 6) return game.i18n.format(CONFIG.NOVA.drops.fuel, {quantity: 1});
+    return game.i18n.format(CONFIG.NOVA.drops.health, {quantity: 1});
   }
 
   get dropType() {
@@ -89,6 +90,18 @@ export class DropRoll extends Roll {
 
   static CHAT_TEMPLATE = 'systems/nova/templates/dice/roll.html'
 
+  /* @override */
+  static fromData(data) {
+    //let roll = super.constructor.fromData(data);
+    let roll = super.fromData(data);
+
+    /* insert our custom field */
+    roll.claimed = data.claimed;
+
+    return roll;
+  }
+
+  /* @override */
   toJSON() {
     let data = super.toJSON();
     data.claimed = this.claimed;
@@ -122,15 +135,15 @@ export class DropRoll extends Roll {
   }
 
   static _updateClaimed(msg) {
-    console.log(msg); 
-    const dropId = msg.getFlag('nova','claim');
-    const dropMsg = game.messages.get(dropId)
-    if(dropMsg) {
-      console.log(dropMsg);
-      let roll = dropMsg.roll;
-      roll.claimed = true;
-      const data = {roll: JSON.stringify(roll)};
-      return dropMsg.update(data); 
+    if(MODULE.isFirstGM()) {
+      const dropId = msg.getFlag('nova','claim');
+      const dropMsg = game.messages.get(dropId)
+      if(dropMsg) {
+        let roll = dropMsg.roll;
+        roll.claimed = true;
+        const data = {roll: JSON.stringify(roll)};
+        return dropMsg.update(data); 
+      }
     }
   }
 }
@@ -141,9 +154,9 @@ export class NovaRoll extends Roll {
   }
 
   get result() {
-    if (this.total < 3) return 'Failure';
-    if (this.total < 5) return 'Success';
-    return 'Total Success';
+    if (this.total < 3) return game.i18n.localize('NOVA.RollFailure');
+    if (this.total < 5) return game.i18n.localize('NOVA.RollSuccess');
+    return game.i18n.localize('NOVA.TotalSuccess');
   }
 
   /**

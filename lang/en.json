@@ -9,6 +9,10 @@
   "NOVA.Description": "Description",
   "NOVA.Name": "Name",
 
+  "NOVA.RollFailure": "Failure",
+  "NOVA.RollSuccess": "Success",
+  "NOVA.RollTotalSuccess": "Total Success",
+
   "NOVA.Attributes": "Attributes",
   "NOVA.AttributeSun": "Sun",
   "NOVA.AttributeMoon": "Moon",
@@ -66,8 +70,17 @@
   "NOVA.ActionList.Delete": "Delete {label}",
   "NOVA.ActionList.Show": "Show {label}",
 
+  "NOVA.DropNone": "No Drop",
+  "NOVA.DropFuel": "{quantity} Fuel",
+  "NOVA.DropHealth": "{quantity} Health",
+
+  "NOVA.ClaimDropLabel": "Claim Drop",
+  "NOVA.ClaimedDropLabel": "Claimed",
   "NOVA.ClaimText": "{name} claims {drop}",
-  "NOVA.ClaimNoActor": "You must claim a drop from a token or assigned character."
+  "NOVA.ClaimNoActor": "You must claim a drop from a token or assigned character.",
+
+  "NOVA.Error.ClaimNoGM": "You cannot claim a drop without an active GM.",
+  "NOVA.Error.DropResourceFull": "Actor resource for drop is already full! Drop will be discarded." 
 
 
 }

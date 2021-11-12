@@ -1,3 +1,5 @@
+import { MODULE } from '../helpers/module.mjs'
+
 const ActorData = foundry.data.ActorData
 
 class NovaActorData extends ActorData {
@@ -167,12 +169,22 @@ export class NovaActor extends Actor {
   }
 
   async claimDrop(messageId, dropInfo) {
+   
+    if(MODULE.hasActiveGM() === false) {
+      ui.notifications.warn(game.i18n.localize('NOVA.Error.ClaimNoGM'));
+      return;
+    }
+
     const updateField = {
       'fuel': 'data.fuel',
       'health': 'data.health',
     }[dropInfo.dropType]
 
     const field = this.data.data[dropInfo.dropType];
+
+    if(field.max == field.value) {
+      ui.notifications.warn(game.i18n.localize('NOVA.Error.DropResourceFull'));
+    }
 
     const data = {
       img: this.img,

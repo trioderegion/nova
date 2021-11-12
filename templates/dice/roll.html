@@ -11,11 +11,11 @@
 {{#if drop.hasDrop}}
 {{#unless claimed}}
 <div class="nova">
-  <button class="drop-button" data-drop-type="{{drop.dropType}}" data-drop-count={{drop.dropCount}} data-drop-name="{{result}}">Claim Drop</button>
+  <button class="drop-button" data-drop-type="{{drop.dropType}}" data-drop-count={{drop.dropCount}} data-drop-name="{{result}}">{{localize "NOVA.ClaimDropLabel"}}</button>
 </div>
 {{else}}
 <div class="nova">
-  Yoinked
+  <button class="drop-button" disabled>{{localize "NOVA.ClaimedDropLabel"}}</button>
 </div>
 {{/unless}}
 {{/if}}
