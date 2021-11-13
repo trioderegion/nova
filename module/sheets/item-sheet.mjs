@@ -76,12 +76,8 @@ export class NovaItemSheet extends ItemSheet {
             powers.forEach( power => {
               context.affectInfo[power.id] = power.name;
             })
-
             break;
         }
-
-
-
       }
     }
 

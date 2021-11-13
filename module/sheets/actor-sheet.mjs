@@ -71,7 +71,6 @@ export class NovaActorSheet extends ActorSheet {
     /* elites have a few more */
     if (context.data.elite) {
       npcActions.push(NovaActorSheet._createNpcActionSet(context.data.followers, "followers", "NOVA.Followers.Label", "NOVA.Follower.Use"));
-      npcActions.push(NovaActorSheet._createNpcActionSet(context.data.lair, "lair", "NOVA.Lair.Label", "NOVA.Lair.Use"));
       npcActions.push(NovaActorSheet._createNpcActionSet(context.data.commands, "commands", "NOVA.Commands.Label", "NOVA.Command.Use"));
     }
 
@@ -153,6 +152,9 @@ export class NovaActorSheet extends ActorSheet {
       const item = this.actor.items.get(li.data("itemId"));
       item.sheet.render(true);
     });
+
+    // Item summaries
+    html.find(".items-list .item .item-name h4").click(event => this._onItemSummary(event));
 
     // -------------------------------------------------------------
     // Everything below here is only needed if the sheet is editable
@@ -269,6 +271,32 @@ export class NovaActorSheet extends ActorSheet {
 
   _onRollDrop(/*event*/) {
     return (new game.nova.DropRoll('1d6')).toMessage();
+  }
+
+  /**
+   * Handle toggling and items expanded description.
+   * @param {Event} event   Triggering event.
+   * @private
+   */
+  _onItemSummary(event) {
+    event.preventDefault();
+    const li = $(event.currentTarget).parents(".item");
+    const item = this.actor.items.get(li.data("item-id"));
+    const chatData = item.getChatData({secrets: this.actor.isOwner});
+
+    // Toggle summary
+    if ( li.hasClass("expanded") ) {
+      let summary = li.children(".item-summary");
+      summary.slideUp(200, () => summary.remove());
+    } else {
+      let div = $(`<div class="item-summary">${chatData.description}</div>`);
+      //let props = $('<div class="item-properties"></div>');
+      //chatData.properties.forEach(p => props.append(`<span class="tag">${p}</span>`));
+      //div.append(props);
+      li.append(div.hide());
+      div.slideDown(200);
+    }
+    li.toggleClass("expanded");
   }
 
 }
