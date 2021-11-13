@@ -62,7 +62,9 @@
     },
     "flare": {
       "templates": ["base"],
-      "type": "persistent"
+      "type": "persistent",
+      "affects": "none"
+      
     },
     "power": {
       "templates": ["base"],

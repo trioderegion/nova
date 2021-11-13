@@ -63,14 +63,30 @@ export class NovaItem extends Item {
 
     let content = item.data.description ?? '';
 
-    /* if attached to an actor, see if we can find the mods too */
-    if (this.actor && this.type == 'power') {
-      this.data.data.mods.forEach( modId => {
-        const mod = this.actor.items.get(modId);
-        if (mod) {
-          content += `<hr/>${mod.data.data.description}`
+    /* if attached to an actor, see if we can find any relevant mod info */
+    if (this.actor) {
+      if (this.type == 'power') {
+        switch (this.data.data.type) {
+          
+          case 'active':
+            this.data.data.mods.forEach( modId => {
+              const mod = this.actor.items.get(modId);
+              if (mod) {
+                content += `<hr/>${mod.data.data.description}`
+              }
+            });
+            break;
+          case 'passive':
+          case 'supernova':
+            this.actor.data.data.mods.forEach( persistentMod => {
+              const mod = this.actor.items.get(persistentMod);
+              if (mod?.data.data.affects == this.data.data.type){
+                content += `<hr/>${mod.data.data.description}`
+              }
+            });
+            break;
         }
-      });
+      }
     }
 
     // If there's no roll data, send a chat message.

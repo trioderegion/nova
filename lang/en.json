@@ -32,6 +32,7 @@
   "NOVA.FlarePower": "Power",
   "NOVA.FlarePersistent": "Persistent",
   "NOVA.PersistentMods": "Persistent Mods",
+  "NOVA.Affects": "Affects",
 
   "NOVA.Effects": "Effects",
   "NOVA.EffectCreate": "Create Effect",
@@ -45,6 +46,7 @@
   "NOVA.AddPersistentFlare": "Add Persistent Flare",
   "NOVA.AddPowerFlare": "Add Power Flare",
   "NOVA.None": "None",
+  "NOVA.Any": "Any",
 
   "NOVA.Keywords": "Keywords",
 

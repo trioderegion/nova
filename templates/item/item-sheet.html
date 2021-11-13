@@ -8,36 +8,12 @@
 
   {{!-- Sheet Body --}}
   <section class="sheet-body">
-      <section class="grid grid-5col align-center">
-          {{!-- As you add new fields, add them in here! --}}
-          <div class="flexrow">
-            <label for="data.type" class="resource-label">{{localize "NOVA.Type"}}</label>
-          </div>
-          <div class="flexrow grid-span-4">
-          {{#if canAttachFlare}}
-          <label for="data.mods" class="resource-label">{{localize "NOVA.FlareMods"}}</label>
-          {{/if}}
-          </div>
-          <div class="flexrow">
-            <select name="data.type">
-              {{#select data.type}}
-              {{#each subTypes as |name type|}}
-              <option value="{{type}}">{{localize name}}</option>
-              {{/each}}
-              {{/select}}
-            </select>
-          </div>
-          {{#each data.mods}}
-          <div class="flexrow grid-span-2">
-          {{#if ../canAttachFlare}} 
-          <select name="data.mods">
-            {{selectOptions ../modInfo selected=this inverted=true}}
-          </select>
-          {{/if}}
-          </div>
-          {{/each}}
-      </section>
-
+    {{log this}}
+    {{#if (eq item.type "power")}}
+    {{> "systems/nova/templates/item/parts/config-power.html"}} 
+    {{else}}
+    {{> "systems/nova/templates/item/parts/config-flare.html"}} 
+    {{/if}}
       <div class="editor flexrow">
         {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
       </div>

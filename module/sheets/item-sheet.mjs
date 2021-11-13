@@ -35,7 +35,7 @@ export class NovaItemSheet extends ItemSheet {
     // Retrieve the roll data for TinyMCE editors.
     context.rollData = {};
     context.modInfo = {
-      "None": "",
+      "": game.i18n.localize("NOVA.None"),
     }
 
     /* insert the appropriate item sub-type */
@@ -50,14 +50,38 @@ export class NovaItemSheet extends ItemSheet {
       
       /* need an actor to grab any possible flare mods to attach */
       if(itemData.data.type == 'active') {
-        const compatibleMods = actor.items.filter( item => item.type == 'flare' && item.data.data.type == 'power' )
+        const compatibleMods = actor.items.filter( item => item.type == 'flare' && item.data.data.type == 'power' 
+          && (item.data.data.affects == 'any' || item.data.data.affects == context.item.id) )
 
         /* populate information for display */
         compatibleMods.forEach( (mod) => {
-          context.modInfo[mod.name] = mod.id;
+          context.modInfo[mod.id] = mod.name;
         });
 
         context.canAttachFlare = true;
+      } else if (itemData.type == 'flare') {
+        
+        /* populate 'affects' selection based on type */
+        switch (itemData.data.type){
+          case 'persistent':
+            /* can affect [spark, passive power, supernova power] */
+            context.affectInfo = {'spark': game.i18n.localize('NOVA.Spark'), 'passive': game.i18n.localize('NOVA.PowerPassive'), 'supernova': game.i18n.localize('NOVA.PowerSupernova')};
+            break;
+          case 'power':
+            /* can affect [any power, specific power] */
+            context.affectInfo = {'none': game.i18n.localize('NOVA.None'), 'any': game.i18n.localize('NOVA.Any')};
+
+            /* collect all powers attached to the parent actor */
+            const powers = actor.items.filter( item => item.type == 'power' && item.data.data.type == 'active' );
+            powers.forEach( power => {
+              context.affectInfo[power.id] = power.name;
+            })
+
+            break;
+        }
+
+
+
       }
     }
 
