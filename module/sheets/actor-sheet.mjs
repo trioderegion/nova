@@ -170,7 +170,7 @@ export class NovaActorSheet extends ActorSheet {
     // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));
 
-    html.find('.drop-button').click(this._onDrop.bind(this));
+    html.find('.drop-button').click(this._onRollDrop.bind(this));
 
     // Drag events for macros.
     if (this.actor.isOwner) {
@@ -267,7 +267,7 @@ export class NovaActorSheet extends ActorSheet {
     }
   }
 
-  _onDrop(event) {
+  _onRollDrop(/*event*/) {
     return (new game.nova.DropRoll('1d6')).toMessage();
   }
 

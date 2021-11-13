@@ -156,7 +156,7 @@ export class NovaRoll extends Roll {
   get result() {
     if (this.total < 3) return game.i18n.localize('NOVA.RollFailure');
     if (this.total < 5) return game.i18n.localize('NOVA.RollSuccess');
-    return game.i18n.localize('NOVA.TotalSuccess');
+    return game.i18n.localize('NOVA.RollTotalSuccess');
   }
 
   /**
