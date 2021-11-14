@@ -117,6 +117,8 @@ export class NovaActorSheet extends ActorSheet {
     //insert our item types at root for convienence
     mergeObject(context, context.actor.itemTypes); 
 
+    context.powerLayout = {'passive': 'NOVA.AddPassive', 'supernova': 'NOVA.AddSupernova', 'active': 'NOVA.AddPower', };
+
     context.persistentInfo = [{
       id: "",
       name: "None",
@@ -213,23 +215,24 @@ export class NovaActorSheet extends ActorSheet {
     const header = event.currentTarget;
     // Get the type of item to create.
     const type = header.dataset.itemType;
+    const subType = header.dataset.subType;
 
     /* Handle NPC psuedo-items */
     if (NovaActorSheet._isNpcAction(type)){
       return await this.actor._addNpcAction(type);
     }
     // Grab any data associated with this control.
-    const data = duplicate(header.dataset);
+    //const data = duplicate(header.dataset);
     // Initialize a default name.
-    const name = `New ${type.capitalize()}`;
+    const name = `New ${subType.capitalize()}`;
     // Prepare the item object.
     const itemData = {
       name: name,
       type: type,
-      data: data
+      data: {
+        type: subType
+      }
     };
-
-    delete itemData.data["itemType"];
 
     // Finally, create the item!
     return await Item.create(itemData, {parent: this.actor});

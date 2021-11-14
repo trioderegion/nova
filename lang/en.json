@@ -43,6 +43,9 @@
   "NOVA.Add": "Add",
   "NOVA.AddEntry": "Add Entry",
   "NOVA.AddPower": "Add Power",
+  "NOVA.AddPassive": "Add Passive",
+  "NOVA.AddSupernova": "Add Supernova",
+
   "NOVA.AddPersistentFlare": "Add Persistent Flare",
   "NOVA.AddPowerFlare": "Add Power Flare",
   "NOVA.None": "None",

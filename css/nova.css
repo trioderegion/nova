@@ -226,6 +226,48 @@
 }
 
 /* Styles limited to nova sheets */
+.chat-message .message-header {
+  font-style: normal;
+  font-size: 12px;
+}
+.chat-message .message-header .flavor-text {
+  padding: 3px 0;
+  border-top: 2px groove #FFF;
+  border-bottom: 2px groove #FFF;
+  display: flex;
+}
+.chat-message .message-header .flavor-text img {
+  flex: 0 0 36px;
+  margin-right: 5px;
+}
+.chat-message .message-header .flavor-text h3 {
+  flex: 1;
+  margin: 0;
+  line-height: 36px;
+  /*font-family: "Modesto Condensed", "Palatino Linotype", serif;*/
+  font-size: 20px;
+  font-weight: 700;
+  color: #4b4a44;
+}
+.attached-mod {
+  display: flex;
+  text-align: center;
+  align-items:center;
+}
+
+.attached-mod .mod-icon {
+ display:flex;
+ flex-grow: 0;
+ flex-direction: column;
+ font-weight: bold;
+ flex-wrap: nowrap;
+ align-items: center;
+}
+
+.attached-mod .mod-icon img {
+  object-fit: contain; 
+  width: 24px;
+}
 
 .nova .item-summary {
   flex: 0 0 100%;

@@ -54,20 +54,24 @@ export class NovaItem extends Item {
     // Initialize chat data.
     const speaker = ChatMessage.getSpeaker({ actor: this.actor });
     const rollMode = game.settings.get('core', 'rollMode');
-    const label = `[${item.type}] ${item.name}`;
+    const label = `<img src="${item.img}" width="36" heigh="36"/><h3>${item.name}</h3>`;
 
     let description = item.data.description ?? '';
+
+    const content = (mod) => {
+      return `<hr/><div class="flexrow attached-mod"><div class="mod-icon flexrow"><img name="perImg" src="${mod.data.img}"/>${mod.name}</div> ${mod.data.data.description}</div>`;
+    }
 
     /* if attached to an actor, see if we can find any relevant mod info */
     if (this.actor) {
       if (this.type == 'power') {
-        switch (this.data.data.type) {
 
+        switch (this.data.data.type) {
           case 'active':
             this.data.data.mods.forEach( modId => {
               const mod = this.actor.items.get(modId);
               if (mod) {
-                description += `<hr/>${mod.data.data.description}`
+                description += content(mod);
               }
             });
             break;
@@ -76,7 +80,7 @@ export class NovaItem extends Item {
             this.actor.data.data.mods.forEach( persistentMod => {
               const mod = this.actor.items.get(persistentMod);
               if (mod?.data.data.affects == this.data.data.type){
-                description += `<hr/>${mod.data.data.description}`
+                description += content(mod);
               }
             });
             break;

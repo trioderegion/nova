@@ -85,6 +85,16 @@ Handlebars.registerHelper('imgFromId', function(collection, id) {
   return null;
 });
 
+Handlebars.registerHelper('descFromId', function(collection, id) {
+  const result = collection.find( entry => entry.id === id )
+  if (result) {
+    return result.description;
+  }
+
+  return null;
+});
+
+
 /* -------------------------------------------- */
 /*  Ready Hook                                  */
 /* -------------------------------------------- */

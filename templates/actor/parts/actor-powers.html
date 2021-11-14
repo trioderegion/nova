@@ -1,11 +1,14 @@
+{{#each powerLayout as |label subType|}} 
+{{log label subType}}
 <ol class="items-list">
   <li class="item flexrow items-header">
     <div class="item-name">{{localize "NOVA.Name"}}</div>
     <div class="item-header-controls">
-      <a class="item-control item-create" title="Create Power" data-item-type="power" data-type="active"><i class="fas fa-plus"></i> {{localize "NOVA.AddPower"}}</a>
+      <a class="item-control item-create" title="{{localize label}}" data-item-type="power" data-sub-type="{{subType}}"><i class="fas fa-plus"></i> {{localize label}}</a>
     </div>
   </li>
-  {{#each power as |item id|}}
+  {{#each ../power as |item|}}
+    {{#if (eq item.data.data.type subType)}}
     <li class="item flexrow" data-item-id="{{item._id}}">
       <div class="item-name">
         <div class="item-image">
@@ -18,5 +21,7 @@
         <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
       </div>
     </li>
+    {{/if}}
   {{/each}}
 </ol>
+{{/each}}
