@@ -15,12 +15,11 @@
             <input type="checkbox" name="data.elite" data-dtype="Boolean" {{checked data.elite}}/>
           </div>
         </div>
-
-
+      </section>
       {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
       use both the "grid" and "grid-Ncol" class where "N" can be any number
       from 1 to 12 and will create that number of columns.  --}}
-      <div class="resources grid grid-5col">
+      <div class="header-fields resources grid grid-5col">
 
         {{!-- "flex-group-center" is also defined in the _grid.scss file
         and it will add a small amount of padding, a border, and will
@@ -34,9 +33,9 @@
           </div>
         </div>
         <div class="resource flex-group-center grid-span-4">
-          <label for="data.keywords" class="resource-label">{{localize "NOVA.Keywords"}}</label>
+          <label for="data.keywords" class="resource-label rollable" data-roll-type="keywords" data-content="{{data.keywords}}">{{localize "NOVA.Keywords"}}</label>
           <div class="resource-content align-center">
-            <input type="text" name="data.keywords" value="{{data.keywords}}" data-dtype="String">
+            <textarea style="min-height:40px" type="text" name="data.keywords" data-dtype="String">{{data.keywords}}</textarea>
           </div>
         </div>
       </div>

@@ -16,7 +16,17 @@ export async function attributeRoll(attribute, actor) {
 }
 
 export function npcRoll(index, actor, actionList, rollFlavor) {
-  const content = actionList[index];
+  index = index ?? false;
+  let content = '';
+
+  /* this may be just a raw roll that
+   * is not derived from a list */
+  if (index !== false) {
+    content = actionList[index];
+  } else {
+    content = actionList;
+  }
+
   return npcRollMessage(content, rollFlavor, ChatMessage.getSpeaker({ actor }) );
 }
 

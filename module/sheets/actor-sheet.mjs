@@ -66,12 +66,17 @@ export class NovaActorSheet extends ActorSheet {
     /* all npcs have harm and move */
     npcActions.push(NovaActorSheet._createNpcActionSet(context.data.harm, "harm", "NOVA.Harm.Label", "NOVA.Harm.Use"));
     npcActions.push(NovaActorSheet._createNpcActionSet(context.data.moves, "moves", "NOVA.Moves.Label", "NOVA.Move.Use"));
-    npcActions.push(NovaActorSheet._createNpcActionSet(context.data.variants, "variants", "NOVA.Variants.Label", "NOVA.Variant.Use"));
 
     /* elites have a few more */
     if (context.data.elite) {
-      npcActions.push(NovaActorSheet._createNpcActionSet(context.data.followers, "followers", "NOVA.Followers.Label", "NOVA.Follower.Use"));
       npcActions.push(NovaActorSheet._createNpcActionSet(context.data.commands, "commands", "NOVA.Commands.Label", "NOVA.Command.Use"));
+      npcActions.push(NovaActorSheet._createNpcActionSet(context.data.lair, "lair", "NOVA.Lair.Label", "NOVA.Lair.Use"));
+    }
+
+    npcActions.push(NovaActorSheet._createNpcActionSet(context.data.variants, "variants", "NOVA.Variants.Label", "NOVA.Variant.Use"));
+
+    if (context.data.elite) {
+      npcActions.push(NovaActorSheet._createNpcActionSet(context.data.followers, "followers", "NOVA.Followers.Label", "NOVA.Follower.Use"));
     }
 
     context.npcActions = npcActions;

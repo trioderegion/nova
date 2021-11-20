@@ -226,6 +226,13 @@
 }
 
 /* Styles limited to nova sheets */
+.nova .active-turn {
+  background-color: coral;
+}
+
+.nova .inactive-turn {
+}
+
 .chat-message .message-header {
   font-style: normal;
   font-size: 12px;

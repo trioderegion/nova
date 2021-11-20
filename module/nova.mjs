@@ -1,13 +1,20 @@
 // Import document classes.
 import { NovaActor } from "./documents/actor.mjs";
 import { NovaItem } from "./documents/item.mjs";
+import { NovaCombat } from './documents/combat.mjs';
+import { NovaCombatant } from './documents/combatant.mjs';
+
 // Import sheet classes.
 import { NovaActorSheet } from "./sheets/actor-sheet.mjs";
 import { NovaItemSheet } from "./sheets/item-sheet.mjs";
+
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
 import { NOVA } from "./helpers/config.mjs";
 import { DropRoll, NovaRoll } from "./helpers/dice.mjs";
+
+// Import UI Classes
+import { NovaCombatTracker } from './ui/combat-tracker.mjs'
 
 /* -------------------------------------------- */
 /*  Init Hook                                   */
@@ -22,7 +29,7 @@ Hooks.once('init', async function() {
     NovaItem,
     rollItemMacro,
     DropRoll,
-    NovaRoll
+    NovaRoll,
   };
 
   // Add custom constants for configuration.
@@ -42,6 +49,11 @@ Hooks.once('init', async function() {
   CONFIG.Item.documentClass = NovaItem;
   CONFIG.Dice.rolls.push(NovaRoll);
   CONFIG.Dice.rolls.push(DropRoll);
+  CONFIG.Combatant.documentClass = NovaCombatant;
+  CONFIG.Combat.documentClass = NovaCombat;
+
+  // Define custom UI classes
+  CONFIG.ui.combat = NovaCombatTracker;
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
