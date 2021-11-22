@@ -1,3 +1,54 @@
+{{#* inline "combatantControls" parameter=isGM}}
+{{log this}}
+<img class="token-image" data-src="{{this.img}}" title="{{this.name}}"/>
+<div class="token-name flexcol">
+  <h4>{{this.name}}</h4>
+  <div class="combatant-controls flexrow">
+    {{#if isGM}}
+    <a class="combatant-control {{#if this.hidden}}active{{/if}}" title="{{localize 'COMBAT.ToggleVis'}}" data-control="toggleHidden">
+      <i class="fas fa-eye-slash"></i></a>
+    <a class="combatant-control {{#if this.defeated}}active{{/if}}" title="{{localize 'COMBAT.ToggleDead'}}" data-control="toggleDefeated">
+      <i class="fas fa-skull"></i></a>
+    {{/if}}
+    <div class="token-effects">
+      {{#each this.effects}}
+      <img class="token-effect" src="{{this.data.icon}}"/>
+      {{/each}}
+    </div>
+  </div>
+</div>
+{{/inline}}
+
+{{#*inline "sparkEntry" parameter=isGM}}
+<li class="combatant actor directory-item flexrow {{this.css}}" data-combatant-id="{{this.id}}">
+  {{> combatantControls isGM=isGM}}
+  {{#if this.hasResource}}
+  <div class="token-resource">
+    <span class="resource">{{this.resource}}</span>
+  </div>
+  {{/if}}
+
+  <div class="token-initiative">
+    {{#if this.ended}}
+    <span class="initiative">X</span>
+    {{else if this.owner}}
+    <a class="combatant-control roll" title="{{localize 'COMBAT.InitiativeRoll'}}" data-control="endTurn"></a>
+    {{/if}}
+  </div>
+</li>
+{{/inline}}
+
+{{#*inline "npcEntry" parameter=isGM}}
+<li class="combatant actor directory-item flexrow {{this.css}}" data-combatant-id="{{this.id}}">
+  {{> combatantControls isGM=isGM}}
+  {{#if this.hasResource}}
+  <div class="token-resource">
+    <span class="resource">{{this.resource}}</span>
+  </div>
+  {{/if}}
+</li>
+{{/inline}}
+
 <section class="tab sidebar-tab directory flexcol nova" id="combat" data-tab="combat">
     <header id="combat-round">
         {{#if user.isGM}}
@@ -56,42 +107,13 @@
 
     <ol id="combat-tracker" class="directory-list">
       {{#if hasCombat}}<h4 class="{{playerStyle}}">Sparks</h4>{{/if}}
-        {{#each turns}}
-        <li class="combatant actor directory-item flexrow {{this.css}}" data-combatant-id="{{this.id}}">
-            <img class="token-image" data-src="{{this.img}}" title="{{this.name}}"/>
-            <div class="token-name flexcol">
-                <h4>{{this.name}}</h4>
-                <div class="combatant-controls flexrow">
-                    {{#if ../user.isGM}}
-                    <a class="combatant-control {{#if this.hidden}}active{{/if}}" title="{{localize 'COMBAT.ToggleVis'}}" data-control="toggleHidden">
-                        <i class="fas fa-eye-slash"></i></a>
-                    <a class="combatant-control {{#if this.defeated}}active{{/if}}" title="{{localize 'COMBAT.ToggleDead'}}" data-control="toggleDefeated">
-                        <i class="fas fa-skull"></i></a>
-                    {{/if}}
-                    <div class="token-effects">
-                        {{#each this.effects}}
-                        <img class="token-effect" src="{{this}}"/>
-                        {{/each}}
-                    </div>
-                </div>
-            </div>
-
-            {{#if this.hasResource}}
-            <div class="token-resource">
-                <span class="resource">{{this.resource}}</span>
-            </div>
-            {{/if}}
-
-            <div class="token-initiative">
-                {{#if this.ended}}
-                <span class="initiative">X</span>
-                {{else if this.owner}}
-                <a class="combatant-control roll" title="{{localize 'COMBAT.InitiativeRoll'}}" data-control="endTurn"></a>
-                {{/if}}
-            </div>
-        </li>
+        {{#each turns.spark}}
+        {{> sparkEntry isGM=../user.isGM}}
         {{/each}}
         {{#if hasCombat}}<h4 class="{{gmStyle}}">GM</h4>{{/if}}
+        {{#each turns.npc}}
+        {{> npcEntry isGM=../user.isGM}}
+        {{/each}}
     </ol>
 
     <nav id="combat-controls" class="directory-footer flexrow">

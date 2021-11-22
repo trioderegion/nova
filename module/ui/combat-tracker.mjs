@@ -20,10 +20,24 @@ export class NovaCombatTracker extends CombatTracker {
     context.gmStyle = !playerTurn ? 'active-turn' : 'inactive-turn';
 
     /* add in the ended turn flag */
-    context.turns.forEach( turn => {
+    context.turns = context.turns.reduce( (acc, turn) => {
+      const combatant = context.combat.combatants.get(turn.id);
+
+      /* super does not look at unlinked effects, do that here */
+      turn.effects = new Set();
+      if ( combatant.token ) {
+        combatant.token.actor.effects.forEach(e => turn.effects.add(e));
+        if ( combatant.token.data.overlayEffect ) turn.effects.add(combatant.token.data.overlayEffect);
+      }
+
       turn.css = "";
-      turn.ended = context.combat.combatants.get(turn.id)?.turnEnded ?? true;
-    });
+      turn.ended = combatant?.turnEnded ?? true;
+      acc[combatant.actor.type].push(turn);
+
+      
+
+      return acc;
+    },{spark: [], npc: []});
 
     return context;
   }

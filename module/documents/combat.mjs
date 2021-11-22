@@ -10,7 +10,7 @@ export class NovaCombat extends Combat {
      * their turn ended, then it is still
      * the players' turn
      */
-    const found = this.turns.find( combatant => !combatant.turnEnded )
+    const found = this.turns.find( combatant => !combatant.turnEnded && combatant.actor.type == 'spark' )
 
     return !!found;
   }
