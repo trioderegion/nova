@@ -15,11 +15,14 @@ export class NovaCombatTracker extends CombatTracker {
 
 
     /* which turn state are we in? */
-    const playerTurn = context.combat?.isPlayerTurn() ?? false;
-    context.playerStyle = playerTurn ? 'active-turn' : 'inactive-turn';
-    context.gmStyle = !playerTurn ? 'active-turn' : 'inactive-turn';
+    context.playerTurn = context.combat?.isPlayerTurn() ?? false;
+    context.playerStyle = context.playerTurn ? 'active-turn' : 'inactive-turn';
+    context.gmStyle = !context.playerTurn ? 'active-turn' : 'inactive-turn';
 
-    /* add in the ended turn flag */
+    /* add in the ended turn flag
+     * and other combatant specific
+     * info
+     */
     context.turns = context.turns.reduce( (acc, turn) => {
       const combatant = context.combat.combatants.get(turn.id);
 
@@ -32,9 +35,8 @@ export class NovaCombatTracker extends CombatTracker {
 
       turn.css = "";
       turn.ended = combatant?.turnEnded ?? true;
+      turn.zeroHp = combatant.actor.data.data.health.value === 0 ? true : false;
       acc[combatant.actor.type].push(turn);
-
-      
 
       return acc;
     },{spark: [], npc: []});
@@ -79,8 +81,51 @@ export class NovaCombatTracker extends CombatTracker {
           return c.endTurn();
         } else {
           ui.notifications.error('Combat must begin before your turn can be ended.');
+          return;
+        }
+      case "resetTurn":
+        if (combat.started) {
+          return c.startTurn();
+        } else {
+          ui.notifications.error('Combat must begin before your turn can be reset.');
+          return;
         }
     }
 
+  }
+
+  /**
+   * Handle mouse-down event on a combatant name in the tracker
+   * @param {Event} event   The originating mousedown event
+   * @return {Promise}      A Promise that resolves once the pan is complete
+   * @private
+   */
+  async _onCombatantMouseDown(event) {
+    event.preventDefault();
+
+    const li = event.currentTarget;
+    const combatant = this.viewed.combatants.get(li.dataset.combatantId);
+    const token = combatant.token;
+    if ( (token === null) || !combatant.actor?.testUserPermission(game.user, "OBSERVED") ) return;
+    const now = Date.now();
+
+    // Handle double-left click to open sheet
+    const dt = now - this._clickTime;
+    this._clickTime = now;
+    if ( dt <= 250 ) return token?.actor?.sheet.render(true);
+
+    // If the Token does not exist in this scene
+    // TODO: This is a temporary workaround until we persist sceneId as part of the Combatant data model
+    if ( token === undefined ) {
+      return ui.notifications.warn(game.i18n.format("COMBAT.CombatantNotInScene", {name: combatant.name}));
+    }
+    
+    // Control and pan to Token object or Roll Drop depending
+    if ( combatant.category.dropNpc) {
+      return this.viewed.handleRollDrop(combatant);
+    } else if ( token.object ) {
+      token.object?.control({releaseOthers: true});
+      return canvas.animatePan({x: token.data.x, y: token.data.y});
+    }
   }
 }

@@ -4,6 +4,13 @@
   font-family: "Roboto", sans-serif;
 }
 
+
+
+.end-turn:hover{
+  color: #FFFFFF;
+  text-shadow: 0 0 10px green;
+  cursor: pointer;
+}
 .rollable:hover,
 .rollable:focus,
 .item-name h4:hover{
@@ -226,11 +233,63 @@
 }
 
 /* Styles limited to nova sheets */
+#combat li.combatant .end-turn {
+  flex: 0 0 48px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+}
+
+#combat li.combatant.actor.drop-entry {
+  flex: 0 0 48px;
+  flex-flow: column wrap;
+  min-width: fit-content;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#combat li.combatant.actor.drop-entry {
+  flex: 0 0 48px;
+  flex-flow: column wrap;
+  min-width: fit-content;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#combat li.combatant.actor.drop-entry .actor-drop-img {
+  border: none;
+}
+.drop-hover{
+/*#combat li.combatant.actor.drop-entry .drop-hover {*/
+ display:none; 
+ border: none;
+}
+
+#combat li.combatant.actor.drop-entry:hover .drop-hover {
+  display: inherit;
+}
+
+#combat li.combatant.actor.drop-entry:hover .actor-drop-img {
+  display: none;
+}
+
 .nova .active-turn {
-  background-color: coral;
+  margin-top: 5px;
+  background-color: red;
+  color: black;
+  font-weight: bold;
+  padding: 5px
 }
 
 .nova .inactive-turn {
+  margin-top: 5px;
+  padding: 5px
 }
 
 .chat-message .message-header {

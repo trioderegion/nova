@@ -124,7 +124,7 @@ export class NovaActor extends Actor {
 
 
   /* @override */
-  update(data, options) {
+  async update(data, options) {
 
     /* check for mangled harm/moves for NPCs */
     const ensureArray = (path) => {
@@ -141,7 +141,11 @@ export class NovaActor extends Actor {
     ensureArray('data.lair');
     ensureArray('data.commands');
 
-    return super.update(data, options);
+    /* update locally and refresh tracker */
+    const result = await super.update(data, options);
+    ui.combat.render();
+
+    return result;
   }
 
   /**
@@ -166,6 +170,10 @@ export class NovaActor extends Actor {
     let current = duplicate(this.data.data[type]);
     current.splice(index, 1);
     return this.update({[`data.${type}`]: current});
+  }
+  
+  rollDrop(expression = '1d6') {
+    return (new game.nova.DropRoll(expression)).toMessage();
   }
 
   async claimDrop(messageId, dropInfo) {

@@ -278,7 +278,7 @@ export class NovaActorSheet extends ActorSheet {
   }
 
   _onRollDrop(/*event*/) {
-    return (new game.nova.DropRoll('1d6')).toMessage();
+    return this.actor.rollDrop();
   }
 
   /**
