@@ -113,14 +113,20 @@ export class NovaActorSheet extends ActorSheet {
   /**
    * Organize and classify Items for Character sheets.
    *
-   * @param {Object} actorData The actor to prepare.
+   * @param {Object} context The context from which to build and
+   * sort our various item lists.
    *
    * @return {undefined}
    */
   _prepareItems(context) {
+    
+    /* sort and insert our item types at root for convienence */
+    let {itemTypes} = context.actor;
 
-    //insert our item types at root for convienence
-    mergeObject(context, context.actor.itemTypes); 
+    //for each item type to be inserted at root, sort its internal array of items according to its `data.sort` value
+    Object.keys(itemTypes).forEach( (key) => { itemTypes[key] = itemTypes[key].sort( (a,b) => (a.data.sort ?? 0) - (b.data.sort ?? 0) )});
+
+    mergeObject(context, itemTypes); 
 
     context.powerLayout = {'passive': 'NOVA.AddPassive', 'supernova': 'NOVA.AddSupernova', 'active': 'NOVA.AddPower', };
 
@@ -278,7 +284,12 @@ export class NovaActorSheet extends ActorSheet {
   }
 
   _onRollDrop(/*event*/) {
-    return this.actor.rollDrop();
+    switch (this.actor.type) {
+      case 'npc':
+        return this.actor.rollDrop();
+      case 'spark':
+        return this.actor.revive();
+    }
   }
 
   /**

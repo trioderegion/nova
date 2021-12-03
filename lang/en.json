@@ -5,9 +5,12 @@
   "NOVA.Pronouns": "Pronouns",
 
   "NOVA.Spark": "Spark",
+  "NOVA.Sparks": "Sparks",
+  "NOVA.GM": "GM",
   "NOVA.Elite": "Elite",
   "NOVA.Description": "Description",
   "NOVA.Name": "Name",
+  "NOVA.Turn": "Turn",
 
   "NOVA.RollFailure": "Failure",
   "NOVA.RollSuccess": "Success",
@@ -78,7 +81,14 @@
   "NOVA.DropNone": "No Drop",
   "NOVA.DropFuel": "{quantity} Fuel",
   "NOVA.DropHealth": "{quantity} Health",
+  
+  "NOVA.AllSparksEndTurn": "End turn for all Sparks",
+  "NOVA.ResetRound": "Reset round",
+  "NOVA.EndTurn": "End turn",
+  "NOVA.ResetTurn": "Reset turn",
 
+  "NOVA.CombatDropTracker": "Drops to Roll",
+  "NOVA.RollAllDrops": "Roll all drops",
   "NOVA.ClaimDropLabel": "Claim Drop",
   "NOVA.ClaimedDropLabel": "Claimed",
   "NOVA.ClaimText": "{name} claims {drop}",

@@ -210,4 +210,30 @@ export class NovaActor extends Actor {
     return this.update({[updateField]: {value: Math.min(field.value + 1, field.max)}})
   }
 
+  get hp() {
+    return this.data.data.health.value;
+  }
+
+  get maxHp() {
+    return this.data.data.health.max;
+  }
+
+  get fuel() {
+    return this.data.data.fuel.value;
+  }
+
+  get maxFuel() {
+    return this.data.data.fuel.max;
+  }
+
+  revive() {
+    const health = Math.ceil(this.maxHp/2);
+    const fuel = Math.ceil(this.maxFuel/2);
+
+    return this.update({
+      'data.health.value': health,
+      'data.fuel.value': fuel
+    });
+  }
+
 }

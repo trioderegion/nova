@@ -230,6 +230,7 @@
   -ms-flex-pack: center;
   justify-content: center;
   text-align: center;
+  align-items: center;
 }
 
 /* Styles limited to nova sheets */
@@ -367,6 +368,7 @@
 .nova .drop-button {
   display: flex;
   justify-content: center;
+  margin-bottom: 5px;
 }
 .nova .item-form {
   font-family: "Roboto", sans-serif;

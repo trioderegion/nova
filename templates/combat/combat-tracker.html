@@ -29,7 +29,7 @@
 
   <div class="end-turn">
     {{#if this.ended}}
-    <i class="combatant-control fas fa-clock" title="{{localize NOVA.ResetTurn}}" data-control="resetTurn"></i>
+    <i class="combatant-control fas fa-clock" title="{{localize 'NOVA.ResetTurn'}}" data-control="resetTurn"></i>
     {{else if this.owner}}
     <i class="combatant-control far fa-check-circle" title="{{localize 'NOVA.EndTurn'}}" data-control="endTurn"></i>
     {{/if}}
@@ -81,11 +81,11 @@
 
         <nav class="encounters flexrow">
             {{#if user.isGM}}
-            <a class="combat-control" title="{{localize 'COMBAT.AllSparksEndTurn'}}" data-control="allEndTurn" {{#unless turns}}disabled{{/unless}}>
-                <i class="fas fa-users"></i>
+            <a class="combat-control" title="{{localize 'NOVA.AllSparksEndTurn'}}" data-control="allEndTurn" {{#unless turns}}disabled{{/unless}}>
+                <i class="far fa-check-circle"></i>
             </a>
             <a class="combat-control" title="{{localize 'NOVA.RollAllDrops'}}" data-control="rollAllDrops" {{#unless turns}}disabled{{/unless}}>
-                <i class="fas fa-users-cog"></i>
+                <i class="fas fa-dice"></i>
             </a>
             {{/if}}
 
@@ -113,17 +113,17 @@
 
     <ol id="combat-tracker" class="directory-list">
       {{#if hasCombat}}
-        <h4 class="flexrow {{playerStyle}}">Sparks</h4>
+      <h4 class="flexrow {{playerStyle}}">{{localize 'NOVA.Sparks'}}</h4>
         {{#each turns.spark}}
         {{> sparkEntry isGM=../user.isGM}}
         {{/each}}
-        <h4 class="flexrow {{gmStyle}}">GM {{#unless playerTurn}}{{#if combat.data.turn}}Turn {{combat.data.turn}}{{/if}}{{/unless}}</h4>
+        <h4 class="flexrow {{gmStyle}}">{{localize 'NOVA.GM'}} {{#unless playerTurn}}{{#if combat.data.turn}}{{localize 'NOVA.Turn'}} {{combat.data.turn}}{{/if}}{{/unless}}</h4>
         {{#each turns.npc}}
         {{#unless this.zeroHp}}
         {{> npcEntry isGM=../user.isGM}}
         {{/unless}}
         {{/each}}
-        <h4 class="flexrow inactive-turn">Drops to Roll</h4>
+        <h4 class="flexrow inactive-turn">{{localize 'NOVA.CombatDropTracker'}}</h4>
         <div class="flexrow">
         {{#each turns.npc}}
         {{#if this.zeroHp}}
@@ -134,9 +134,9 @@
       {{/if}}
     </ol>
 
+    {{#if user.isGM}}
     <nav id="combat-controls" class="directory-footer flexrow">
     {{#if hasCombat}}
-        {{#if user.isGM}}
             {{#if round}}
             <a class="combat-control" title="{{localize 'COMBAT.RoundPrev'}}" data-control="previousRound"><i class="fas fa-step-backward"></i></a>
             <a class="combat-control center" title="{{localize 'COMBAT.End'}}" data-control="endCombat">{{localize 'COMBAT.End'}}</a>
@@ -145,7 +145,7 @@
             <a class="combat-control center" title="{{localize 'COMBAT.Begin'}}" data-control="startCombat">{{localize 'COMBAT.Begin'}}</a>
             {{/if}}
         {{else if control}}
-        {{/if}}
+    {{/if}}
     {{/if}}
     </nav>
 </section>
