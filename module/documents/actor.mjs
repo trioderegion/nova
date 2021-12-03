@@ -19,7 +19,7 @@ class NovaActorData extends ActorData {
     return schema;
   }
 
-  static DEFAULT_SPARK_TOKEN = 'systems/nova/img/nova.svg';
+  static DEFAULT_SPARK_TOKEN = 'icons/svg/sun.svg';
 }
 
 /**
