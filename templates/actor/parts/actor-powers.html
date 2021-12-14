@@ -1,5 +1,4 @@
 {{#each powerLayout as |label subType|}} 
-{{log label subType}}
 <ol class="items-list">
   <li class="item flexrow items-header">
     <div class="item-name">{{localize "NOVA.Name"}}</div>
@@ -9,7 +8,7 @@
   </li>
   {{#each ../power as |item|}}
     {{#if (eq item.data.data.type subType)}}
-    <li class="item flexrow" data-item-id="{{item._id}}">
+    <li class="item flexrow" data-item-id="{{item.id}}">
       <div class="item-name">
         <div class="item-image">
           <a class="rollable" data-roll-type="item"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></a>
