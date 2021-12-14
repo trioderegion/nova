@@ -4,7 +4,7 @@
   "description": "The Nova system for FoundryVTT!",
   "version": "0.1.0",
   "minimumCoreVersion": "0.8.5",
-  "compatibleCoreVersion": "0.8.9",
+  "compatibleCoreVersion": "9",
   "author": "trioderegion",
   "esmodules": ["module/nova.mjs"],
   "styles": ["css/nova.css"],
