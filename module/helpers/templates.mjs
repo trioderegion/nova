@@ -5,8 +5,6 @@
  */
  export const preloadHandlebarsTemplates = async function() {
   return loadTemplates([
-
-    // Actor partials.
     "systems/nova/templates/actor/parts/actor-flare.html",
     "systems/nova/templates/actor/parts/actor-effects.html",
     "systems/nova/templates/actor/parts/actor-powers.html",
@@ -14,5 +12,6 @@
     "systems/nova/templates/actor/parts/npc-actions.html",
     "systems/nova/templates/item/parts/config-power.html",
     "systems/nova/templates/item/parts/config-flare.html",
+    "systems/nova/templates/item/parts/type-attachment.html",
   ]);
 };

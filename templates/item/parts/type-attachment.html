@@ -1,0 +1,20 @@
+{{!-- As you add new fields, add them in here! --}}
+<label class="resource-label">{{localize "NOVA.Type"}}</label>
+<select name="data.type">
+  {{#select data.type}}
+  {{#each subTypes as |name type|}}
+  <option value="{{type}}">{{localize name}}</option>
+  {{/each}}
+  {{/select}}
+</select>
+{{#if canAttachFlare}}
+<label class="resource-label">{{localize "NOVA.FlareMods"}}</label>
+{{/if}}
+{{#each data.mods}}
+{{#if ../canAttachFlare}} 
+<select name="data.mods">
+  {{selectOptions ../modInfo selected=this inverted=false}}
+</select>
+{{/if}}
+{{/each}}
+

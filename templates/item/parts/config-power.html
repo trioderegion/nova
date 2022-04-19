@@ -1,30 +1,39 @@
 <section class="grid grid-5col align-center">
-          {{!-- As you add new fields, add them in here! --}}
-          <div class="flexrow">
-            <label for="data.type" class="resource-label">{{localize "NOVA.Type"}}</label>
-          </div>
-          <div class="flexrow grid-span-4">
-          {{#if canAttachFlare}}
-          <label for="data.mods" class="resource-label">{{localize "NOVA.FlareMods"}}</label>
-          {{/if}}
-          </div>
-          <div class="flexrow">
-            <select name="data.type">
-              {{#select data.type}}
-              {{#each subTypes as |name type|}}
-              <option value="{{type}}">{{localize name}}</option>
-              {{/each}}
-              {{/select}}
-            </select>
-          </div>
-          {{#each data.mods}}
-          <div class="flexrow grid-span-2">
-          {{#if ../canAttachFlare}} 
-          <select name="data.mods">
-            {{selectOptions ../modInfo selected=this inverted=false}}
-          </select>
-          {{/if}}
-          </div>
-          {{/each}}
-      </section>
+  <div class="flexrow">
+    <label class="resource-label">{{localize "NOVA.Harm"}}</label>
+  </div>
+  <div class="flexrow">
+    <label class="resource-label">{{localize "NOVA.Range"}}</label>
+  </div>
+  <div class="flexrow">
+    <label class="resource-label">{{localize "NOVA.Target"}}</label>
+  </div>
+  <div class="flexrow grid-span-2">
+    <label class="resource-label">{{localize "NOVA.Quantity"}}</label>
+  </div>
+  <div class="flexrow">
+    <input data-dtype="Number" type="Number" value=0>  
+  </div>
+  <div class="flexrow">
+    <input data-dtype="Number" type="Number" value=0>  
+  </div>
+  <div class="flexrow">
+    <input data-dtype="Number" type="Number" value=0>  
+  </div>
+  <div class="flexrow grid-span-2">
+    <input data-dtype="Number" type="Number" value=0>  
+  </div>
+  <div class="flexrow">
+    <input data-dtype="Number" type="Number" value=0>  
+  </div>
+  <div class="flexrow">
+    <input data-dtype="Number" type="Number" value=0>  
+  </div>
+  <div class="flexrow">
+    <input data-dtype="Number" type="Number" value=0>  
+  </div>
+  <div class="flexrow grid-span-2">
+    <input data-dtype="Number" type="Number" value=0>  
+  </div>
+</section>
 
