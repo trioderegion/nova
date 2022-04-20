@@ -40,47 +40,58 @@ export class NovaItemSheet extends ItemSheet {
 
     /* insert the appropriate item sub-type */
     context.subTypes = {'flare': CONFIG.NOVA.flareType,
-                               'power': CONFIG.NOVA.powerType}[itemData.type]
+      'power': CONFIG.NOVA.powerType}[itemData.type]
 
     context.canAttachFlare = false;
 
     let actor = this.object?.parent ?? null;
     if (actor) {
       context.rollData = actor.getRollData();
-      
+
       /* need an actor to grab any possible flare mods to attach */
-      if(itemData.data.type == 'active') {
-        const compatibleMods = actor.items.filter( item => item.type == 'flare' && item.data.data.type == 'power' 
-          && (item.data.data.affects == 'any' || item.data.data.affects == context.item.id) )
+      switch (itemData.data.type) {
+        case 'active': {
+          context.canAttachFlare = true;
 
-        /* populate information for display */
-        compatibleMods.forEach( (mod) => {
-          context.modInfo[mod.id] = mod.name;
-        });
+          /* collect all flare mods that we could attach to a power (i.e. not persistant and not already in use) */
+          const compatibleMods = actor.items.filter( item => item.type == 'flare' && item.data.data.type == 'power' 
+            && (item.data.data.affects == 'any' || item.data.data.affects == context.item.id) )
 
-        context.canAttachFlare = true;
-      } else if (itemData.type == 'flare') {
-        
-        /* populate 'affects' selection based on type */
-        switch (itemData.data.type){
-          case 'persistent':
-            /* can affect [spark, passive power, supernova power] */
-            context.affectInfo = {'spark': game.i18n.localize('NOVA.Spark'), 'passive': game.i18n.localize('NOVA.PowerPassive'), 'supernova': game.i18n.localize('NOVA.PowerSupernova')};
-            break;
-          case 'power':
-            /* can affect [any power, specific power] */
-            context.affectInfo = {'none': game.i18n.localize('NOVA.None'), 'any': game.i18n.localize('NOVA.Any')};
+          /* populate information for display */
+          compatibleMods.forEach( (mod) => {
+            context.modInfo[mod.id] = mod.name;
+          });
 
-            /* collect all powers attached to the parent actor */
-            const powers = actor.items.filter( item => item.type == 'power' && item.data.data.type == 'active' );
-            powers.forEach( power => {
-              context.affectInfo[power.id] = power.name;
-            })
-            break;
+
+
+          break;
         }
-      }
-    }
+        case 'flare': {
 
+          /* populate 'affects' selection based on type */
+          switch (itemData.data.type){
+            case 'persistent':
+              /* can affect [spark, passive power, supernova power] */
+              context.affectInfo = {'spark': game.i18n.localize('NOVA.Spark'), 'passive': game.i18n.localize('NOVA.PowerPassive'), 'supernova': game.i18n.localize('NOVA.PowerSupernova')};
+              break;
+            case 'power':
+              /* can affect [any power, specific power] */
+              context.affectInfo = {'none': game.i18n.localize('NOVA.None'), 'any': game.i18n.localize('NOVA.Any')};
+
+              /* collect all powers attached to the parent actor */
+              const powers = actor.items.filter( item => item.type == 'power' && item.data.data.type == 'active' );
+              powers.forEach( power => {
+                context.affectInfo[power.id] = power.name;
+              })
+              break;
+          }
+          break;
+        }
+        default: break;
+      }
+
+
+    }
     // Add the actor's data to context.data for easier access, as well as flags.
     context.data = itemData.data;
     context.flags = itemData.flags;

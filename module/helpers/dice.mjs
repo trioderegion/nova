@@ -1,16 +1,24 @@
 import { MODULE } from '../helpers/module.mjs'
 
-export async function attributeRoll(attribute, actor) {
+export async function attributeRoll(attribute, actor = undefined, {createMsg = true, bonusDie = 0} = {}) {
 
-  const rollData = actor.getRollData();
-  const attributeData = rollData.attributes[attribute];
-  const rollString = `${attributeData.value + attributeData.bonus}d6kh`;
+  const rollData = actor?.getRollData() ?? {};
+  let attributeData = {};
+
+  if (typeof attribute == 'number') attributeData = {value: attribute, bonus: 0, total: attribute};
+  else attributeData = getProperty(rollData.attributes ?? {}, attribute) ?? {value: 0, bonus: 0, total: 0};
+
+  const rollString = bonusDie == 0 ? `${attributeData.total}d6kh` : `(${attributeData.total} + ${bonusDie})d6kh`;
   const roll = await (new game.nova.NovaRoll(rollString, rollData ).evaluate({async:true}));
-  await roll.toMessage({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    flavor: attributeData.label,
-    rollMode: game.settings.get('core', 'rollMode'),
-  });
+
+  if (createMsg) {
+    await roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor }),
+      flavor: attributeData.label,
+      rollMode: game.settings.get('core', 'rollMode'),
+    });
+  }
+
   return roll;
 
 }

@@ -1,4 +1,5 @@
 import { MODULE } from '../helpers/module.mjs'
+import { attributeRoll } from '../helpers/dice.mjs'
 
 const ActorData = foundry.data.ActorData
 
@@ -71,16 +72,16 @@ export class NovaActor extends Actor {
    * Prepare Character type specific data
    */
   _prepareCharacterData(actorData) {
-    if (actorData.type !== 'character') return;
+    if (actorData.type !== 'spark') return;
 
     // Make modifications to data here. For example:
     const data = actorData.data;
-
-    // Loop through ability scores, and add their modifiers to our sheet output.
-    for (let [key, ability] of Object.entries(data.abilities)) {
-      // Calculate the modifier using d20 rules.
-      ability.mod = Math.floor((ability.value - 10) / 2);
+    
+    /* combine current and bonus values for ability scores */
+    for (let [key, {value, bonus}] of Object.entries(data.attributes)) {
+      data.attributes[key].total = value + bonus;
     }
+
   }
 
   /**
@@ -107,11 +108,25 @@ export class NovaActor extends Actor {
     return data;
   }
 
+  /* @param {String|Number}
+  /* @param {Object} options
+   * @param {Boolean} [options.createMsg]
+   * @param {Number} [options.bonusDie]
+  /* @return {NovaRoll}
+   */
+  async rollTest(attribute, options ){
+    
+    const roll = attributeRoll(attribute, this, options);
+
+    return roll;
+
+  }
+
   /**
    * Prepare character roll data.
    */
   _getCharacterRollData(data) {
-    if (this.data.type !== 'character') return;
+    if (this.data.type !== 'npc') return;
 
     // Copy the ability scores to the top level, so that rolls can use
     // formulas like `@str.mod + 4`.
@@ -134,12 +149,12 @@ export class NovaActor extends Actor {
       }
     }
 
-    ensureArray('data.harm');
-    ensureArray('data.moves');
-    ensureArray('data.variants');
-    ensureArray('data.followers');
-    ensureArray('data.lair');
-    ensureArray('data.commands');
+    //ensureArray('data.harm');
+    //ensureArray('data.moves');
+    //ensureArray('data.variants');
+    //ensureArray('data.followers');
+    //ensureArray('data.lair');
+    //ensureArray('data.commands');
 
     /* update locally and refresh tracker */
     const result = await super.update(data, options);
@@ -161,7 +176,7 @@ export class NovaActor extends Actor {
     /* get current list */
     let current = duplicate(this.data.data[type]);
     if ( current instanceof Array) {
-      current.push(CONFIG.NOVA.DEFAULTS[type]);
+      current.push(game.i18n.localize(CONFIG.NOVA.DEFAULTS[type]));
     } else current = [current, CONFIG.NOVA.DEFAULTS[type]]
     return this.update({[`data.${type}`]: current});
   }

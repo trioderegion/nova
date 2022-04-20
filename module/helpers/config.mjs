@@ -2,12 +2,23 @@ export const NOVA = {};
 
 // Define constants here, such as:
 NOVA.DEFAULTS = {
-  harm: "0 Harm",
-  moves: "New Move",
-  variants: "New Variant",
-  followers: "New Follower",
-  lair: "New Property",
-  commands: "New Command",
+  NPC_ACTION: {
+    harm: "NOVA.NPCActions.Harm",
+    moves: "NOVA.NPCActions.Moves",
+    variants: "NOVA.NPCActions.Variants",
+    followers: "NOVA.NPCActions.Follower",
+    lair: "NOVA.NPCActions.Lair",
+    commands: "NOVA.NPCActions.Commands",
+  },
+  POWER_DATA: {
+    cost: 1,
+    harm: 0,
+    target: "NOVA.None",
+    quantity: 0,
+    band: "NOVA.BandAt",
+    range: 0,
+    special: "",
+  }
 }
 
 /**
@@ -27,6 +38,8 @@ NOVA.range = {
   far: "NOVA.RangeFar",
   beyond: "NOVA.RangeBeyond"
 }
+
+NOVA.rangeIncrements = ['none', 'close', 'near', 'far', 'beyond']
 
 NOVA.powerType = {
   passive: "NOVA.PowerPassive",

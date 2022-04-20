@@ -58,16 +58,18 @@
     "templates": {
       "base": {
         "description": ""
+      },
+      "active": {
+        "harm": []
       }
     },
     "flare": {
       "templates": ["base"],
       "type": "persistent",
       "affects": "none"
-      
     },
     "power": {
-      "templates": ["base"],
+      "templates": ["base", "activated"],
       "type": "passive",
       "mods": [null, null]
     }

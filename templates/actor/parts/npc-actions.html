@@ -15,7 +15,7 @@
         <div class="item-image">
           <a class="rollable" data-roll-type="{{../listField}}"><img src="icons/svg/d20-black.svg" title="{{../rollLabel}}" width="24" height="24"/></a>
         </div>
-        <input type="text" name="data.{{../listField}}" value="{{this}}" data-dtype="String"/>
+        <input type="text" name="data.{{../listField}}.{{@index}}" value="{{this}}" data-dtype="String"/>
       </div>
       <div class="item-controls">
         <a class="item-control item-delete" title="{{../deleteLabel}}"><i class="fas fa-trash"></i></a>

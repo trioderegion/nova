@@ -56,6 +56,13 @@
 
   "NOVA.Keywords": "Keywords",
 
+  "NOVA.NPCActions.Harm": "0 Harm",
+  "NOVA.NPCActions.Moves": "New Move",
+  "NOVA.NPCActions.Variants": "New Variant",
+  "NOVA.NPCActions.Followers": "New Follower",
+  "NOVA.NPCActions.Lair": "New Property",
+  "NOVA.NPCActions.Commands": "New Command",
+
   "NOVA.Harm.Label": "Harm",
   "NOVA.Harm.Use": "Inflicts harm",
 

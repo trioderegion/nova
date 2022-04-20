@@ -1,41 +1,23 @@
 <form class="{{cssClass}}" autocomplete="off">
-  <header class="sheet-header">
-    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
-    <div class="header-fields">
-      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
-    </div>
-  </header>
 
-  {{!-- Sheet Tab Navigation --}}
-  <nav class="sheet-tabs tabs" data-group="primary">
-    {{!-- Default tab is specified in actor-sheet.mjs --}}
-    <a class="item" data-tab="description">{{localize "NOVA.Description"}}</a>
-    <a class="item" data-tab="config">{{localize "NOVA.Config"}}</a>
-  </nav>
-
+  {{!-- Header --}}
+  {{> "systems/nova/templates/item/parts/header.html"}} 
 
   {{!-- Sheet Body --}}
-
-  {{!-- Description Tab --}}
   <section class="sheet-body">
-    <div class="tab description" data-group="primary" data-tab="description">
-      <div class="grid grid-4col">
-        <div>
-          {{> "systems/nova/templates/item/parts/type-attachment.html"}}
-        </div>
-        <div class="grid-span-3">
-          {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
-        </div>
-      </div>
+      
+        {{#if (eq item.type "power")}}
+        {{> "systems/nova/templates/item/parts/config-power.html"}} 
+        {{else}}
+        {{> "systems/nova/templates/item/parts/config-flare.html"}} 
+        {{/if}}
+     
+
+      
+        {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+      
     </div>
 
-    <div class="tab config" data-tab="config">
-      {{#if (eq item.type "power")}}
-      {{> "systems/nova/templates/item/parts/config-power.html"}} 
-      {{else}}
-      {{> "systems/nova/templates/item/parts/config-flare.html"}} 
-      {{/if}}
-    </div>
-  </section>
+    
 
 </form>
