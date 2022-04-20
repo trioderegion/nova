@@ -40,9 +40,11 @@ export class NovaItem extends Item {
    * @private
    */
    getRollData() {
+    let rollData = {};
+    
     // If present, return the actor's roll data.
-    if ( !this.actor ) return null;
-    const rollData = this.actor.getRollData();
+    if ( this.actor ) rollData = this.actor.getRollData();
+
     rollData.item = foundry.utils.deepClone(this.data.data);
 
     return rollData;
@@ -107,5 +109,45 @@ export class NovaItem extends Item {
       flavor: label,
       content: description
     });
+  }
+
+  /** 
+   * Handle adding new harm data
+   */
+  async addHarm(harmData = CONFIG.NOVA.DEFAULTS.HARM_DATA){
+
+    /* accounting for 1.0 -> 1.1 migration where harm was added
+     * to items */
+    const currentHarm = this.data.data.harm ?? [];
+
+    const updatedHarm = currentHarm.concat([harmData]); 
+    await this.update({'data.harm': updatedHarm});
+  }
+
+  /**
+   * Handle deleting harm data
+   * @param {String|Number} name or index
+   */
+  async deleteHarm(identifier) {
+    
+    /* if handed a string, try to parse as a number */
+    let index = parseInt(identifier);
+
+    if(isNaN(index)) {
+      ui.notifications.error('Could not locate harm by index');
+      return;
+    }
+
+    /* accounting for 1.0 -> 1.1 migration where harm was added
+     * to items */
+    let currentHarm = deepClone(this.data.data.harm) ?? [];
+
+    if(index > currentHarm.length) {
+      ui.notifications.error('Invalid harm index provided for removal');
+      return;
+    }
+
+    currentHarm.splice(index,1);
+    await this.update({'data.harm': currentHarm})
   }
 }

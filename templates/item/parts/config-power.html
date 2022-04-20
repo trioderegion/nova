@@ -1,39 +1,22 @@
-<section class="grid grid-5col align-center">
-  <div class="flexrow">
-    <label class="resource-label">{{localize "NOVA.Harm"}}</label>
-  </div>
-  <div class="flexrow">
-    <label class="resource-label">{{localize "NOVA.Range"}}</label>
-  </div>
-  <div class="flexrow">
-    <label class="resource-label">{{localize "NOVA.Target"}}</label>
-  </div>
-  <div class="flexrow grid-span-2">
-    <label class="resource-label">{{localize "NOVA.Quantity"}}</label>
-  </div>
-  <div class="flexrow">
-    <input data-dtype="Number" type="Number" value=0>  
-  </div>
-  <div class="flexrow">
-    <input data-dtype="Number" type="Number" value=0>  
-  </div>
-  <div class="flexrow">
-    <input data-dtype="Number" type="Number" value=0>  
-  </div>
-  <div class="flexrow grid-span-2">
-    <input data-dtype="Number" type="Number" value=0>  
-  </div>
-  <div class="flexrow">
-    <input data-dtype="Number" type="Number" value=0>  
-  </div>
-  <div class="flexrow">
-    <input data-dtype="Number" type="Number" value=0>  
-  </div>
-  <div class="flexrow">
-    <input data-dtype="Number" type="Number" value=0>  
-  </div>
-  <div class="flexrow grid-span-2">
-    <input data-dtype="Number" type="Number" value=0>  
-  </div>
-</section>
+  <ol class="items-list effects-list">
+    <li class="flexrow items-header flex-between">
+      <div class="item-name effect-name">{{localize "NOVA.Harm.Label"}}</div>
+      <div class="item-header-controls">
+        <a class="effect-control" title="{{localize 'EFFECT.MODE_ADD'}}" data-action="create"><i class="fas fa-plus"></i> {{localize 'EFFECT.MODE_ADD'}}</a>
+      </div>
+    </li>
+    {{#if (eq data.type "active")}}
+    {{#each data.harm as |harm|}}
+    <li class="item effect flexrow" data-harm-index="{{@index}}">
+      <div class="item-name effect-name flexrow">
+        <h4>{{harm.name}}</h4>
+      </div>
+      <div class="item-controls effect-controls flexrow">
+        <a class="effect-control" data-action="edit" data-harm-index="{{@index}}" title="{{localize 'NOVA.Harm.Edit'}}"><i class="fas fa-edit"></i></a>
+        <a class="effect-control" data-action="delete" data-harm-index="{{@index}}" title="{{localize 'Nova.Harm.Delete'}}"><i class="fas fa-trash"></i></a>
+      </div>
+    </li>
+    {{/each}}
+    {{/if}}
+  </ol>
 

@@ -10,14 +10,19 @@ NOVA.DEFAULTS = {
     lair: "NOVA.NPCActions.Lair",
     commands: "NOVA.NPCActions.Commands",
   },
-  POWER_DATA: {
-    cost: 1,
-    harm: 0,
-    target: "NOVA.None",
-    quantity: 0,
-    band: "NOVA.BandAt",
-    range: 0,
-    special: "",
+  get HARM_DATA() {
+    return {
+      get name() {
+        return game.i18n.localize("PERMISSION.DEFAULT"); 
+      },
+      cost: 1,
+      harm: 0,
+      target: "NOVA.None",
+      quantity: 0,
+      band: "NOVA.BandAt",
+      range: 0,
+      special: "",
+    }
   }
 }
 

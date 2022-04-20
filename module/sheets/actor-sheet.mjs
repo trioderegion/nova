@@ -128,7 +128,7 @@ export class NovaActorSheet extends ActorSheet {
 
     mergeObject(context, itemTypes); 
 
-    context.powerLayout = {'passive': 'NOVA.AddPassive', 'supernova': 'NOVA.AddSupernova', 'active': 'NOVA.AddPower', };
+    context.powerLayout = {'passive': 'NOVA.PowerPassive', 'supernova': 'NOVA.PowerSupernova', 'active': 'NOVA.FlarePower', };
 
     context.persistentInfo = [{
       id: "",

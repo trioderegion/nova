@@ -524,8 +524,9 @@
   display: -ms-flexbox;
   display: flex;
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 136px;
-  flex: 0 0 136px;
+  -ms-flex: 1;
+  flex: 1;
+  flex-wrap: no-wrap;
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   justify-content: flex-end;
@@ -535,6 +536,7 @@
   font-size: 12px;
   text-align: center;
   margin: 0 6px;
+  flex-shrink: 0;
 }
 
 .nova .items-list .item-controls {

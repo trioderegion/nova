@@ -8,9 +8,9 @@ export class NovaItemSheet extends ItemSheet {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["nova", "sheet", "item"],
+      template: "systems/nova/templates/item/item-sheet.html",
       width: 520,
       height: 480,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
     });
   }
 
@@ -44,9 +44,9 @@ export class NovaItemSheet extends ItemSheet {
 
     context.canAttachFlare = false;
 
+
     let actor = this.object?.parent ?? null;
     if (actor) {
-      context.rollData = actor.getRollData();
 
       /* need an actor to grab any possible flare mods to attach */
       switch (itemData.data.type) {
@@ -61,8 +61,6 @@ export class NovaItemSheet extends ItemSheet {
           compatibleMods.forEach( (mod) => {
             context.modInfo[mod.id] = mod.name;
           });
-
-
 
           break;
         }
@@ -93,8 +91,9 @@ export class NovaItemSheet extends ItemSheet {
 
     }
     // Add the actor's data to context.data for easier access, as well as flags.
-    context.data = itemData.data;
-    context.flags = itemData.flags;
+    context.rollData = this.object.getRollData();
+    context.data = duplicate(itemData.data);
+    context.flags = duplicate(itemData.flags);
 
     context.config = CONFIG.NOVA;
     return context;
@@ -109,6 +108,25 @@ export class NovaItemSheet extends ItemSheet {
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
 
-    // Roll handlers, click handlers, etc. would go here.
+    /* Harm Entry Management */
+    html.find(".effect-control").click(ev => this._onManageHarm(ev));
+  }
+
+  async _onManageHarm(event) {
+    event.preventDefault();
+    const header = event.currentTarget;
+
+    const action = header.dataset.action;
+    const index = header.dataset.harmIndex;
+
+    switch (action) {
+      case 'create':
+        await this.object.addHarm(CONFIG.NOVA.DEFAULTS.HARM_DATA);
+      case 'edit':
+        break;
+      case 'delete':
+        await this.object.deleteHarm(index);
+        break;
+    }
   }
 }
