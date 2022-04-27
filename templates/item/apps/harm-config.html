@@ -1,0 +1,32 @@
+<form class="{{cssClass}} grid grid-6col" autocomplete="off">
+
+  {{!-- subgrid to arrange data field input --}}
+  <input class="grid-span-3" type="text" value="{{name}}" name="name" placeholder="Name">
+  <label class="grid-span-2 align-right" for="harm">{{localize "NOVA.Harm"}}</label>
+  <input type="number" value="{{harm}}" name="harm" placeholder="Harm">
+
+  <span class="grid-span-3">
+    {{localize "NOVA.Cost"}}
+  </span>
+  <input type="number" value="{{cost.value}}" name="cost" placeholder="Cost">
+  <select class="grid-span-2" name="resource">
+    {{selectOptions costResource selected=cost.source localize=true}}
+  </select>
+  <span class="grid-span-3">
+    {{localize "NOVA.Target"}}
+  </span>
+  <input type="number" value="{{target.num}}" name="quantity" placeholder="Qty.">
+  <select class="grid-span-2" name="target">
+    {{selectOptions targetSelect selected=target.type localize=true}}
+  </select>
+  <span class="grid-span-2">
+    {{localize "NOVA.Range"}}
+  </span>
+  <select class="grid-span-2" name="range-min">
+    {{selectOptions rangeSelect selected=range.min localize=true}}
+  </select>
+  <select class="grid-span-2" name="range-max">
+    {{selectOptions rangeSelect selected=range.max localize=true}}
+  </select>
+  <input class="grid-span-6" type="text" value="{{special}}" name="special" placeholder="Special">
+</form>

@@ -1,3 +1,5 @@
+import { HarmConfig } from '../ui/harm-config.mjs'
+
 /**
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
@@ -117,12 +119,14 @@ export class NovaItemSheet extends ItemSheet {
     const header = event.currentTarget;
 
     const action = header.dataset.action;
-    const index = header.dataset.harmIndex;
+    let index = header.dataset.harmIndex;
 
     switch (action) {
       case 'create':
         await this.object.addHarm(CONFIG.NOVA.DEFAULTS.HARM_DATA);
+        index = this.object.data.data.harm.length-1;
       case 'edit':
+        HarmConfig.create(this.object, this.object.data.data.harm[index] );
         break;
       case 'delete':
         await this.object.deleteHarm(index);

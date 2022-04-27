@@ -69,7 +69,7 @@
       "affects": "none"
     },
     "power": {
-      "templates": ["base", "activated"],
+      "templates": ["base", "active"],
       "type": "passive",
       "mods": [null, null]
     }

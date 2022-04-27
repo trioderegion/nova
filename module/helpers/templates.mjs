@@ -13,5 +13,6 @@
     "systems/nova/templates/item/parts/header.html",
     "systems/nova/templates/item/parts/config-power.html",
     "systems/nova/templates/item/parts/config-flare.html",
+    "systems/nova/templates/item/apps/harm-config.html"
   ]);
 };
