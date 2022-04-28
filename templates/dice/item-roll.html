@@ -1,0 +1,23 @@
+{{#*inline "modInfo"}}
+<hr/>
+<div class="flexrow attached-mod">
+  <div class="mod-icon flexrow">
+    <img name="perImg" src="{{img}}"/>{{name}}
+  </div> {{{description}}}
+</div>
+{{/inline}}
+
+{{#*inline "harmButtons"}}
+<div class="nova">
+  <button class="drop-button" disabled>{{localize this}}</button>
+</div>
+{{/inline}}
+
+{{{description}}}
+{{#each mods}}
+{{> modInfo}}
+{{/each}}
+
+{{#each harm}}
+{{> harmButtons}}
+{{/each}}

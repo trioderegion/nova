@@ -21,10 +21,20 @@
   "NOVA.AttributeMoon": "Moon",
   "NOVA.AttributeShade": "Shade",
 
+  "NOVA.Cost": "Cost",
+
+  "NOVA.Range": "Range",
   "NOVA.RangeClose": "Close",
   "NOVA.RangeNear": "Near",
   "NOVA.RangeFar": "Far",
   "NOVA.RangeBeyond": "Beyond",
+
+  "NOVA.Target": "Target",
+  "NOVA.TargetSelf": "Self",
+  "NOVA.TargetAlly": "Ally",
+  "NOVA.TargetEnemy": "Enemy",
+  "NOVA.TargetObject": "Object",
+  "NOVA.TargetAny": "Any",
 
   "NOVA.PowerPassive": "Passive",
   "NOVA.PowerActive": "Active",
@@ -65,6 +75,7 @@
 
   "NOVA.Harm.Label": "Harm",
   "NOVA.Harm.Use": "Inflicts harm",
+  "NOVA.HarmConfigTitle": "Configure Harm Entry: {name}",
 
   "NOVA.Moves.Label": "Moves",
   "NOVA.Move.Use": "Uses a move",

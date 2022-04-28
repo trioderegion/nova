@@ -323,12 +323,11 @@
 }
 
 .attached-mod .mod-icon {
- display:flex;
- flex-grow: 0;
  flex-direction: column;
  font-weight: bold;
  flex-wrap: nowrap;
  align-items: center;
+ flex: 0 0 auto;
 }
 
 .attached-mod .mod-icon img {
@@ -363,6 +362,12 @@
   max-width: 30px;
   margin-left: 5px;
   margin-right: 5px;
+  text-align: center;
+}
+
+.nova .at-end {
+  place-self: flex-end;
+  text-align-last: end;
 }
 
 .nova .drop-button {
@@ -454,6 +459,7 @@
 
 .nova .resource-label {
   font-weight: bold;
+  align-self: center;
 }
 
 .nova .items-header {

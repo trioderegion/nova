@@ -48,50 +48,48 @@ export class NovaItemSheet extends ItemSheet {
 
 
     let actor = this.object?.parent ?? null;
-    if (actor) {
 
       /* need an actor to grab any possible flare mods to attach */
       switch (itemData.data.type) {
         case 'active': {
-          context.canAttachFlare = true;
+          context.canAttachFlare = !!actor;
 
-          /* collect all flare mods that we could attach to a power (i.e. not persistant and not already in use) */
-          const compatibleMods = actor.items.filter( item => item.type == 'flare' && item.data.data.type == 'power' 
-            && (item.data.data.affects == 'any' || item.data.data.affects == context.item.id) )
+          if(actor) {
+            /* collect all flare mods that we could attach to a power (i.e. not persistant and not already in use) */
+            const compatibleMods = actor.items.filter( item => item.type == 'flare' && item.data.data.type == 'power' 
+              && (item.data.data.affects == 'any' || item.data.data.affects == context.item.id) )
 
-          /* populate information for display */
-          compatibleMods.forEach( (mod) => {
-            context.modInfo[mod.id] = mod.name;
-          });
+            /* populate information for display */
+            compatibleMods.forEach( (mod) => {
+              context.modInfo[mod.id] = mod.name;
+            });
+          }
 
           break;
         }
-        case 'flare': {
+        case 'persistent':
+          context.canBeAttached = true;
+          /* can affect [spark, passive power, supernova power] */
+          context.affectInfo = {'spark': game.i18n.localize('NOVA.Spark'), 'passive': game.i18n.localize('NOVA.PowerPassive'), 'supernova': game.i18n.localize('NOVA.PowerSupernova')};
+          break;
+        case 'power':
 
-          /* populate 'affects' selection based on type */
-          switch (itemData.data.type){
-            case 'persistent':
-              /* can affect [spark, passive power, supernova power] */
-              context.affectInfo = {'spark': game.i18n.localize('NOVA.Spark'), 'passive': game.i18n.localize('NOVA.PowerPassive'), 'supernova': game.i18n.localize('NOVA.PowerSupernova')};
-              break;
-            case 'power':
-              /* can affect [any power, specific power] */
-              context.affectInfo = {'none': game.i18n.localize('NOVA.None'), 'any': game.i18n.localize('NOVA.Any')};
+          context.canBeAttached = true;
+          /* can affect [any power, specific power] */
+          context.affectInfo = {'none': game.i18n.localize('NOVA.None'), 'any': game.i18n.localize('NOVA.Any')};
 
-              /* collect all powers attached to the parent actor */
-              const powers = actor.items.filter( item => item.type == 'power' && item.data.data.type == 'active' );
-              powers.forEach( power => {
-                context.affectInfo[power.id] = power.name;
-              })
-              break;
+          if (actor) {
+            /* collect all powers attached to the parent actor */
+            const powers = actor.items.filter( item => item.type == 'power' && item.data.data.type == 'active' );
+            powers.forEach( power => {
+              context.affectInfo[power.id] = power.name;
+            })
           }
           break;
-        }
         default: break;
       }
 
 
-    }
     // Add the actor's data to context.data for easier access, as well as flags.
     context.rollData = this.object.getRollData();
     context.data = duplicate(itemData.data);
@@ -126,11 +124,11 @@ export class NovaItemSheet extends ItemSheet {
         await this.object.addHarm(CONFIG.NOVA.DEFAULTS.HARM_DATA);
         index = this.object.data.data.harm.length-1;
       case 'edit':
-        HarmConfig.create(this.object, this.object.data.data.harm[index] );
-        break;
+        const harmData = await HarmConfig.create(this.object, this.object.data.data.harm[index] );
+        if(!harmData) return;
+        return this.object.updateHarm(index, harmData);
       case 'delete':
-        await this.object.deleteHarm(index);
-        break;
+        return this.object.deleteHarm(index);
     }
   }
 }

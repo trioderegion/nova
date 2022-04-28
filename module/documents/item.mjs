@@ -50,7 +50,7 @@ export class NovaItem extends Item {
     return rollData;
   }
 
-  getChatData() {
+  async getChatData() {
     const item = this.data;
     
     // Initialize chat data.
@@ -59,21 +59,20 @@ export class NovaItem extends Item {
     const label = `<img src="${item.img}" width="36" heigh="36"/><h3>${item.name}</h3>`;
 
     let description = item.data.description ?? '';
-
-    const content = (mod) => {
-      return `<hr/><div class="flexrow attached-mod"><div class="mod-icon flexrow"><img name="perImg" src="${mod.data.img}"/>${mod.name}</div> ${mod.data.data.description}</div>`;
-    }
+    let mods = [];
+    let harm = []
 
     /* if attached to an actor, see if we can find any relevant mod info */
     if (this.actor) {
       if (this.type == 'power') {
 
+        /* construct info about attached flare mods */
         switch (this.data.data.type) {
           case 'active':
             this.data.data.mods.forEach( modId => {
               const mod = this.actor.items.get(modId);
               if (mod) {
-                description += content(mod);
+                mods.push({name: mod.data.name, img: mod.data.img, description: mod.data.data.description});
               }
             });
             break;
@@ -82,15 +81,21 @@ export class NovaItem extends Item {
             this.actor.data.data.mods.forEach( persistentMod => {
               const mod = this.actor.items.get(persistentMod);
               if (mod?.data.data.affects == this.data.data.type){
-                description += content(mod);
+                mods.push({name: mod.data.name, img: mod.data.img, description: mod.data.data.description});
               }
             });
             break;
         }
+
+        /* construct info about available Harm */
+        harm = this.data.data.harm?.map( harm => harm.name ) ?? [];
       }
     }
 
-    return {speaker, rollMode, label, description}
+    const html = await renderTemplate("systems/nova/templates/dice/item-roll.html", {mods, description, harm});
+    
+
+    return {speaker, rollMode, label, description: html}
   }
 
   /**
@@ -100,7 +105,7 @@ export class NovaItem extends Item {
    */
   async roll() {
 
-    const {speaker, rollMode, label, description} = this.getChatData();
+    const {speaker, rollMode, label, description} = await this.getChatData();
 
     //send chat message
     return ChatMessage.create({
@@ -110,6 +115,35 @@ export class NovaItem extends Item {
       content: description
     });
   }
+
+  _getHarm(identifier) {
+
+    /* if handed a string, try to parse as a number */
+    let index = parseInt(identifier);
+
+    if(isNaN(index)) {
+      ui.notifications.error('Could not locate harm by index');
+      return false;
+    }
+
+    /* accounting for 1.0 -> 1.1 migration where harm was added
+     * to items */
+    const currentHarm = this.data.data.harm ?? [];
+
+    if(index > currentHarm.length) {
+      ui.notifications.error('Invalid harm index provided');
+      return false;
+    }
+
+    return {
+      index,
+      _harmSource: currentHarm,
+      get harmArray() {
+        return deepClone(this._harmSource);
+      }
+    }
+  }
+
 
   /** 
    * Handle adding new harm data
@@ -129,25 +163,24 @@ export class NovaItem extends Item {
    * @param {String|Number} name or index
    */
   async deleteHarm(identifier) {
-    
-    /* if handed a string, try to parse as a number */
-    let index = parseInt(identifier);
 
-    if(isNaN(index)) {
-      ui.notifications.error('Could not locate harm by index');
-      return;
-    }
+    const harmInfo = this._getHarm(identifier);
+    if(!harmInfo) return false;
 
-    /* accounting for 1.0 -> 1.1 migration where harm was added
-     * to items */
-    let currentHarm = deepClone(this.data.data.harm) ?? [];
+    let currentHarm = harmInfo.harmArray;
 
-    if(index > currentHarm.length) {
-      ui.notifications.error('Invalid harm index provided for removal');
-      return;
-    }
+    currentHarm.splice(harmInfo.index,1);
+    await this.update({'data.harm': currentHarm})
+  }
 
-    currentHarm.splice(index,1);
+  async updateHarm(identifier, harmData) {
+
+    const harmInfo = this._getHarm(identifier);
+    if(!harmInfo) return false;
+
+    let currentHarm = harmInfo.harmArray;
+
+    mergeObject(currentHarm[harmInfo.index], harmData);
     await this.update({'data.harm': currentHarm})
   }
 }

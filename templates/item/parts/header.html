@@ -28,6 +28,15 @@
       {{/each}}
     </div>
     {{/if}}
+    {{#if canBeAttached}}
+    <div class="flexrow grid-span-6">
+      <label class="resource-label grid-span-2">{{localize "NOVA.Affects"}}</label>
+      <select name="data.affects">
+        {{selectOptions affectInfo selected=data.affects inverted=false}}
+      </select>
+    </div>
+    {{/if}}
+    
 
   </div>
 </header>
