@@ -50,6 +50,11 @@ NOVA.costResource = {
   'data.attributes.shade.value': "NOVA.AttributeShade"
 }
 
+NOVA.changeColors = {
+  neg: 0xFF0000,
+  pos: 0x00FF00
+}
+
 NOVA.target = {
   self: "NOVA.TargetSelf",
   ally: "NOVA.TargetAlly",

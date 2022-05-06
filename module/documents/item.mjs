@@ -54,7 +54,7 @@ export class NovaItem extends Item {
     const item = this.data;
     
     // Initialize chat data.
-    const speaker = ChatMessage.getSpeaker({ token: this.actor.token ?? this.actor.getActiveTokens()[0], actor: this.actor });
+    const speaker = ChatMessage.getSpeaker({ token: this.actor.token ?? this.actor.getActiveTokens()[0].document, actor: this.actor });
     const label = `<img src="${item.img}" width="36" heigh="36"/><h3>${item.name}</h3>`;
 
     let description = item.data.description ?? '';
@@ -98,14 +98,14 @@ export class NovaItem extends Item {
   }
 
   async getHarmChatData(harmInfo, {rollMode = game.settings.get('core', 'rollMode')} = {}) {
-    //const item = this.data;
+    const item = this.data;
     let targets = [];
     game.user.targets.forEach( target => targets.push(target.actor.uuid) );
     const casters = [this.actor.uuid];
 
     // Initialize chat data.
-    const speaker = ChatMessage.getSpeaker({ token: this.actor.token ?? this.actor.getActiveTokens()[0], actor: this.actor });
-    const label = `<strong>${this.name} - ${harmInfo.name}</strong>`;
+    const speaker = ChatMessage.getSpeaker({ token: this.actor.token ?? this.actor.getActiveTokens()[0].document, actor: this.actor });
+    const label = `<img src="${item.img}" width="36" height="36"/><strong>${this.name} - ${harmInfo.name}</strong>`;
 
     let data = {harmInfo, casters, targets, itemUuid: this.uuid};
     data.resourceLabel = game.i18n.format("NOVA.SpendResource", {num: harmInfo.cost.value, resource: game.i18n.localize(CONFIG.NOVA.costResource[harmInfo.cost.source])});
@@ -153,14 +153,38 @@ export class NovaItem extends Item {
       return false;
     }
 
+    const item = this;
+
     return {
-      index,
+      _spendRoll: null,
+      _harmRoll: null,
       _harmSource: currentHarm,
+      index,
       get harmArrayClone() {
         return deepClone(this._harmSource);
       },
       get harm() {
         return this._harmSource[this.index];
+      },
+      async evalHarm() {
+        let harm = duplicate(this._harmSource[this.index]);
+
+        if(!this._spendRoll || !this._harmRoll) {
+          const rollData = item.getRollData();
+
+          if (!this._spendRoll) {
+            this._spendRoll = await new Roll(harm.cost.value, rollData).evaluate({async:true}); 
+          } 
+
+          if (!this._harmRoll) {
+            this._harmRoll = await new Roll(harm.harm.value, rollData).evaluate({async:true});
+          }
+        }
+
+        harm.cost.value = this._spendRoll.total;
+        harm.harm.value = this._harmRoll.total; 
+
+        return harm;
       }
     }
   }
@@ -207,7 +231,8 @@ export class NovaItem extends Item {
 
   async rollHarm(identifier, {createChatMessage = true, rollModeOverride} = {}) {
     const harmInfo = this.getHarmInfo(identifier);
-    const {speaker, rollMode, label, description} = await this.getHarmChatData(harmInfo.harm, {rollMode: rollModeOverride});
+
+    const {speaker, rollMode, label, description} = await this.getHarmChatData( await harmInfo.evalHarm(), {rollMode: rollModeOverride});
 
     return ChatMessage.create({
       speaker,
@@ -218,16 +243,16 @@ export class NovaItem extends Item {
 
   }
 
-  async _applyHarmChange(path, targets, change) {
+  async _applyUseChange(path, targets, change) {
 
     if(typeof targets == 'string') targets = [targets];
 
     const promises = targets.map( async (targetUuid) => {
-      const target = await fromUuid(targetUuid);
-      const finalChange = (await new Roll(change, this.getRollData()).evaluate({async:true})).total;
+      let target = await fromUuid(targetUuid);
+      target = target instanceof TokenDocument ? target.actor : target;
 
       const original = getProperty(target.data, path);
-      return target.update({[path]: original - finalChange});
+      return target.update({[path]: original + change}, {change, source: game.i18n.localize(CONFIG.NOVA.costResource[path])});
     })
 
     return Promise.all(promises);
@@ -257,11 +282,13 @@ export class NovaItem extends Item {
     event.preventDefault();
     const button = event.currentTarget;
     const {itemUuid} = button.closest(".harm-apply").dataset;
-    const {path, targets, change} = button.dataset;
+    let {path, targets, change} = button.dataset;
+    targets = targets.split(',');
     
     const item = await fromUuid(itemUuid);
 
-    return item._applyHarmChange(path, targets, change);
+    change = Number(change);
+    return item._applyUseChange(path, targets, -change);
   }
   
 }

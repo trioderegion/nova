@@ -126,13 +126,13 @@ export class NovaActor extends Actor {
    * Prepare character roll data.
    */
   _getCharacterRollData(data) {
-    if (this.data.type !== 'npc') return;
+    if (this.data.type == 'npc') return;
 
     // Copy the ability scores to the top level, so that rolls can use
     // formulas like `@str.mod + 4`.
     if (data.attributes) {
       for (let [k, v] of Object.entries(data.attributes)) {
-        data[k] = foundry.utils.deepClone(v);
+        data[k] = v.total;
       }
     }
   }
@@ -161,6 +161,37 @@ export class NovaActor extends Actor {
     ui.combat.render();
 
     return result;
+  }
+
+  _onUpdate(data, options, userId) {
+    super._onUpdate(data, options, userId);
+    this._showScrollingText(options.change, options.source);
+  }
+
+  /*
+   * Displays change on all token's owned by this actor
+   *
+   *
+   * LICENSE: Body of showScrollingText taken from
+   * Actor5e#_displayScrollingDamage.
+   * MIT Copyright 2021 Andrew Clayton
+   * https://gitlab.com/foundrynet/dnd5e/-/blob/master/LICENSE.txt
+   */
+  _showScrollingText(change, label) {
+
+    if ( !change ) return;
+    change = Number(change);
+    const tokens = this.isToken ? [this.token?.object] : this.getActiveTokens(true);
+    for ( let t of tokens ) {
+      t.hud.createScrollingText(`${change.signedString()} ${label}`, {
+        anchor: CONST.TEXT_ANCHOR_POINTS.TOP,
+        fontSize: 48, // Range between [16, 48]
+        fill: CONFIG.NOVA.changeColors[change < 0 ? "neg" : "pos"],
+        stroke: 0x000000,
+        strokeThickness: 4,
+        jitter: 0.25
+      });
+    }
   }
 
   /**
