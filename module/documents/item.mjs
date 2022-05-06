@@ -104,16 +104,24 @@ export class NovaItem extends Item {
     const casters = [this.actor.uuid];
 
     // Initialize chat data.
-    const speaker = ChatMessage.getSpeaker({ token: this.actor.token ?? this.actor.getActiveTokens()[0].document, actor: this.actor });
-    const label = `<img src="${item.img}" width="36" height="36"/><strong>${this.name} - ${harmInfo.name}</strong>`;
+    let speaker = ChatMessage.getSpeaker({ token: this.actor.token ?? this.actor.getActiveTokens()[0].document, actor: this.actor });
 
-    let data = {harmInfo, casters, targets, itemUuid: this.uuid};
+    speaker.alias += `: ${this.name} - ${harmInfo.name}`
+
+    //const label = `<img src="${item.img}" width="36" height="36"/><strong>${this.name} - ${harmInfo.name}</strong>`;
+
+    const footEntries = NovaItem.footerEntries(harmInfo);
+    const harmFooter = footEntries.reduce( (acc, entry) => {
+      return acc += `${acc.length == 0 ? '' : ' |'} ${entry}` 
+    },"");
+
+    let data = {harmInfo, casters, targets, itemUuid: this.uuid, harmFooter};
     data.resourceLabel = game.i18n.format("NOVA.SpendResource", {num: harmInfo.cost.value, resource: game.i18n.localize(CONFIG.NOVA.costResource[harmInfo.cost.source])});
     data.harmLabel = game.i18n.format("NOVA.ApplyHarm", {num: harmInfo.harm.value});
 
     const html = await renderTemplate("systems/nova/templates/chat/harm-roll.html", data);
 
-    return {speaker, label, description: html, rollMode};
+    return {speaker, /*label,*/ description: html, rollMode};
   }
 
   /**
@@ -232,12 +240,12 @@ export class NovaItem extends Item {
   async rollHarm(identifier, {createChatMessage = true, rollModeOverride} = {}) {
     const harmInfo = this.getHarmInfo(identifier);
 
-    const {speaker, rollMode, label, description} = await this.getHarmChatData( await harmInfo.evalHarm(), {rollMode: rollModeOverride});
+    const {speaker, rollMode, /*label,*/ description} = await this.getHarmChatData( await harmInfo.evalHarm(), {rollMode: rollModeOverride});
 
     return ChatMessage.create({
       speaker,
       rollMode,
-      flavor: label,
+      //flavor: label,
       content: description
     }, {temporary: !createChatMessage});
 
@@ -290,5 +298,30 @@ export class NovaItem extends Item {
     change = Number(change);
     return item._applyUseChange(path, targets, -change);
   }
+
+  static footerEntries(harmInfo) {
+    let entries = [];
+    if(harmInfo.target.type !== 'none'){
+      /* add target info */
+      entries.push(`${game.i18n.localize('NOVA.Target')}: ${harmInfo.target.value.length == 0 ? '' : harmInfo.target.value + ' '}${game.i18n.localize(CONFIG.NOVA.target[harmInfo.target.type])}`);
+    }
+
+    if(!!harmInfo.range.min || !!harmInfo.range.max) {
+      let entry = game.i18n.localize('NOVA.Range') + ': '
+      const min = game.i18n.localize(CONFIG.NOVA.range[harmInfo.range.min]) ?? '';
+      const max = game.i18n.localize(CONFIG.NOVA.range[harmInfo.range.max]) ?? '';
+
+      if( !!min && !!max ){
+        entry += `${min} - ${max}`
+      } else {
+        entry += `${min}${max}`;
+      }
+
+      entries.push(entry);
+    }
+
+    return entries;
+  }
   
 }
+
