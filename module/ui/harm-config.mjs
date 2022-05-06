@@ -43,7 +43,9 @@ export class HarmConfig extends Dialog {
   static _parseHarmForm(html) {
     const harmData = {
       name: html[0].querySelector("[name=name]").value,
-      harm: html[0].querySelector("[name=harm]").value,
+      harm: {
+        value: html[0].querySelector("[name=harm]").value,
+      },
       cost: {
         value: html[0].querySelector("[name=cost]").value,
         source: html[0].querySelector("[name=resource]").value

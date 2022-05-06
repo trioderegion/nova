@@ -50,12 +50,11 @@ export class NovaItem extends Item {
     return rollData;
   }
 
-  async getChatData() {
+  async getItemChatData({rollMode = game.settings.get('core', 'rollMode') } = {}) {
     const item = this.data;
     
     // Initialize chat data.
-    const speaker = ChatMessage.getSpeaker({ actor: this.actor });
-    const rollMode = game.settings.get('core', 'rollMode');
+    const speaker = ChatMessage.getSpeaker({ token: this.actor.token ?? this.actor.getActiveTokens()[0], actor: this.actor });
     const label = `<img src="${item.img}" width="36" heigh="36"/><h3>${item.name}</h3>`;
 
     let description = item.data.description ?? '';
@@ -92,20 +91,39 @@ export class NovaItem extends Item {
       }
     }
 
-    const html = await renderTemplate("systems/nova/templates/dice/item-roll.html", {mods, description, harm});
+    const html = await renderTemplate("systems/nova/templates/dice/item-roll.html", {mods, description, harm, uuid: this.uuid});
     
 
     return {speaker, rollMode, label, description: html}
   }
 
+  async getHarmChatData(harmInfo, {rollMode = game.settings.get('core', 'rollMode')} = {}) {
+    //const item = this.data;
+    let targets = [];
+    game.user.targets.forEach( target => targets.push(target.actor.uuid) );
+    const casters = [this.actor.uuid];
+
+    // Initialize chat data.
+    const speaker = ChatMessage.getSpeaker({ token: this.actor.token ?? this.actor.getActiveTokens()[0], actor: this.actor });
+    const label = `<strong>${this.name} - ${harmInfo.name}</strong>`;
+
+    let data = {harmInfo, casters, targets, itemUuid: this.uuid};
+    data.resourceLabel = game.i18n.format("NOVA.SpendResource", {num: harmInfo.cost.value, resource: game.i18n.localize(CONFIG.NOVA.costResource[harmInfo.cost.source])});
+    data.harmLabel = game.i18n.format("NOVA.ApplyHarm", {num: harmInfo.harm.value});
+
+    const html = await renderTemplate("systems/nova/templates/chat/harm-roll.html", data);
+
+    return {speaker, label, description: html, rollMode};
+  }
+
   /**
-   * Handle clickable rolls.
-   * @param {Event} event   The originating click event
+   * Handle rolling
+   * @param 
    * @private
    */
-  async roll() {
+  async roll({rollModeOverride, createMessage=true} = {}) {
 
-    const {speaker, rollMode, label, description} = await this.getChatData();
+    const {speaker, rollMode, label, description} = await this.getItemChatData({rollMode: rollModeOverride});
 
     //send chat message
     return ChatMessage.create({
@@ -116,7 +134,7 @@ export class NovaItem extends Item {
     });
   }
 
-  _getHarm(identifier) {
+  getHarmInfo(identifier) {
 
     /* if handed a string, try to parse as a number */
     let index = parseInt(identifier);
@@ -138,8 +156,11 @@ export class NovaItem extends Item {
     return {
       index,
       _harmSource: currentHarm,
-      get harmArray() {
+      get harmArrayClone() {
         return deepClone(this._harmSource);
+      },
+      get harm() {
+        return this._harmSource[this.index];
       }
     }
   }
@@ -164,10 +185,10 @@ export class NovaItem extends Item {
    */
   async deleteHarm(identifier) {
 
-    const harmInfo = this._getHarm(identifier);
+    const harmInfo = this.getHarmInfo(identifier);
     if(!harmInfo) return false;
 
-    let currentHarm = harmInfo.harmArray;
+    let currentHarm = harmInfo.harmArrayClone;
 
     currentHarm.splice(harmInfo.index,1);
     await this.update({'data.harm': currentHarm})
@@ -175,12 +196,72 @@ export class NovaItem extends Item {
 
   async updateHarm(identifier, harmData) {
 
-    const harmInfo = this._getHarm(identifier);
+    const harmInfo = this.getHarmInfo(identifier);
     if(!harmInfo) return false;
 
-    let currentHarm = harmInfo.harmArray;
+    let currentHarm = harmInfo.harmArrayClone;
 
     mergeObject(currentHarm[harmInfo.index], harmData);
     await this.update({'data.harm': currentHarm})
   }
+
+  async rollHarm(identifier, {createChatMessage = true, rollModeOverride} = {}) {
+    const harmInfo = this.getHarmInfo(identifier);
+    const {speaker, rollMode, label, description} = await this.getHarmChatData(harmInfo.harm, {rollMode: rollModeOverride});
+
+    return ChatMessage.create({
+      speaker,
+      rollMode,
+      flavor: label,
+      content: description
+    }, {temporary: !createChatMessage});
+
+  }
+
+  async _applyHarmChange(path, targets, change) {
+
+    if(typeof targets == 'string') targets = [targets];
+
+    const promises = targets.map( async (targetUuid) => {
+      const target = await fromUuid(targetUuid);
+      const finalChange = (await new Roll(change, this.getRollData()).evaluate({async:true})).total;
+
+      const original = getProperty(target.data, path);
+      return target.update({[path]: original - finalChange});
+    })
+
+    return Promise.all(promises);
+  }
+
+  static _chatListeners(html) {
+    html.on("click", ".harm-button button", this._onItemCardAction.bind(this));
+    html.on("click", ".harm-apply button", this._onHarmButtonAction.bind(this));
+
+  }
+
+  static async _onItemCardAction(event) {
+
+    event.preventDefault();
+    const button = event.currentTarget;
+    const harmId = button.dataset.harmIndex;
+    const {itemUuid} = button.closest(".harm-button").dataset;
+
+    const item = await fromUuid(itemUuid);
+
+    return item.rollHarm(harmId);
+
+  }
+
+  static async _onHarmButtonAction(event) {
+
+    event.preventDefault();
+    const button = event.currentTarget;
+    const {itemUuid} = button.closest(".harm-apply").dataset;
+    const {path, targets, change} = button.dataset;
+    
+    const item = await fromUuid(itemUuid);
+
+    return item._applyHarmChange(path, targets, change);
+  }
+  
 }

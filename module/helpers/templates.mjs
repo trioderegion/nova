@@ -15,5 +15,6 @@
     "systems/nova/templates/item/parts/config-flare.html",
     "systems/nova/templates/item/apps/harm-config.html",
     "systems/nova/templates/dice/item-roll.html",
+    "systems/nova/templates/chat/harm-roll.html",
   ]);
 };

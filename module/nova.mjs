@@ -61,9 +61,20 @@ Hooks.once('init', async function() {
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("nova", NovaItemSheet, { makeDefault: true });
 
-  /* init hooks */
-  Hooks.on('renderChatLog', (app, html)=>{DropRoll._claimListener(html)});
-  Hooks.on('createChatMessage', (msg) => {DropRoll._updateClaimed(msg)});
+  /*************
+  * init hooks 
+  *************/
+
+  /* chat log listeners */
+  Hooks.on('renderChatLog', (app, html) => {
+    DropRoll._claimListener(html);
+    NovaItem._chatListeners(html);
+  });
+
+  /* drop claim message monitor and drop message modifier */
+  Hooks.on('createChatMessage', (msg) => {
+    DropRoll._updateClaimed(msg)
+  });
   
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();

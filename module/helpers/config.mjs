@@ -16,7 +16,7 @@ NOVA.DEFAULTS = {
         return game.i18n.localize("NOVA.Harm.Label"); 
       },
       cost: {value: "1", source: 'data.fuel.value'},
-      harm: '0',
+      harm: {value: '0', source: 'data.health.value'},
       target: {type: 'none', value: ''},
       range: {min: '', max: ''},
       special: "",

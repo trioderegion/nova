@@ -1,0 +1,9 @@
+<span class="nova">
+  <div class="flexcol">
+    <p>{{harmInfo.special}}</p>
+  </div>
+  <div class="harm-apply flexrow", data-item-uuid="{{itemUuid}}">
+    <button data-path="{{harmInfo.cost.source}}" data-targets="{{casters}}" data-change="{{harmInfo.cost.value}}">{{resourceLabel}}</button>
+    <button data-path="{{harmInfo.harm.source}}" data-targets="{{targets}}" data-change="{{harmInfo.harm.value}}">{{harmLabel}}</button>
+  </div>
+</span>

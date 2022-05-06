@@ -40,6 +40,9 @@
   "NOVA.PowerActive": "Active",
   "NOVA.PowerSupernova": "Supernova",
 
+  "NOVA.SpendResource": "Spend {num} {resource}",
+  "NOVA.ApplyHarm": "Apply {num} Harm",
+
   "NOVA.FlareMods": "Flare Mods",
   "NOVA.Type": "Type",
   "NOVA.FlarePower": "Power",
