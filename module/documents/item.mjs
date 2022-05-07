@@ -269,6 +269,7 @@ export class NovaItem extends Item {
   static _chatListeners(html) {
     html.on("click", ".harm-button button", this._onItemCardAction.bind(this));
     html.on("click", ".harm-apply button", this._onHarmButtonAction.bind(this));
+    html.on("contextmenu", ".harm-apply button", this._onHarmButtonAction.bind(this));
 
   }
 
@@ -288,10 +289,24 @@ export class NovaItem extends Item {
   static async _onHarmButtonAction(event) {
 
     event.preventDefault();
+
+    /* we are intercepting a right click for "auto-damage" */
+    event.stopPropagation();
+
     const button = event.currentTarget;
     const {itemUuid} = button.closest(".harm-apply").dataset;
     let {path, targets, change} = button.dataset;
-    targets = targets.split(',');
+
+    if (event.type == 'click') {
+      /* apply change to selected */
+      targets = canvas.tokens.controlled.map( token => token.actor.uuid );
+    } else if (event.type == 'contextmenu') {
+      /* apply change to predefined targets/source */
+      targets = targets.split(',');
+    } else {
+      /* um...no clue */
+      targets = []
+    }
     
     const item = await fromUuid(itemUuid);
 

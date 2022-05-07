@@ -253,7 +253,7 @@ export class NovaActor extends Actor {
       flags: {nova: {claim: messageId}}
     });
 
-    return this.update({[updateField]: {value: Math.min(field.value + 1, field.max)}})
+    return this.update({[updateField]: {value: Math.min(field.value + Number(dropInfo.dropCount), field.max)}})
   }
 
   get hp() {
