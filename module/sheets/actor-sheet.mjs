@@ -64,7 +64,7 @@ export class NovaActorSheet extends ActorSheet {
     let npcActions = [];
 
     /* all npcs have harm and move */
-    npcActions.push(NovaActorSheet._createNpcActionSet(context.data.harm, "harm", "NOVA.Harm.Label", "NOVA.Harm.Use"));
+
     npcActions.push(NovaActorSheet._createNpcActionSet(context.data.moves, "moves", "NOVA.Moves.Label", "NOVA.Move.Use"));
 
     /* elites have a few more */
@@ -73,13 +73,31 @@ export class NovaActorSheet extends ActorSheet {
       npcActions.push(NovaActorSheet._createNpcActionSet(context.data.lair, "lair", "NOVA.Lair.Label", "NOVA.Lair.Use"));
     }
 
+    /* any NPC can have a variant */
     npcActions.push(NovaActorSheet._createNpcActionSet(context.data.variants, "variants", "NOVA.Variants.Label", "NOVA.Variant.Use"));
 
+    /* but only Elites have followers */
     if (context.data.elite) {
       npcActions.push(NovaActorSheet._createNpcActionSet(context.data.followers, "followers", "NOVA.Followers.Label", "NOVA.Follower.Use"));
     }
 
     context.npcActions = npcActions;
+    context.npcHarm = NovaActorSheet._createNpcActionSet(context.data.harm, "harm", "NOVA.Harm.Label", "NOVA.Harm.Use")
+
+    /* migration from 1.0 to 1.1 data structure -- harm for NPCs is a 2 entry array */
+    if (typeof context.npcHarm.entries == 'object') {
+      //handlebars mangled arrays somehow got through, correct this
+      context.npcHarm.entries = Object.values(context.npcHarm.entries);
+    }
+
+    context.npcHarm.entries = context.npcHarm.entries.map( entry => {
+      if (typeof entry == 'string') {
+        //1.0 version, make into 2d array
+        return [0, entry];
+      }
+
+      return entry;
+    })
     return;
   }
 
@@ -267,19 +285,26 @@ export class NovaActorSheet extends ActorSheet {
     const npcData = $(event.currentTarget).parents(".item");
 
     // Handle rolls.
-    if (dataset.rollType) {
-      if (dataset.rollType == 'item') {
+    switch (dataset.rollType) {
+      case 'item': {
         const itemId = element.closest('.item').dataset.itemId;
         const item = this.actor.items.get(itemId);
         if (item) return item.roll();
-      } else if (dataset.rollType == "attribute") {
+        break;
+      } 
+      case "attribute": {
         return attributeRoll( dataset.attribute, this.actor );  
-      } else {
+      } 
+      case 'harm': {
+        const index = npcData.data('index');
+        const harm = this.actor.data.data.harm[index]; 
+        return this.actor.harmRoll(harm[0], harm[1]);
+      }
+      default:
         /* it must be a 'plain' action */
         const index = npcData.data('index');
         const flavor = npcData.data('flavor'); 
         return npcRoll(index, this.actor, this.actor.data.data[dataset.rollType], flavor);
-      }
     }
   }
 

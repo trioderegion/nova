@@ -1,6 +1,30 @@
 <section >
+  <ol class="items-list">
+    <li class="item flexrow items-header">
+      <div class="item-name">{{npcHarm.label}}</div>
+      <div class="item header-controls">
+        <a class="item-control item-create" title="{{npcHarm.addLabel}}" data-item-type="{{npcHarm.listField}}"><i class="fas fa-plus"></i> {{localize "NOVA.AddEntry"}}</a>
+      </div>
+    </li>
+    {{log this}}
+    {{#each npcHarm.entries as |entry index|}}
+    {{log "entry"}}
+    {{log this}}
+    <li class="item flexrow" data-npc-item="{{../npcHarm.listField}}" data-index="{{index}}">
+      <div class="item-name">
+        <div class="item-image">
+          <a class="rollable" data-roll-type="{{../npcHarm.listField}}"><img src="icons/svg/d20-black.svg" title="{{../npcHarm.rollLabel}}" width="24" height="24"/></a>
+        </div>
+        <input type="text" name="data.{{../npcHarm.listField}}.{{index}}" value="{{entry.[0]}}" data-dtype="String"/>
+        <input type="text" name="data.{{../npcHarm.listField}}.{{index}}" value="{{entry.[1]}}" data-dtype="String" placeholder="Special"/>
+      </div>
+      <div class="item-controls">
+        <a class="item-control item-delete" title="{{../npcHarm.deleteLabel}}"><i class="fas fa-trash"></i></a>
+      </div>
+    </li>
+    {{/each}}
+  </ol>
   {{#each npcActions}}
-  {{log this}}
   <ol class="items-list">
     <li class="item flexrow items-header">
       <div class="item-name">{{this.label}}</div>
@@ -9,7 +33,6 @@
       </div>
     </li>
     {{#each this.entries}}
-    {{log this}}
     <li class="item flexrow" data-npc-item="{{../listField}}" data-index="{{@index}}", data-flavor="{{../flavor}}">
       <div class="item-name">
         <div class="item-image">

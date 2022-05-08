@@ -58,7 +58,7 @@ export const statusEffects = [
 // Define constants here, such as:
 NOVA.DEFAULTS = {
   NPC_ACTION: {
-    harm: "NOVA.NPCActions.Harm",
+    harm: ["0", "NOVA.NPCActions.Harm"],
     moves: "NOVA.NPCActions.Moves",
     variants: "NOVA.NPCActions.Variants",
     followers: "NOVA.NPCActions.Follower",

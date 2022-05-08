@@ -5,7 +5,9 @@
   </div>
   {{/if}}
   <div class="harm-apply flexrow", data-item-uuid="{{itemUuid}}">
+    {{#unless proxy}}
     <button data-path="{{harmInfo.cost.source}}" data-targets="{{casters}}" data-change="{{harmInfo.cost.value}}">{{resourceLabel}}</button>
+    {{/unless}}
     <button data-path="{{harmInfo.harm.source}}" data-targets="{{targets}}" data-change="{{harmInfo.harm.value}}">{{harmLabel}}</button>
   </div>
   <div class="harm-footer">

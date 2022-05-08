@@ -1,7 +1,26 @@
 import { MODULE } from '../helpers/module.mjs'
 import { attributeRoll } from '../helpers/dice.mjs'
 
-const ActorData = foundry.data.ActorData
+const ActorData = foundry.data.ActorData;
+
+export async function applyUseChange(path, targets, change) {
+
+  if(typeof targets == 'string') targets = [targets];
+
+  const promises = targets.map( async (targetUuid) => {
+    let target = await fromUuid(targetUuid);
+    target = target instanceof TokenDocument ? target.actor : target;
+    if (target.isOwner) {
+      const original = getProperty(target.data, path);
+      return target.update({[path]: original + change}, {change, source: game.i18n.localize(CONFIG.NOVA.costResource[path])});
+    }
+
+    return false;
+  })
+
+  return Promise.all(promises);
+}
+
 
 class NovaActorData extends ActorData {
   static defineSchema() {
@@ -32,6 +51,9 @@ export class NovaActor extends Actor {
   static get schema() {
     return NovaActorData;
   }
+
+  
+
 
   /** @override */
   prepareData() {
@@ -122,6 +144,34 @@ export class NovaActor extends Actor {
 
   }
 
+  async harmRoll(rollExpression, description, {createChatMessage = true, rollMode = game.settings.get('core','rollMode')} = {}) {
+    const rollData = this.getRollData();
+
+    const roll = await new Roll(rollExpression, rollData).evaluate({async: true});
+
+    let targets = [];
+    game.user.targets.forEach( target => targets.push(target.actor.uuid) );
+
+    // Initialize chat data.
+    let speaker = ChatMessage.getSpeaker({ token: this.token ?? this.getActiveTokens()[0].document, actor: this });
+
+    speaker.alias += `: ${game.i18n.localize('NOVA.Harm.Label')}`
+
+    const harmProxy = mergeObject(CONFIG.NOVA.DEFAULTS.HARM_DATA, {special: description, harm: {value: roll.total}});
+
+    let data = {
+      harmInfo: harmProxy,
+      targets,
+      harmLabel: game.i18n.format("NOVA.ApplyHarm", {num: roll.total}),
+      proxy: true,
+    }
+
+    const html = await renderTemplate("systems/nova/templates/chat/harm-roll.html", data);
+
+    return ChatMessage.create({speaker, rollMode, content: html}, {temporary: !createChatMessage});
+
+  }
+
   /**
    * Prepare character roll data.
    */
@@ -141,21 +191,6 @@ export class NovaActor extends Actor {
   /* @override */
   async update(data, options) {
 
-    /* check for mangled harm/moves for NPCs */
-    const ensureArray = (path) => {
-      const value = data[path];
-      if (!!value && typeof value == 'string') {
-        data[path] = [value];
-      }
-    }
-
-    //ensureArray('data.harm');
-    //ensureArray('data.moves');
-    //ensureArray('data.variants');
-    //ensureArray('data.followers');
-    //ensureArray('data.lair');
-    //ensureArray('data.commands');
-
     /* update locally and refresh tracker */
     const result = await super.update(data, options);
     ui.combat.render();
@@ -166,6 +201,15 @@ export class NovaActor extends Actor {
   _onUpdate(data, options, userId) {
     super._onUpdate(data, options, userId);
     this._showScrollingText(options.change, options.source);
+  }
+
+  async _preUpdate(changed, options, user) {
+    await super._preUpdate(changed,options,user);
+
+    /* ensure NPC harm comes in as an array */
+    if ('harm' in changed.data) {
+      changed.data.harm = Object.values(changed.data.harm);
+    }
   }
 
   /*
@@ -208,7 +252,7 @@ export class NovaActor extends Actor {
     let current = duplicate(this.data.data[type]);
     if ( current instanceof Array) {
       current.push(game.i18n.localize(CONFIG.NOVA.DEFAULTS[type]));
-    } else current = [current, CONFIG.NOVA.DEFAULTS[type]]
+    } else current = [["0", current], CONFIG.NOVA.DEFAULTS[type]]
     return this.update({[`data.${type}`]: current});
   }
 

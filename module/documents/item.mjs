@@ -1,3 +1,5 @@
+import { applyUseChange } from './actor.mjs'
+
 const ItemData = foundry.data.ItemData;
 
 class NovaItemData extends ItemData {
@@ -96,7 +98,7 @@ export class NovaItem extends Item {
   }
 
   async getHarmChatData(harmInfo, {rollMode = game.settings.get('core', 'rollMode')} = {}) {
-    const item = this.data;
+
     let targets = [];
     game.user.targets.forEach( target => targets.push(target.actor.uuid) );
     const casters = [this.actor.uuid];
@@ -105,8 +107,6 @@ export class NovaItem extends Item {
     let speaker = ChatMessage.getSpeaker({ token: this.actor.token ?? this.actor.getActiveTokens()[0].document, actor: this.actor });
 
     speaker.alias += `: ${this.name} - ${harmInfo.name}`
-
-    //const label = `<img src="${item.img}" width="36" height="36"/><strong>${this.name} - ${harmInfo.name}</strong>`;
 
     const footEntries = NovaItem.footerEntries(harmInfo);
     const harmFooter = footEntries.reduce( (acc, entry) => {
@@ -119,7 +119,7 @@ export class NovaItem extends Item {
 
     const html = await renderTemplate("systems/nova/templates/chat/harm-roll.html", data);
 
-    return {speaker, /*label,*/ description: html, rollMode};
+    return {speaker, description: html, rollMode};
   }
 
   /**
@@ -249,24 +249,6 @@ export class NovaItem extends Item {
 
   }
 
-  async _applyUseChange(path, targets, change) {
-
-    if(typeof targets == 'string') targets = [targets];
-
-    const promises = targets.map( async (targetUuid) => {
-      let target = await fromUuid(targetUuid);
-      target = target instanceof TokenDocument ? target.actor : target;
-      if (target.isOwner) {
-        const original = getProperty(target.data, path);
-        return target.update({[path]: original + change}, {change, source: game.i18n.localize(CONFIG.NOVA.costResource[path])});
-      }
-
-      return false;
-    })
-
-    return Promise.all(promises);
-  }
-
   static _chatListeners(html) {
     html.on("click", ".harm-button button", this._onItemCardAction.bind(this));
     html.on("click", ".harm-apply button", this._onHarmButtonAction.bind(this));
@@ -295,7 +277,7 @@ export class NovaItem extends Item {
     event.stopPropagation();
 
     const button = event.currentTarget;
-    const {itemUuid} = button.closest(".harm-apply").dataset;
+    //const {itemUuid} = button.closest(".harm-apply").dataset;
     let {path, targets, change} = button.dataset;
 
     if (event.type == 'click') {
@@ -309,20 +291,18 @@ export class NovaItem extends Item {
       targets = []
     }
     
-    const item = await fromUuid(itemUuid);
-
     change = Number(change);
-    return item._applyUseChange(path, targets, -change);
+    return applyUseChange(path, targets, -change);
   }
 
   static footerEntries(harmInfo) {
     let entries = [];
-    if(harmInfo.target.type !== 'none'){
+    if( (harmInfo.target?.type ?? 'none') !== 'none'){
       /* add target info */
       entries.push(`${game.i18n.localize('NOVA.Target')}: ${harmInfo.target.value.length == 0 ? '' : harmInfo.target.value + ' '}${game.i18n.localize(CONFIG.NOVA.target[harmInfo.target.type])}`);
     }
 
-    if(!!harmInfo.range.min || !!harmInfo.range.max) {
+    if(!!harmInfo.range?.min || !!harmInfo.range?.max) {
       let entry = game.i18n.localize('NOVA.Range') + ': '
       const min = game.i18n.localize(CONFIG.NOVA.range[harmInfo.range.min]) ?? '';
       const max = game.i18n.localize(CONFIG.NOVA.range[harmInfo.range.max]) ?? '';
