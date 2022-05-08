@@ -10,7 +10,7 @@ import { NovaItemSheet } from "./sheets/item-sheet.mjs";
 
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
-import { NOVA } from "./helpers/config.mjs";
+import { NOVA, statusEffects } from "./helpers/config.mjs";
 import { DropRoll, NovaRoll } from "./helpers/dice.mjs";
 
 // Import UI Classes
@@ -34,6 +34,9 @@ Hooks.once('init', async function() {
 
   // Add custom constants for configuration.
   CONFIG.NOVA = NOVA;
+
+  // Add custom status effects
+  CONFIG.statusEffects = statusEffects;
 
   /**
    * Set an initiative formula for the system

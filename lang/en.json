@@ -108,6 +108,7 @@
   "NOVA.EndTurn": "End turn",
   "NOVA.ResetTurn": "Reset turn",
 
+  "NOVA.RollDrop": "Roll Drop",
   "NOVA.CombatDropTracker": "Drops to Roll",
   "NOVA.RollAllDrops": "Roll all drops",
   "NOVA.ClaimDropLabel": "Claim Drop",

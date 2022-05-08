@@ -1,4 +1,59 @@
 export const NOVA = {};
+export const statusEffects = [
+  {
+    id: 'berserk',
+    label: 'NOVA.StatusBerserk',
+    icon: 'icons/svg/paralysis.svg',
+  },{
+    id: 'disrupted',
+    label: 'NOVA.StatusDisrupted',
+    icon: 'icons/svg/cancel.svg',
+  },{
+    id: 'flight',
+    label: 'NOVA.StatusFlight',
+    icon: 'icons/svg/wing.svg',
+  },{
+    id: 'immune',
+    label: 'NOVA.StatusImmune',
+    icon: 'icons/svg/aura.svg',
+  },{
+    id: 'lock',
+    label: 'NOVA.StatusLock',
+    icon: 'icons/svg/padlock.svg',
+  },{
+    id: 'protect',
+    label: 'NOVA.StatusProtect',
+    icon: 'icons/svg/shield.svg',
+  },{
+    id: 'weaken',
+    label: 'NOVA.StatusWeaken',
+    icon: 'icons/svg/downgrade.svg',
+  },{
+    id: 'marked',
+    label: 'NOVA.StatusMarked',
+    icon: 'icons/svg/target.svg',
+  },{
+    id: 'stunned',
+    label: 'NOVA.StatusStunned',
+    icon: 'icons/svg/stoned.svg',
+  },{
+    id: 'infected',
+    label: 'NOVA.StatusInfected',
+    icon: 'icons/svg/biohazard.svg',
+  },{
+    id: 'fear',
+    label: 'NOVA.StatusFear',
+    icon: 'icons/svg/skull.svg',
+  },{
+    id: 'damned',
+    label: 'NOVA.StatusDamned',
+    icon: 'icons/svg/terror.svg',
+  },{
+    id: 'dormant',
+    label: 'NOVA.StatusDormant',
+    icon: 'icons/svg/unconscious.svg',
+  },
+]
 
 // Define constants here, such as:
 NOVA.DEFAULTS = {

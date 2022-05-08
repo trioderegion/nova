@@ -1,5 +1,3 @@
-import { NOVA } from '../helpers/config.mjs'
-
 const ItemData = foundry.data.ItemData;
 
 class NovaItemData extends ItemData {
@@ -258,9 +256,12 @@ export class NovaItem extends Item {
     const promises = targets.map( async (targetUuid) => {
       let target = await fromUuid(targetUuid);
       target = target instanceof TokenDocument ? target.actor : target;
+      if (target.isOwner) {
+        const original = getProperty(target.data, path);
+        return target.update({[path]: original + change}, {change, source: game.i18n.localize(CONFIG.NOVA.costResource[path])});
+      }
 
-      const original = getProperty(target.data, path);
-      return target.update({[path]: original + change}, {change, source: game.i18n.localize(CONFIG.NOVA.costResource[path])});
+      return false;
     })
 
     return Promise.all(promises);
