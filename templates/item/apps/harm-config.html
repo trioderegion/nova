@@ -23,10 +23,10 @@
   <span class="grid-span-2 resource-label">
     {{localize "NOVA.Range"}}
   </span>
-  <select class="grid-span-2" name="range-min">
+  <select class="grid-span-2" name="range-min" data-dtype="Number">
     {{selectOptions rangeSelect selected=range.min localize=true blank=localLabels.min}}
   </select>
-  <select class="grid-span-2" name="range-max">
+  <select class="grid-span-2" name="range-max" data-dtype="Number">
     {{selectOptions rangeSelect selected=range.max localize=true blank=localLabels.max}}
   </select>
   <span class="grid-span-6"><hr/></span>

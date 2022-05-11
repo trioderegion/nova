@@ -175,6 +175,8 @@ export class NovaItem extends Item {
       async evalHarm() {
         let harm = duplicate(this._harmSource[this.index]);
 
+        item.modifyHarm(harm);
+
         if(!this._spendRoll || !this._harmRoll) {
           const rollData = item.getRollData();
 
@@ -195,18 +197,68 @@ export class NovaItem extends Item {
     }
   }
 
+  modifyHarm(harmData) {
+
+    /* do not modify locked harm entries */
+    if(harmData.locked) return;
+
+    /* collect *all* changes */
+    const changes = this.data.data.mods.flatMap( modId => {
+      if(modId == undefined) return [];
+      return this.actor.items.get(modId)?.data.data.changes ?? []
+    });
+
+    /* apply changes linearly */
+    changes.forEach( change => {
+
+      let value = getProperty(harmData, change.target);
+
+      switch(change.target) {
+        /* range has special handling, and is stored as a number */
+        case 'range.min':
+        case 'range.max':
+
+          const modification = Number(change.value); //heaven help the user that attempts a roll expression
+
+          switch (change.mode) {
+            case CONST.ACTIVE_EFFECT_MODES.ADD:
+              value = Math.clamped(value + modification, 1, 4);
+              break;
+            case CONST.ACTIVE_EFFECT_MODES.OVERRIDE:
+              value = Math.clamped(modification, 0, 4);
+              break;
+          }
+
+          break;
+        default:
+          /* all others are simple maf roll expressions */
+          value = NovaItem._applyExpression(value, change.value, change.mode);
+          break;
+      }
+
+      setProperty(harmData, change.target, value);
+    });
+  }
+
+  static _applyExpression(current, change, mode) {
+    
+    switch (mode) {
+      case CONST.ACTIVE_EFFECT_MODES.ADD:
+        return `${current} + ${change}`;
+      case CONST.ACTIVE_EFFECT_MODES.MULTIPLY:
+        return `(${current}) * ${change}`;
+      case CONST.ACTIVE_EFFECT_MODES.OVERRIDE:
+        return change;
+    }
+
+  }
 
   /** 
    * Handle adding new harm data
    */
   async addHarm(harmData = CONFIG.NOVA.DEFAULTS.HARM_DATA){
 
-    /* accounting for 1.0 -> 1.1 migration where harm was added
-     * to items */
-    const currentHarm = this.data.data.harm ?? [];
-
-    const updatedHarm = currentHarm.concat([harmData]); 
-    await this.update({'data.harm': updatedHarm});
+    return this._updateArray('data.harm', harmData);
   }
 
   /**
@@ -218,21 +270,14 @@ export class NovaItem extends Item {
     const harmInfo = this.getHarmInfo(identifier);
     if(!harmInfo) return false;
 
-    let currentHarm = harmInfo.harmArrayClone;
-
-    currentHarm.splice(harmInfo.index,1);
-    await this.update({'data.harm': currentHarm})
+    return this._removeArrayElement('data.harm', harmInfo.index);
   }
 
   async updateHarm(identifier, harmData) {
-
     const harmInfo = this.getHarmInfo(identifier);
     if(!harmInfo) return false;
 
-    let currentHarm = harmInfo.harmArrayClone;
-
-    mergeObject(currentHarm[harmInfo.index], harmData);
-    await this.update({'data.harm': currentHarm})
+    return this._updateArray('data.harm', harmData, harmInfo.index);
   }
 
   async rollHarm(identifier, {createChatMessage = true, rollModeOverride} = {}) {
@@ -249,6 +294,49 @@ export class NovaItem extends Item {
 
   }
 
+  /*
+   * Handle adding a new change entry for flare mods
+   *
+   */
+  async addChange(changeData = CONFIG.NOVA.DEFAULTS.CHANGE_DATA) {
+    return this._updateArray('data.changes', changeData);
+  }
+
+  async updateChange(index, changeData) {
+    return this._updateArray('data.changes', changeData, index);
+  }
+
+  async deleteChange(index) {
+    return this._removeArrayElement('data.changes', index);
+  }
+
+  async _updateArray(path, data, index = null) {
+
+    /* accounting for 1.0 -> 1.1 migration where harm/change was added
+     * to items */
+    let currentArray = duplicate(getProperty(this.data, path) ?? []);
+
+    if(index == undefined) {
+      /* add new */
+      currentArray.push(data);
+    } else {
+      /* update existing */
+      mergeObject(currentArray[index], data);
+    }
+
+    return this.update({[path]: currentArray});
+  }
+  
+  async _removeArrayElement(path, index) {
+
+    let currentArray = getProperty(this.data, path);
+
+    if(index > currentArray.length - 1) return false;
+
+    currentArray.splice(index,1);
+    await this.update({[path]: currentArray})
+  }
+  
   static _chatListeners(html) {
     html.on("click", ".harm-button button", this._onItemCardAction.bind(this));
     html.on("click", ".harm-apply button", this._onHarmButtonAction.bind(this));
@@ -309,8 +397,10 @@ export class NovaItem extends Item {
 
       if( !!min && !!max ){
         entry += `${min} - ${max}`
+      } else if (!!min) {
+        entry += `${min}`;
       } else {
-        entry += `${min}${max}`;
+        entry += `${max} (${game.i18n.localize('NOVA.MaximumAbbr').toLowerCase()})`
       }
 
       entries.push(entry);

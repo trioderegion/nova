@@ -1,22 +1,39 @@
-  <ol class="items-list effects-list">
-    <li class="flexrow items-header flex-between">
-      <div class="item-name effect-name">{{localize "NOVA.Harm.Label"}}</div>
-      <div class="item-header-controls">
-        <a class="effect-control" title="{{localize 'EFFECT.MODE_ADD'}}" data-action="create"><i class="fas fa-plus"></i> {{localize 'EFFECT.MODE_ADD'}}</a>
-      </div>
-    </li>
-    {{#if (eq data.type "active")}}
-    {{#each data.harm as |harm|}}
-    <li class="item effect flexrow" data-harm-index="{{@index}}">
-      <div class="item-name effect-name flexrow">
-        <h4>{{harm.name}}</h4>
-      </div>
-      <div class="item-controls effect-controls flexrow">
-        <a class="effect-control" data-action="edit" data-harm-index="{{@index}}" title="{{localize 'NOVA.Harm.Edit'}}"><i class="fas fa-edit"></i></a>
-        <a class="effect-control" data-action="delete" data-harm-index="{{@index}}" title="{{localize 'Nova.Harm.Delete'}}"><i class="fas fa-trash"></i></a>
-      </div>
-    </li>
-    {{/each}}
-    {{/if}}
-  </ol>
+<ol class="items-list effects-list" data-category="{{data.type}}">
+  <li class="flexrow items-header flex-between">
+    <div class="item-name effect-name">{{localize configLabel}}</div>
+    <div class="item-header-controls">
+      <a class="effect-control" title="{{localize 'EFFECT.MODE_ADD'}}" data-action="create"><i class="fas fa-plus"></i> {{localize 'EFFECT.MODE_ADD'}}</a>
+    </div>
+  </li>
+  {{#if (eq data.type "active")}}
+  {{#each data.harm as |harm|}}
+  <li class="item effect flexrow" data-harm-index="{{@index}}">
+    <div class="item-name effect-name flexrow">
+      <h4>{{harm.name}}</h4>
+    </div>
+    <div class="item-controls effect-controls flexrow">
+      <a class="effect-control" data-action="edit" data-harm-index="{{@index}}" title="{{localize 'NOVA.Harm.Edit'}}"><i class="fas fa-edit"></i></a>
+      <a class="effect-control" data-action="delete" data-harm-index="{{@index}}" title="{{localize 'Nova.Harm.Delete'}}"><i class="fas fa-trash"></i></a>
+    </div>
+  </li>
+  {{/each}}
+  {{else}} {{!-- is a flare mod, add in modification dropdowns --}}
+  {{#each data.changes as |change|}}
+  <li class="item effect flexrow" data-change-index="{{@index}}">
+    <div class="item-name effect-name flexrow">
+      <select class="change-field" data-field="target">
+        {{selectOptions ../flareChanges.targets selected=change.target inverted=true localize=true}}
+      </select> 
+      <select class="change-field" data-field="mode" data-dtype="Number">
+        {{selectOptions ../flareChanges.mode selected=change.mode inverted=true localize=true}}
+      </select>
+      <input type="text" class="change-field at-end" data-field="value" placeholder="(change)" value="{{change.value}}"/> 
+    </div>
+    <div class="item-controls effect-controls flexrow">
+      <a class="effect-control" data-action="delete" data-change-index="{{@index}}" title="{{localize 'Nova.Change.Delete'}}"><i class="fas fa-trash"></i></a>
+    </div>
+  </li>
+  {{/each}}
+  {{/if}}
+</ol>
 

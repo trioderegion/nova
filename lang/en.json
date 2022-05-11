@@ -22,14 +22,17 @@
   "NOVA.AttributeShade": "Shade",
 
   "NOVA.Cost": "Cost",
+  "NOVA.MaximumAbbr": "Max",
 
   "NOVA.Range": "Range",
+  "NOVA.RangeMax": "Max Range",
   "NOVA.RangeClose": "Close",
   "NOVA.RangeNear": "Near",
   "NOVA.RangeFar": "Far",
   "NOVA.RangeBeyond": "Beyond",
 
   "NOVA.Target": "Target",
+  "NOVA.Targets": "Targets",
   "NOVA.TargetSelf": "Self",
   "NOVA.TargetAlly": "Ally",
   "NOVA.TargetEnemy": "Enemy",
@@ -49,6 +52,8 @@
   "NOVA.FlarePersistent": "Persistent",
   "NOVA.PersistentMods": "Persistent Mods",
   "NOVA.Affects": "Affects",
+
+  "NOVA.Modifications": "Modifications",
 
   "NOVA.Effects": "Effects",
   "NOVA.EffectCreate": "Create Effect",

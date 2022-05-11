@@ -60,18 +60,21 @@
         "description": ""
       },
       "active": {
-        "harm": []
+        "harm": [],
+        "type": "passive",
+        "mods": [null, null]
+      },
+      "mod": {
+        "changes": [],
+        "type": "persistent",
+        "affects": "none"
       }
     },
     "flare": {
-      "templates": ["base"],
-      "type": "persistent",
-      "affects": "none"
+      "templates": ["base", "mod"]
     },
     "power": {
-      "templates": ["base", "active"],
-      "type": "passive",
-      "mods": [null, null]
+      "templates": ["base", "active"]
     }
   }
 }

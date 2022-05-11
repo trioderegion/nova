@@ -73,8 +73,16 @@ NOVA.DEFAULTS = {
       cost: {value: "1", source: 'data.fuel.value'},
       harm: {value: '0', source: 'data.health.value'},
       target: {type: 'none', value: ''},
-      range: {min: '', max: ''},
+      range: {min: 0, max: 0},
       special: "",
+      locked: false,
+    }
+  },
+  get CHANGE_DATA() {
+    return {
+      target: 'harm.value',
+      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      value: '',
     }
   }
 }
@@ -90,11 +98,10 @@ NOVA.attributes = {
 };
 
 NOVA.range = {
-  none: "NOVA.None",
-  close: "NOVA.RangeClose",
-  near: "NOVA.RangeNear",
-  far: "NOVA.RangeFar",
-  beyond: "NOVA.RangeBeyond"
+  1: "NOVA.RangeClose",
+  2: "NOVA.RangeNear",
+  3: "NOVA.RangeFar",
+  4: "NOVA.RangeBeyond"
 }
 
 NOVA.costResource = {
@@ -104,6 +111,30 @@ NOVA.costResource = {
   'data.attributes.moon.value': "NOVA.AttributeMoon",
   'data.attributes.shade.value': "NOVA.AttributeShade"
 }
+
+NOVA.modTargets = {
+  'NOVA.Harm.Label': 'harm.value',
+  'NOVA.Cost': 'cost.value',
+  'NOVA.Targets': 'target.value',
+  'NOVA.Range': 'range.min',
+  'NOVA.RangeMax': 'range.max'
+}
+
+NOVA.changeModes = {
+  'EFFECT.MODE_ADD': CONST.ACTIVE_EFFECT_MODES.ADD,
+  'EFFECT.MODE_MULTIPLY': CONST.ACTIVE_EFFECT_MODES.MULTIPLY,
+  'EFFECT.MODE_OVERRIDE': CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+}
+
+NOVA.persistTargets = {
+  'NOVA.Health': 'data.health.max',
+  'NOVA.Fuel': 'data.fuel.max',
+  'NOVA.Sun': 'data.sun.bonus',
+  'NOVA.Moon': 'data.moon.bonus',
+  'NOVA.Shade': 'data.shade.bonus',
+}
+
+
 
 NOVA.changeColors = {
   neg: 0xFF0000,
@@ -117,8 +148,6 @@ NOVA.target = {
   object: "NOVA.TargetObject",
   any: "NOVA.TargetAny"
 }
-
-NOVA.rangeIncrements = ['none', 'close', 'near', 'far', 'beyond']
 
 NOVA.powerType = {
   passive: "NOVA.PowerPassive",

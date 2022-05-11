@@ -326,7 +326,7 @@ export class NovaActorSheet extends ActorSheet {
     event.preventDefault();
     const li = $(event.currentTarget).parents(".item");
     const item = this.actor.items.get(li.data("item-id"));
-    const chatData = item.getChatData({secrets: this.actor.isOwner});
+    const chatData = item.getItemChatData({secrets: this.actor.isOwner});
 
     // Toggle summary
     if ( li.hasClass("expanded") ) {

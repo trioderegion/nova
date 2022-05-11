@@ -55,8 +55,8 @@ export class HarmConfig extends Dialog {
         value: html[0].querySelector("[name=quantity]").value,
       },
       range: {
-        min: html[0].querySelector("[name=range-min]").value,
-        max: html[0].querySelector("[name=range-max]").value,
+        min: Number(html[0].querySelector("[name=range-min]").value),
+        max: Number(html[0].querySelector("[name=range-max]").value),
       },
       special: html[0].querySelector("[name=special]").value,
     }

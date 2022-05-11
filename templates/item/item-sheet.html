@@ -6,14 +6,10 @@
   {{!-- Sheet Body --}}
   <section class="sheet-body grid grid-5col">
       
-        {{#if (eq item.type "power")}}
         <aside class="sidebar harm-summary grid-span-2">
         {{> "systems/nova/templates/item/parts/config-power.html"}} 
         </aside>
-        {{else}}
-        {{!-- {{> "systems/nova/templates/item/parts/config-flare.html"}} --}}
-        {{/if}}
-      
+
         <section class="main editor grid-span-3">
         {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
         </section>
