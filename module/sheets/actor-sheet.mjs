@@ -322,11 +322,11 @@ export class NovaActorSheet extends ActorSheet {
    * @param {Event} event   Triggering event.
    * @private
    */
-  _onItemSummary(event) {
+  async _onItemSummary(event) {
     event.preventDefault();
     const li = $(event.currentTarget).parents(".item");
     const item = this.actor.items.get(li.data("item-id"));
-    const chatData = item.getItemChatData({secrets: this.actor.isOwner});
+    const chatData = await item.getItemChatData({embedHarm: false, /*secrets: this.actor.isOwner*/});
 
     // Toggle summary
     if ( li.hasClass("expanded") ) {

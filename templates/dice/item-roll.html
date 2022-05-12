@@ -15,9 +15,11 @@
   {{> modInfo}}
   {{/each}}
 
+  {{#if embedHarm}}
   <div class="harm-button" data-item-uuid="{{uuid}}">
     {{#each harm}}
     <button data-harm-index="{{@index}}">{{this}}</button>
     {{/each}}
   </div>
+  {{/if}}
 </div>

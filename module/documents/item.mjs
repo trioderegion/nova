@@ -50,7 +50,7 @@ export class NovaItem extends Item {
     return rollData;
   }
 
-  async getItemChatData({rollMode = game.settings.get('core', 'rollMode') } = {}) {
+  async getItemChatData({embedHarm = true, rollMode = game.settings.get('core', 'rollMode') } = {}) {
     const item = this.data;
     
     // Initialize chat data.
@@ -91,7 +91,7 @@ export class NovaItem extends Item {
       }
     }
 
-    const html = await renderTemplate("systems/nova/templates/dice/item-roll.html", {mods, description, harm, uuid: this.uuid});
+    const html = await renderTemplate("systems/nova/templates/dice/item-roll.html", {mods, description, harm, uuid: this.uuid, embedHarm});
     
 
     return {speaker, rollMode, label, description: html}
