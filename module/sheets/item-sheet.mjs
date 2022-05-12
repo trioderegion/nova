@@ -45,15 +45,18 @@ export class NovaItemSheet extends ItemSheet {
       'power': CONFIG.NOVA.powerType}[itemData.type]
 
     context.canAttachFlare = false;
+    context.canBeAttached = false;
 
 
     let actor = this.object?.parent ?? null;
 
       /* need an actor to grab any possible flare mods to attach */
-      switch (itemData.data.type) {
+      switch (itemData.type) {
 
-        case 'active': {
-          context.canAttachFlare = !!actor;
+        //case 'active':
+        //case 'passive':
+        case 'power': {
+          context.canAttachFlare = !!actor && itemData.data.type == 'active';
           context.configLabel = "NOVA.Harm.Label";
 
           if(actor) {
@@ -70,41 +73,17 @@ export class NovaItemSheet extends ItemSheet {
           break;
         }
 
-        case 'persistent':
+        case 'flare':
 
           context.canBeAttached = true;
           context.configLabel = "NOVA.Modifications";
-
-          /* can affect [spark, passive power, supernova power] */
-          context.affectInfo = {'spark': game.i18n.localize('NOVA.Spark'), 'passive': game.i18n.localize('NOVA.PowerPassive'), 'supernova': game.i18n.localize('NOVA.PowerSupernova')};
+          context.affectInfo = this._createAffectsOptions();
 
           /* populate available change targets, modes, expressions */
           context.flareChanges = this._createChangeOptions();
 
           break;
-
-        case 'power':
-
-          context.canBeAttached = true;
-          context.configLabel = "NOVA.Modifications";
-
-          /* can affect [any power, specific power] */
-          context.affectInfo = {'none': game.i18n.localize('NOVA.None'), 'any': game.i18n.localize('NOVA.Any')};
-
-          if (actor) {
-            /* collect all powers attached to the parent actor */
-            const powers = actor.items.filter( item => item.type == 'power' && item.data.data.type == 'active' );
-            powers.forEach( power => {
-              context.affectInfo[power.id] = power.name;
-            })
-          }
-
-          /* populate available change targets, modes, expressions */
-          context.flareChanges = this._createChangeOptions();
-
-          break;
-
-        default: break;
+        
       }
 
 
@@ -120,10 +99,18 @@ export class NovaItemSheet extends ItemSheet {
   _createChangeOptions() {
     switch (this.object.data.data.type) {
       case 'persistent':
-        return {
-          mode: CONFIG.NOVA.changeModes,
-          targets: CONFIG.NOVA.persistTargets
+
+        if (this.object.data.data.affects == 'spark') {
+          /* this mod affects the sparks stats directly */
+          return {
+            mode: CONFIG.NOVA.changeModes,
+            targets: CONFIG.NOVA.persistTargets
+          }
         }
+
+          /* this mod is effectively a "power" mod
+           * fallthrough to power case
+           */
       case 'power':
         return {
           mode: CONFIG.NOVA.changeModes,
@@ -131,6 +118,33 @@ export class NovaItemSheet extends ItemSheet {
         }
     }
 
+  }
+
+  _createAffectsOptions() {
+    
+    let affectInfo = {};
+
+    switch (this.object.data.data.type) {
+      case 'power' :
+        /* can affect [any power, specific power] */
+        affectInfo = {'none': game.i18n.localize('NOVA.None'), 'any': game.i18n.localize('NOVA.Any')};
+
+        if (this.object.actor) {
+          /* collect all powers attached to the parent actor */
+          const powers = this.object.actor.items.filter( item => item.type == 'power' && item.data.data.type == 'active' );
+          powers.forEach( power => {
+            affectInfo[power.id] = power.name;
+          })
+        }
+
+        break;
+
+      default:
+          /* can affect [spark, passive power, supernova power] */
+          affectInfo = {'spark': game.i18n.localize('NOVA.Spark'), 'passive': game.i18n.localize('NOVA.PowerPassive'), 'supernova': game.i18n.localize('NOVA.PowerSupernova')};
+    }
+
+    return affectInfo;
   }
 
   /* -------------------------------------------- */
@@ -157,7 +171,9 @@ export class NovaItemSheet extends ItemSheet {
     const action = header.dataset.action;
 
     switch(category) {
-      case 'active': {
+      case 'active':
+      case 'passive':
+      case 'supernova': {
         const index = Number(header.dataset.harmIndex);
         return this._onManageHarm(action, index);
       }

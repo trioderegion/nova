@@ -5,7 +5,8 @@
       <a class="effect-control" title="{{localize 'EFFECT.MODE_ADD'}}" data-action="create"><i class="fas fa-plus"></i> {{localize 'EFFECT.MODE_ADD'}}</a>
     </div>
   </li>
-  {{#if (eq data.type "active")}}
+  {{log this}}
+  {{#unless canBeAttached}}
   {{#each data.harm as |harm|}}
   <li class="item effect flexrow" data-harm-index="{{@index}}">
     <div class="item-name effect-name flexrow">
@@ -34,6 +35,6 @@
     </div>
   </li>
   {{/each}}
-  {{/if}}
+  {{/unless}}
 </ol>
 

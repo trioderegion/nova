@@ -50,6 +50,31 @@ export class NovaItem extends Item {
     return rollData;
   }
 
+  /*
+   * If a flare type 'persistent' has its 'affects' field changed 
+   * to OR from 'spark', we need to wipe the 'changes' field as the 
+   * modifier set needs to be swapped entirely
+   */
+  _preUpdate(change, ...args) {
+    super._preUpdate(change, ...args);
+
+    const affectsChanged = hasProperty(change, 'data.affects');
+
+    if(affectsChanged) {
+      /* double check transition */
+      const current = getProperty(this.data, 'data.affects');
+      const updated = getProperty(change, 'data.affects');
+
+      /* if there is an actual change AND we are going to or coming from a 'spark' mod */
+      const transitioned = (current !== updated) && ( current === 'spark' || updated === 'spark' );
+      if (transitioned) {
+        /* wipe current changes data */
+        change.data.changes = [];
+      }
+    }
+    
+  }
+
   async getItemChatData({embedHarm = true, rollMode = game.settings.get('core', 'rollMode') } = {}) {
     const item = this.data;
     
@@ -203,10 +228,29 @@ export class NovaItem extends Item {
     if(harmData.locked) return;
 
     /* collect *all* changes */
-    const changes = this.data.data.mods.flatMap( modId => {
-      if(modId == undefined) return [];
-      return this.actor.items.get(modId)?.data.data.changes ?? []
-    });
+    let changes = [];
+
+    switch(this.data.data.type) {
+      case 'active':
+        /* active powers have mods attached directly */
+        changes = this.data.data.mods.flatMap( modId => {
+          if(modId == undefined) return [];
+          return this.actor.items.get(modId)?.data.data.changes ?? []
+        });
+        break;
+
+      case 'passive':
+      case 'supernova':
+        /* others derive from persistent mods attached to spark */
+        changes = this.actor.data.data.mods.flatMap( modId => {
+          if(modId == undefined) return [];
+          const mod = this.actor.items.get(modId);
+          return mod?.data.data.affects == this.data.data.type ? mod.data.data.changes : [];
+
+        });
+        break;
+
+    }
 
     /* apply changes linearly */
     changes.forEach( change => {
@@ -299,6 +343,9 @@ export class NovaItem extends Item {
    *
    */
   async addChange(changeData = CONFIG.NOVA.DEFAULTS.CHANGE_DATA) {
+    if(this.data.data.affects == 'spark' && changeData.target == CONFIG.NOVA.DEFAULTS.CHANGE_DATA.target) {
+      changeData.target = CONFIG.NOVA.persistTargets['NOVA.Fuel'];
+    }
     return this._updateArray('data.changes', changeData);
   }
 

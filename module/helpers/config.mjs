@@ -134,8 +134,6 @@ NOVA.persistTargets = {
   'NOVA.Shade': 'data.shade.bonus',
 }
 
-
-
 NOVA.changeColors = {
   neg: 0xFF0000,
   pos: 0x00FF00
