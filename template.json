@@ -67,7 +67,7 @@
       "mod": {
         "changes": [],
         "type": "persistent",
-        "affects": "none"
+        "affects": "spark"
       }
     },
     "flare": {

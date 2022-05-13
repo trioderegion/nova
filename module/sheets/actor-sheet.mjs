@@ -57,6 +57,11 @@ export class NovaActorSheet extends ActorSheet {
     // Prepare active effects
     context.effects = prepareActiveEffectCategories(this.actor.effects);
 
+    // Add pre-translated strings
+    context.i18n = {
+      none: game.i18n.localize('NOVA.None'),
+    }
+
     return context;
   }
 
@@ -149,21 +154,37 @@ export class NovaActorSheet extends ActorSheet {
     context.powerLayout = {'passive': 'NOVA.PowerPassive', 'supernova': 'NOVA.PowerSupernova', 'active': 'NOVA.FlarePower', };
 
     context.persistentInfo = [{
-      id: "",
-      name: "None",
+      id: '',
+      name: game.i18n.localize("NOVA.None"),
+      img: false
+    }];
+
+    context.freePersistants = [{
+      id: '',
+      name: game.i18n.localize("NOVA.None"),
       img: false
     }];
 
     context.powerModInfo = [{
-      id: "",
-      name: "None",
+      id: '',
+      name: game.i18n.localize("NOVA.None"),
       img: false
     }];
 
     //sort the two subtypes of flare mods
     context.flare.forEach( (mod) => {
       if (mod.data.data.type == 'persistent') {
-        context.persistentInfo.push({id: mod.id, img: mod.img, name: mod.name})
+        const modInfo = {id: mod.id, img: mod.img, name: mod.name};
+
+        /* add to the overall info array */
+        context.persistentInfo.push(modInfo)
+
+        /* if this mod isn't attached, add it to the list
+         * of available persistant's to attach */
+        if( !context.actor.data.data.mods.includes(modInfo.id) ){
+          context.freePersistants.push(modInfo); 
+        }
+
       } else if (mod.data.data.type == 'power') {
         context.powerModInfo.push({id: mod.id, img: mod.img, name: mod.name});
       }

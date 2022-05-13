@@ -160,6 +160,66 @@ export class NovaActor extends Actor {
     //data.xp = (data.cr * data.cr) * 100;
   }
 
+  /*
+   * If an attached flare mod is deleted, ensure its removed
+   * from any referencing spark or power mods
+   */
+  _onDeleteEmbeddedDocuments(type, documents, result, ...args){
+    super._onDeleteEmbeddedDocuments(type, documents, result, ...args);
+
+    /* grab any flare mod IDs */
+    if(this.type == 'spark') {
+
+      let actorUpdates = {};
+      let itemUpdates = [];
+
+      const flareIds = documents.reduce( (acc, curr) => {
+        if (curr.data.type == 'flare') {
+          let category = curr.data.data.type == 'persistent' ? 'persistent' : 'power';
+          acc[category].push(curr.id)
+          return acc;
+        }
+      },{persistent: [], power: []});
+
+      if (flareIds.persistent.length > 0) {
+
+        /* remove attachments to the spark */
+        const updatedMods = this.data.data.mods.map( id => {
+          return flareIds.persistent.includes(id) ? '' : id;
+        });
+
+        const undefOrEmpty = e => (e == undefined || e == '');
+
+        /* if there was a change */
+        if (updatedMods.filter(undefOrEmpty).length != this.data.data.mods.filter(undefOrEmpty).length){
+          mergeObject(actorUpdates, {data: {mods: updatedMods}}); 
+        }
+      }
+
+      /* remove attachments to other powers */
+      if (flareIds.power.length > 0){
+        
+        itemUpdates = flareIds.power.reduce( (acc, curr) => {
+          const attachedItem = this.items.find( item => (getProperty(item.data.data, 'mods') ?? []).includes(curr) );
+
+          if (attachedItem) {
+            const modUpdate = attachedItem.data.data.mods.map( id => id == curr ? null : id)
+            acc.push({_id: attachedItem.id, 'data.mods': modUpdate});
+          }
+
+          return acc;
+        }, [])
+      }
+
+      /* try to batch these updates together, at least a little */
+      (async () => {
+        await this.update(actorUpdates);
+        await this.updateEmbeddedDocuments("Item", itemUpdates);
+      })();
+    }
+    
+  }
+
   /**
    * Override getRollData() that's supplied to rolls.
    */

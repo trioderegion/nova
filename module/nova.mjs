@@ -111,6 +111,20 @@ Handlebars.registerHelper('imgFromId', function(collection, id) {
   return null;
 });
 
+Handlebars.registerHelper('novaNameFromId', function(collection, id) {
+  const result = collection.find( entry => entry.id === id )
+  if (result) {
+    return result.name;
+  }
+
+  return null;
+});
+
+Handlebars.registerHelper('novaNullOrEmpty', function(element) {
+  return element == undefined || element == '';
+});
+
+
 Handlebars.registerHelper('descFromId', function(collection, id) {
   const result = collection.find( entry => entry.id === id )
   if (result) {
