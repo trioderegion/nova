@@ -97,11 +97,11 @@ export class NovaActor extends Actor {
     if (actorData.type !== 'spark') return;
 
     // Make modifications to data here. For example:
-    const data = actorData.data;
+    //const data = actorData.data;
     
     /* combine current and bonus values for ability scores */
-    for (let [key, {value, bonus}] of Object.entries(data.attributes)) {
-      data.attributes[key].total = value + bonus;
+    for (let [key, {value, bonus}] of Object.entries(actorData.data.attributes)) {
+      actorData.data.attributes[key].total = value + bonus;
     }
 
     /* gather persistent mod changes */
@@ -110,10 +110,43 @@ export class NovaActor extends Actor {
       if(modId == undefined) return [];
 
       const mod = this.items.get(modId);
-      return mod?.data.data.changes ?? []
+
+      if (mod?.data.data.affects == 'spark') {
+        return mod.data.data.changes ?? []
+      }
+
+      return [];
     });
 
+    changes.forEach( change => {
 
+      if (change.value == undefined || change.value.length == 0) return;
+      const value = getProperty(actorData, change.target);
+
+      let expression;
+      switch(change.mode) {
+      case CONST.ACTIVE_EFFECT_MODES.ADD:
+        expression = `${value} + ${change.value}`;
+        break;
+      case CONST.ACTIVE_EFFECT_MODES.MULTIPLY:
+        expression = `(${value}) * ${change.value}`;
+      case CONST.ACTIVE_EFFECT_MODES.OVERRIDE:
+        expression = `${change.value}`;
+      }
+
+      expression = Roll.replaceFormulaData(expression, actorData.data)
+      const result = Roll.safeEval(expression)
+
+      setProperty(actorData, change.target, result);
+
+      /* are we already overriding this from an AE?
+       * if not, add to overrides so the sheet will
+       * disable its input */
+      if(!hasProperty(this.overrides, change.target)) {
+        setProperty(this.overrides, change.target, value);
+      } 
+
+    })
   }
 
   /**

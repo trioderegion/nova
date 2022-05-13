@@ -129,9 +129,9 @@ NOVA.changeModes = {
 NOVA.persistTargets = {
   'NOVA.Health': 'data.health.max',
   'NOVA.Fuel': 'data.fuel.max',
-  'NOVA.Sun': 'data.sun.bonus',
-  'NOVA.Moon': 'data.moon.bonus',
-  'NOVA.Shade': 'data.shade.bonus',
+  'NOVA.Sun': 'data.attributes.sun.bonus',
+  'NOVA.Moon': 'data.attributes.moon.bonus',
+  'NOVA.Shade': 'data.attributes.shade.bonus',
 }
 
 NOVA.changeColors = {
