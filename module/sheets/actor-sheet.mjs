@@ -34,7 +34,7 @@ export class NovaActorSheet extends ActorSheet {
     const context = super.getData();
 
     // Use a safe clone of the actor data for further operations.
-    let actorData = duplicate(context.actor.data);
+    let actorData = context.actor.data;
 
     // Add the actor's data to context.data for easier access, as well as flags.
     context.data = actorData.data;
@@ -203,6 +203,7 @@ export class NovaActorSheet extends ActorSheet {
     // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));
 
+    html.keypress( (event)=>{ if(event.which == '13') event.preventDefault(); } );
     html.find('.drop-button').click(this._onRollDrop.bind(this));
 
     // Drag events for macros.
@@ -214,6 +215,11 @@ export class NovaActorSheet extends ActorSheet {
         li.addEventListener("dragstart", handler, false);
       });
     }
+
+    /* disable any fields that are targeted by AEs */
+    Object.keys(flattenObject(this.object.overrides)).forEach( key => {
+      this.element.find(`[name="${key}"]`).prop('disabled', true);
+    });
   }
 
   async _onItemDelete(event) {
@@ -308,7 +314,7 @@ export class NovaActorSheet extends ActorSheet {
     }
   }
 
-  _onRollDrop(/*event*/) {
+  _onRollDrop(event, ...args) {
     switch (this.actor.type) {
       case 'npc':
         return this.actor.rollDrop();

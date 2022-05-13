@@ -52,8 +52,6 @@ export class NovaActor extends Actor {
     return NovaActorData;
   }
 
-  
-
 
   /** @override */
   prepareData() {
@@ -78,6 +76,8 @@ export class NovaActor extends Actor {
    * (such as ability modifiers rather than ability scores) and should be
    * available both inside and outside of character sheets (such as if an actor
    * is queried and has a roll executed directly from it).
+   *
+   * AEs have already been applied by this stage (this.overrides)
    */
   prepareDerivedData() {
     const actorData = this.data;
@@ -103,6 +103,16 @@ export class NovaActor extends Actor {
     for (let [key, {value, bonus}] of Object.entries(data.attributes)) {
       data.attributes[key].total = value + bonus;
     }
+
+    /* gather persistent mod changes */
+    const changes = this.data.data.mods.flatMap( modId => {
+
+      if(modId == undefined) return [];
+
+      const mod = this.items.get(modId);
+      return mod?.data.data.changes ?? []
+    });
+
 
   }
 
