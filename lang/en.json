@@ -122,7 +122,30 @@
   "NOVA.ClaimNoActor": "You must claim a drop from a token or assigned character.",
 
   "NOVA.Error.ClaimNoGM": "You cannot claim a drop without an active GM.",
-  "NOVA.Error.DropResourceFull": "Actor resource for drop is already full! Drop will be discarded." 
+  "NOVA.Error.DropResourceFull": "Actor resource for drop is already full! Drop will be discarded.",
 
-
+  "NOVA.StatusAura":"Aura",
+  "NOVA.StatusBerserk": "Berserk",
+  "NOVA.StatusDisrupted": "Disrupted",
+  "NOVA.StatusFlight": "Flight",
+  "NOVA.StatusImmune": "Immune",
+  "NOVA.StatusLock": "Locked",
+  "NOVA.StatusProtect": "Protected",
+  "NOVA.StatusWeaken": "Weakened",
+  "NOVA.StatusMarked": "Marked",
+  "NOVA.StatusStunned": "Stunned",
+  "NOVA.StatusInfected": "Infected",
+  "NOVA.StatusFear": "Fear",
+  "NOVA.StatusDamned": "Damned",
+  "NOVA.StatusDormant": "Dormant",
+  "NOVA.StatusBleeding": "Bleeding",
+  "NOVA.StatusBlind": "Blind",
+  "NOVA.StatusTaunted": "Taunted",
+  "NOVA.StatusHidden": "Hidden",
+  "NOVA.StatusExposed": "Exposed",
+  "NOVA.StatusBurning": "Burning",
+  "NOVA.StatusFrozen": "Frozen",
+  "NOVA.StatusAlerted": "Alerted",
+  "NOVA.StatusImmobilized": "Immobilized",
+  "NOVA.StatusEmpowered": "Empowered"
 }
