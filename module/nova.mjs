@@ -134,6 +134,13 @@ Handlebars.registerHelper('descFromId', function(collection, id) {
   return null;
 });
 
+Handlebars.registerHelper('novaLookup', function (object, propertyName, defaultValue, options) {
+    const result = options.lookupProperty(object, propertyName)
+    if (result != null) {
+        return result
+    }
+    return defaultValue
+})
 
 /* -------------------------------------------- */
 /*  Ready Hook                                  */

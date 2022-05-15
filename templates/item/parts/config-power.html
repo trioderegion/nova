@@ -5,16 +5,17 @@
       <a class="effect-control" title="{{localize 'EFFECT.MODE_ADD'}}" data-action="create"><i class="fas fa-plus"></i> {{localize 'EFFECT.MODE_ADD'}}</a>
     </div>
   </li>
-  {{log this}}
   {{#unless canBeAttached}}
   {{#each data.harm as |harm|}}
   <li class="item effect flexrow" data-harm-index="{{@index}}">
-    <div class="item-name effect-name flexrow">
-      <h4>{{harm.name}}</h4>
+    <div class="item-controls effect-controls flexrow" style="max-width: fit-content;">
+      <a class="effect-control" data-action="toggle-lock" data-harm-index="{{@index}}" title="{{novaLookup ../lockTitle harm.locked ../lockTitle.default}}"><i class="{{novaLookup ../lockCSS harm.locked ../lockCSS.default}}"></i></a>
     </div>
-    <div class="item-controls effect-controls flexrow">
-      <a class="effect-control" data-action="edit" data-harm-index="{{@index}}" title="{{localize 'NOVA.Harm.Edit'}}"><i class="fas fa-edit"></i></a>
-      <a class="effect-control" data-action="delete" data-harm-index="{{@index}}" title="{{localize 'Nova.Harm.Delete'}}"><i class="fas fa-trash"></i></a>
+    <div class="item-name effect-name flexrow">
+      <a class="effect-control" data-action="edit" data-harm-index="{{@index}}" title="{{localize 'NOVA.Harm.Edit'}}"><h4>{{harm.name}}</h4></a>
+    </div>
+    <div class="item-controls effect-controls flexrow" >
+      <a class="effect-control" data-action="delete" data-harm-index="{{@index}}" title="{{localize 'NOVA.Harm.Delete'}}"><i class="fas fa-trash"></i></a>
     </div>
   </li>
   {{/each}}
@@ -31,7 +32,7 @@
       <input type="text" class="change-field at-end" data-field="value" placeholder="(change)" value="{{change.value}}"/> 
     </div>
     <div class="item-controls effect-controls flexrow">
-      <a class="effect-control" data-action="delete" data-change-index="{{@index}}" title="{{localize 'Nova.Change.Delete'}}"><i class="fas fa-trash"></i></a>
+      <a class="effect-control" data-action="delete" data-change-index="{{@index}}" title="{{localize 'NOVA.Change.Delete'}}"><i class="fas fa-trash"></i></a>
     </div>
   </li>
   {{/each}}

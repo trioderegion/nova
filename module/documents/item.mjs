@@ -324,6 +324,16 @@ export class NovaItem extends Item {
     return this._updateArray('data.harm', harmData, harmInfo.index);
   }
 
+  async toggleHarmLock(identifier, forceState = undefined) {
+    const harmInfo = this.getHarmInfo(identifier);
+    if(!harmInfo) return false;
+
+    let harm = harmInfo.harm;
+    harm.locked = forceState == undefined ? !harm.locked : forceState;
+
+    return this.updateHarm(identifier, harm);
+  }
+
   async rollHarm(identifier, {createChatMessage = true, rollModeOverride} = {}) {
     const harmInfo = this.getHarmInfo(identifier);
 
@@ -444,13 +454,14 @@ export class NovaItem extends Item {
 
       if( !!min && !!max ){
         entry += `${min} - ${max}`
+        entries.push(entry);
       } else if (!!min) {
         entry += `${min}`;
-      } else {
+        entries.push(entry);
+      } else if (!!max) {
         entry += `${max} (${game.i18n.localize('NOVA.MaximumAbbr').toLowerCase()})`
+        entries.push(entry);
       }
-
-      entries.push(entry);
     }
 
     return entries;

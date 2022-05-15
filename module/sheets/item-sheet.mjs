@@ -47,44 +47,53 @@ export class NovaItemSheet extends ItemSheet {
     context.canAttachFlare = false;
     context.canBeAttached = false;
 
+    context.lockCSS = {
+      default: 'fas fa-lock-open trans50',
+      false: 'fas fa-lock-open trans50',
+      true: 'fas fa-lock'
+    }
+
+    context.lockTitle = {
+      default: game.i18n.localize('NOVA.Harm.UnlockInfo'),
+      false: game.i18n.localize('NOVA.Harm.UnlockInfo'),
+      true: game.i18n.localize('NOVA.Harm.LockInfo')
+    }
 
     let actor = this.object?.parent ?? null;
 
-      /* need an actor to grab any possible flare mods to attach */
-      switch (itemData.type) {
+    /* need an actor to grab any possible flare mods to attach */
+    switch (itemData.type) {
 
-        //case 'active':
-        //case 'passive':
-        case 'power': {
-          context.canAttachFlare = !!actor && itemData.data.type == 'active';
-          context.configLabel = "NOVA.Harm.Label";
+      case 'power': {
+        context.canAttachFlare = !!actor && itemData.data.type == 'active';
+        context.configLabel = "NOVA.Harm.Label";
 
-          if(actor) {
-            /* collect all flare mods that we could attach to a power (i.e. not persistant and not already in use) */
-            const compatibleMods = actor.items.filter( item => item.type == 'flare' && item.data.data.type == 'power' 
-              && (item.data.data.affects == 'any' || item.data.data.affects == context.item.id) )
+        if(actor) {
+          /* collect all flare mods that we could attach to a power (i.e. not persistant and not already in use) */
+          const compatibleMods = actor.items.filter( item => item.type == 'flare' && item.data.data.type == 'power' 
+            && (item.data.data.affects == 'any' || item.data.data.affects == context.item.id) )
 
-            /* populate information for display */
-            compatibleMods.forEach( (mod) => {
-              context.modInfo[mod.id] = mod.name;
-            });
-          }
-
-          break;
+          /* populate information for display */
+          compatibleMods.forEach( (mod) => {
+            context.modInfo[mod.id] = mod.name;
+          });
         }
 
-        case 'flare':
-
-          context.canBeAttached = true;
-          context.configLabel = "NOVA.Modifications";
-          context.affectInfo = this._createAffectsOptions();
-
-          /* populate available change targets, modes, expressions */
-          context.flareChanges = this._createChangeOptions();
-
-          break;
-        
+        break;
       }
+
+      case 'flare':
+
+        context.canBeAttached = true;
+        context.configLabel = "NOVA.Modifications";
+        context.affectInfo = this._createAffectsOptions();
+
+        /* populate available change targets, modes, expressions */
+        context.flareChanges = this._createChangeOptions();
+
+        break;
+
+    }
 
 
     // Add the actor's data to context.data for easier access, as well as flags.
@@ -197,6 +206,8 @@ export class NovaItemSheet extends ItemSheet {
         return this.object.updateHarm(index, harmData);
       case 'delete':
         return this.object.deleteHarm(index);
+      case 'toggle-lock':
+        return this.object.toggleHarmLock(index);
     }
   }
 

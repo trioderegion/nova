@@ -84,6 +84,11 @@
   "NOVA.Harm.Label": "Harm",
   "NOVA.Harm.Use": "Inflicts harm",
   "NOVA.HarmConfigTitle": "Configure Harm Entry: {name}",
+  "NOVA.Harm.LockInfo": "Not currently affected by Flare Mods",
+  "NOVA.Harm.UnlockInfo": "Accepts Flare Mod changes",
+  "NOVA.Harm.Delete": "Delete Harm entry",
+
+  "NOVA.Change.Delete": "Delete modification",
 
   "NOVA.Moves.Label": "Moves",
   "NOVA.Move.Use": "Uses a move",

@@ -290,7 +290,11 @@
 
 .nova .inactive-turn {
   margin-top: 5px;
-  padding: 5px
+  padding: 5px;
+}
+
+.nova .trans50 {
+  opacity: 50%;
 }
 
 .chat-message .message-header {
@@ -655,9 +659,9 @@
 .nova .items-list .item .item-name .item-image {
   -webkit-box-flex: 0;
   -ms-flex: 0 0 30px;
-  flex: 0 0 30px;
-  height: 30px;
-  background-size: 30px;
+  flex: 0 0 24px;
+  height: 24px;
+  background-size: 24px;
   border: none;
   margin-right: 5px;
 }
