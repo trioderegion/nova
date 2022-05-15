@@ -90,19 +90,23 @@ export class NovaActorSheet extends ActorSheet {
     context.npcHarm = NovaActorSheet._createNpcActionSet(context.data.harm, "harm", "NOVA.Harm.Label", "NOVA.Harm.Use")
 
     /* migration from 1.0 to 1.1 data structure -- harm for NPCs is a 2 entry array */
-    if (typeof context.npcHarm.entries == 'object') {
-      //handlebars mangled arrays somehow got through, correct this
-      context.npcHarm.entries = Object.values(context.npcHarm.entries);
-    }
+    //if (typeof context.npcHarm.entries == 'object') {
+    //  //handlebars mangled arrays somehow got through, correct this
+    //  context.npcHarm.entries = Object.values(context.npcHarm.entries);
+    //}
 
     context.npcHarm.entries = context.npcHarm.entries.map( entry => {
       if (typeof entry == 'string') {
-        //1.0 version, make into 2d array
-        return [0, entry];
+        //1.0 version, make into 2d array grabbing the first number, hoping its the Harm value
+        const regex = /\d+/;
+        const result = entry.match(regex)[0];
+        return [result ?? "0", entry, ''];
       }
 
       return entry;
     })
+
+    context.statusList = CONFIG.statusEffects;
     return;
   }
 
@@ -325,7 +329,7 @@ export class NovaActorSheet extends ActorSheet {
       case 'harm': {
         const index = npcData.data('index');
         const harm = this.actor.data.data.harm[index]; 
-        return this.actor.harmRoll(harm[0], harm[1]);
+        return this.actor.harmRoll(harm[0], harm[1], harm[2]);
       }
       default:
         /* it must be a 'plain' action */

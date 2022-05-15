@@ -267,7 +267,7 @@ export class NovaActor extends Actor {
 
   }
 
-  async harmRoll(rollExpression, description, {createChatMessage = true, rollMode = game.settings.get('core','rollMode')} = {}) {
+  async harmRoll(rollExpression, description = '', statusId = '', {createChatMessage = true, rollMode = game.settings.get('core','rollMode')} = {}) {
     const rollData = this.getRollData();
 
     const roll = await new Roll(rollExpression, rollData).evaluate({async: true});
@@ -276,11 +276,11 @@ export class NovaActor extends Actor {
     game.user.targets.forEach( target => targets.push(target.actor.uuid) );
 
     // Initialize chat data.
-    let speaker = ChatMessage.getSpeaker({ token: this.token ?? this.getActiveTokens()[0].document, actor: this });
+    let speaker = ChatMessage.getSpeaker({ token: this.token ?? this.getActiveTokens()[0]?.document, actor: this });
 
     speaker.alias += `: ${game.i18n.localize('NOVA.Harm.Label')}`
 
-    const harmProxy = mergeObject(CONFIG.NOVA.DEFAULTS.HARM_DATA, {special: description, harm: {value: roll.total}});
+    const harmProxy = mergeObject(CONFIG.NOVA.DEFAULTS.HARM_DATA, {special: description, harm: {value: roll.total}, status: {target: statusId}});
 
     let data = {
       harmInfo: harmProxy,
@@ -374,8 +374,8 @@ export class NovaActor extends Actor {
     /* get current list */
     let current = duplicate(this.data.data[type]);
     if ( current instanceof Array) {
-      current.push(game.i18n.localize(CONFIG.NOVA.DEFAULTS[type]));
-    } else current = [["0", current], CONFIG.NOVA.DEFAULTS[type]]
+      current.push(CONFIG.NOVA.DEFAULTS.NPC_ACTION[type]);
+    } else current = [["0", current, ''], CONFIG.NOVA.DEFAULTS.NPC_ACTION[type]]
     return this.update({[`data.${type}`]: current});
   }
 

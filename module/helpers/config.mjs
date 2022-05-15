@@ -102,12 +102,14 @@ export const statusEffects = [
 // Define constants here, such as:
 NOVA.DEFAULTS = {
   NPC_ACTION: {
-    harm: ["0", "NOVA.NPCActions.Harm"],
-    moves: "NOVA.NPCActions.Moves",
-    variants: "NOVA.NPCActions.Variants",
-    followers: "NOVA.NPCActions.Follower",
-    lair: "NOVA.NPCActions.Lair",
-    commands: "NOVA.NPCActions.Commands",
+    get harm() {
+      return ["0", game.i18n.localize("NOVA.NPCActions.Harm"), ''];
+    },
+    get moves() { return game.i18n.localize("NOVA.NPCActions.Moves") },
+    get variants() { return game.i18n.localize("NOVA.NPCActions.Variants") },
+    get followers() { return game.i18n.localize("NOVA.NPCActions.Follower") },
+    get lair() { return game.i18n.localize("NOVA.NPCActions.Lair") },
+    get commands() { return game.i18n.localize("NOVA.NPCActions.Commands")},
   },
   get HARM_DATA() {
     return {

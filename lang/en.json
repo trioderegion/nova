@@ -112,6 +112,7 @@
   "NOVA.DropNone": "No Drop",
   "NOVA.DropFuel": "{quantity} Fuel",
   "NOVA.DropHealth": "{quantity} Health",
+  "NOVA.Revive": "Reboot",
   
   "NOVA.AllSparksEndTurn": "End turn for all Sparks",
   "NOVA.ResetRound": "Reset round",
