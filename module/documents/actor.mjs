@@ -21,6 +21,24 @@ export async function applyUseChange(path, targets, change) {
   return Promise.all(promises);
 }
 
+export async function applyStatus(targets, status, {active = true, overlay = false} = {}) {
+
+  if(typeof targets == 'string') targets = [targets];
+
+  const promises = targets.map( async (targetUuid) => {
+    let target = await fromUuid(targetUuid);
+    target = target instanceof Actor ? target.token ? target.token.object : target.getActiveTokens()[0] : target.object;
+    if (target?.isOwner) {
+      return target.toggleEffect(status, {active, overlay});
+    }
+
+    return false;
+  })
+
+  return Promise.all(promises);
+
+}
+
 
 class NovaActorData extends ActorData {
   static defineSchema() {
@@ -177,8 +195,10 @@ export class NovaActor extends Actor {
         if (curr.data.type == 'flare') {
           let category = curr.data.data.type == 'persistent' ? 'persistent' : 'power';
           acc[category].push(curr.id)
-          return acc;
         }
+
+        return acc;
+
       },{persistent: [], power: []});
 
       if (flareIds.persistent.length > 0) {

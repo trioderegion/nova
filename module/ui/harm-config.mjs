@@ -13,9 +13,15 @@ export class HarmConfig extends Dialog {
       rangeSelect: CONFIG.NOVA.range,
       targetSelect: CONFIG.NOVA.target,
       costResource: CONFIG.NOVA.costResource,
+      statusSelect: CONFIG.statusEffects.reduce( (acc, effect) => {
+                      acc[effect.id] = effect.label;
+                      return acc;
+                    }, {}),
       localLabels: {
         min: `(${game.i18n.localize('Minimum')})`,
         max: `(${game.i18n.localize('Maximum')})`,
+        self: `(${game.i18n.localize('NOVA.TargetSelf')})`,
+        target: `(${game.i18n.localize('NOVA.Target')})`,
       }
     }
     
@@ -57,6 +63,10 @@ export class HarmConfig extends Dialog {
       range: {
         min: Number(html[0].querySelector("[name=range-min]").value),
         max: Number(html[0].querySelector("[name=range-max]").value),
+      },
+      status: {
+        self: html[0].querySelector("[name=status-self]").value,
+        target: html[0].querySelector("[name=status-target]").value,
       },
       special: html[0].querySelector("[name=special]").value,
     }

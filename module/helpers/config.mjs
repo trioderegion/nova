@@ -119,6 +119,10 @@ NOVA.DEFAULTS = {
       target: {type: 'none', value: ''},
       range: {min: 0, max: 0},
       special: "",
+      status: {
+        self: '',
+        target: ''
+      },
       locked: false,
     }
   },
@@ -161,7 +165,9 @@ NOVA.modTargets = {
   'NOVA.Cost': 'cost.value',
   'NOVA.Targets': 'target.value',
   'NOVA.Range': 'range.min',
-  'NOVA.RangeMax': 'range.max'
+  'NOVA.RangeMax': 'range.max',
+  'NOVA.StatusSelf': 'status.self',
+  'NOVA.StatusTarget': 'status.target',
 }
 
 NOVA.changeModes = {

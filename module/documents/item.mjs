@@ -1,4 +1,4 @@
-import { applyUseChange } from './actor.mjs'
+import { applyUseChange, applyStatus } from './actor.mjs'
 
 const ItemData = foundry.data.ItemData;
 
@@ -423,11 +423,11 @@ export class NovaItem extends Item {
 
     const button = event.currentTarget;
     //const {itemUuid} = button.closest(".harm-apply").dataset;
-    let {path, targets, change} = button.dataset;
+    let {path, targets, change, statusId} = button.dataset;
 
     if (event.type == 'click') {
       /* apply change to selected */
-      targets = canvas.tokens.controlled.map( token => token.actor.uuid );
+      targets = canvas.tokens.controlled.map( token => token.document.uuid );
     } else if (event.type == 'contextmenu') {
       /* apply change to predefined targets/source */
       targets = targets.split(',');
@@ -435,9 +435,16 @@ export class NovaItem extends Item {
       /* um...no clue */
       targets = []
     }
-    
-    change = Number(change);
-    return applyUseChange(path, targets, -change);
+   
+    if (targets.length > 0) {
+      change = Number(change);
+      await applyUseChange(path, targets, -change);
+      
+      if( statusId != '') {
+        const status = CONFIG.statusEffects.find( effect => effect.id == statusId ) ?? statusId;
+        await applyStatus(targets, status);
+      }
+    }
   }
 
   static footerEntries(harmInfo) {

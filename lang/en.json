@@ -129,6 +129,9 @@
   "NOVA.Error.ClaimNoGM": "You cannot claim a drop without an active GM.",
   "NOVA.Error.DropResourceFull": "Actor resource for drop is already full! Drop will be discarded.",
 
+  "NOVA.StatusSelf": "Self Status",
+  "NOVA.StatusTarget": "Target Status",
+
   "NOVA.StatusAura":"Aura",
   "NOVA.StatusBerserk": "Berserk",
   "NOVA.StatusDisrupted": "Disrupted",

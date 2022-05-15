@@ -29,6 +29,15 @@
   <select class="grid-span-2" name="range-max" data-dtype="Number">
     {{selectOptions rangeSelect selected=range.max localize=true blank=localLabels.max}}
   </select>
+  <span class="grid-span-2 resource-label">
+    {{localize "NOVA.AppliesStatus"}}
+  </span>
+  <select class="grid-span-2" name="status-self">
+    {{selectOptions statusSelect selected=status.self localize=true blank=localLabels.self}}
+  </select>
+  <select class="grid-span-2" name="status-target">
+    {{selectOptions statusSelect selected=status.target localize=true blank=localLabels.target}}
+  </select>
   <span class="grid-span-6"><hr/></span>
   <input class="grid-span-6" type="text" value="{{special}}" name="special" placeholder="Special">
 </form>
