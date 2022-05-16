@@ -11,6 +11,7 @@
   "NOVA.Description": "Description",
   "NOVA.Name": "Name",
   "NOVA.Turn": "Turn",
+  "NOVA.Source": "Source",
 
   "NOVA.RollFailure": "Failure",
   "NOVA.RollSuccess": "Success",
@@ -112,7 +113,7 @@
   "NOVA.DropNone": "No Drop",
   "NOVA.DropFuel": "{quantity} Fuel",
   "NOVA.DropHealth": "{quantity} Health",
-  "NOVA.Revive": "Reboot",
+  "NOVA.Revive": "Revive",
   
   "NOVA.AllSparksEndTurn": "End turn for all Sparks",
   "NOVA.ResetRound": "Reset round",
@@ -130,6 +131,7 @@
   "NOVA.Error.ClaimNoGM": "You cannot claim a drop without an active GM.",
   "NOVA.Error.DropResourceFull": "Actor resource for drop is already full! Drop will be discarded.",
 
+  "NOVA.AppliesStatus": "Applies Status",
   "NOVA.StatusSelf": "Self Status",
   "NOVA.StatusTarget": "Target Status",
 

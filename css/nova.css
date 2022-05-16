@@ -4,8 +4,6 @@
   font-family: "Roboto", sans-serif;
 }
 
-
-
 .end-turn:hover{
   color: #FFFFFF;
   text-shadow: 0 0 10px green;
@@ -412,6 +410,17 @@
   touch-action: manipulation;
 }
 
+.nova select {
+  border-radius: 15px;
+  text-align: center;
+  margin-right: 5px;
+}
+
+.nova .items-list select {
+  font-size: 12px;
+  max-width: fit-content;
+}
+
 .nova button:hover {
   background-color: #fff;
 }
@@ -518,7 +527,9 @@
 }
 
 .nova .sheet-body,
-.nova .sheet-body .tab,
+.nova .sheet-body .tab {
+  height: 100%;
+}
 .nova .sheet-body .tab .editor {
   height: 100%;
 }
@@ -532,6 +543,11 @@
 
 .nova .tox .tox-edit-area {
   padding: 0 8px;
+}
+
+.nova .sheet-body .harm-summary {
+  flex: 0;
+  padding-bottom: 10px;
 }
 
 .nova .resource-label {
@@ -580,7 +596,7 @@
   padding: 0;
 }
 
-.nova .items-list .item-name {
+.nova .items-list .item-name, .nova .items-list .effect-name {
   -webkit-box-flex: 2;
   -ms-flex: 2;
   flex: 2;
@@ -596,7 +612,7 @@
   display: flex;
 }
 
-.nova .items-list .item-name h3, .nova .items-list .item-name h4 {
+.nova .items-list .item-name h3, .nova .items-list .item-name h4, .nova .items-list .effect-name h4 {
   margin: 0;
   white-space: nowrap;
   overflow-x: hidden;
@@ -627,8 +643,8 @@
   display: -ms-flexbox;
   display: flex;
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 50px;
-  flex: 0 0 50px;
+  -ms-flex: 0;
+  flex: inherit;
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   justify-content: flex-end;
@@ -652,11 +668,11 @@
   border-bottom: none;
 }
 
-.nova .items-list .item .item-name {
+.nova .items-list .item .item-name, .nova .items-list .effect .effect-name {
   color: #191813;
 }
 
-.nova .items-list .item .item-name .item-image {
+.nova .items-list .item .item-name .item-image, .nova .items-list .effect .effect-name .effect-image {
   -webkit-box-flex: 0;
   -ms-flex: 0 0 30px;
   flex: 0 0 24px;

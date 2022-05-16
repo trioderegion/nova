@@ -29,7 +29,7 @@
       <select class="change-field" data-field="mode" data-dtype="Number">
         {{selectOptions ../flareChanges.mode selected=change.mode inverted=true localize=true}}
       </select>
-      <input type="text" class="change-field at-end" data-field="value" placeholder="(change)" value="{{change.value}}"/> 
+      <input type="text" class="change-field" data-field="value" placeholder="(change)" value="{{change.value}}"/> 
     </div>
     <div class="item-controls effect-controls flexrow">
       <a class="effect-control" data-action="delete" data-change-index="{{@index}}" title="{{localize 'NOVA.Change.Delete'}}"><i class="fas fa-trash"></i></a>

@@ -1,12 +1,12 @@
 <ol class="items-list effects-list">
   {{#each effects as |section sid|}}
     <li class="items-header flexrow" data-effect-type="{{section.type}}">
-      <a class="item-controls">
-        <i class="fas border-none" style="opacity:0%;"></i>
-      </a>
+      <div class="item-controls effect-controls flexrow">
+        <a class="effect-controls"><i class="fas fa-check" style="opacity:0%;"></i></a>
+      </div>
       <h3 class="item-name effect-name flexrow">{{localize section.label}}</h3>
-      <div class="effect-source">Source</div>
-      <div class="effect-source">Duration</div>
+      <div class="effect-source">{{localize "NOVA.Source"}}</div>
+      <div class="effect-source">{{localize "EFFECT.TabDuration"}}</div>
       <div class="item-controls effect-controls flexrow">
         <a class="effect-control" data-action="create" title="{{localize 'NOVA.EffectCreate'}}">
           <i class="fas fa-plus"></i> {{localize "NOVA.Add"}}
@@ -22,16 +22,15 @@
             <i class="fas {{#if effect.data.disabled}}fa-check trans50{{else}}fa-times{{/if}}"></i>
           </a>
         </div>
-        <div class="item-name effect-name flexrow">
-          <img class="item-image" src="{{effect.data.icon}}"/>
-          <h4>{{effect.data.label}}</h4>
+        <div class="effect-name flexrow">
+          <img class="effect-image" src="{{effect.data.icon}}"/>
+          <a class="effect-control" data-action="edit" title="{{localize 'NOVA.EffectEdit'}}">
+            <h4>{{effect.data.label}}</h4>
+          </a>
         </div>
         <div class="effect-source">{{effect.sourceName}}</div>
         <div class="effect-duration">{{effect.duration.label}}</div>
-        <div class="item-controls effect-controls flexrow">
-          <a class="effect-control" data-action="edit" title="{{localize 'NOVA.EffectEdit'}}">
-            <i class="fas fa-edit"></i>
-          </a>
+        <div class="item-controls effect-controls flexrow" style="padding-left:20px;">
           <a class="effect-control" data-action="delete" title="{{localize 'NOVA.EffectDelete'}}">
             <i class="fas fa-trash"></i>
           </a>

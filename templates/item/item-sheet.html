@@ -4,16 +4,25 @@
   {{> "systems/nova/templates/item/parts/header.html"}}
 
   {{!-- Sheet Body --}}
-  <section class="sheet-body grid grid-5col">
       
-        <aside class="sidebar harm-summary grid-span-2">
-        {{> "systems/nova/templates/item/parts/config-power.html"}} 
-        </aside>
+    {{#if canBeAttached}}
+    <section class="sheet-body flexcol">
+    <div class="harm-summary">
+      {{> "systems/nova/templates/item/parts/config-power.html"}} 
+    </div>
+    <div class="main editor">
+      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
+    {{else}}
+    <section class="sheet-body grid grid-5col">
+    <aside class="sidebar harm-summary grid-span-2">
+      {{> "systems/nova/templates/item/parts/config-power.html"}} 
+    </aside>
+    <section class="main editor grid-span-3">
+      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+    </section>
+    {{/if}}
 
-        <section class="main editor grid-span-3">
-        {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
-        </section>
-      
   </section> 
 
 </form>
