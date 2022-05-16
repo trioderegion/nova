@@ -35,8 +35,17 @@ Hooks.once('init', async function() {
   // Add custom constants for configuration.
   CONFIG.NOVA = NOVA;
 
-  // Add custom status effects
-  CONFIG.statusEffects = statusEffects;
+
+  // Add custom status effects after translations are ready
+  Hooks.once('setup', () => {
+    CONFIG.statusEffects = statusEffects.sort( (left, right) => {
+      const a = game.i18n.localize(left.label);
+      const b = game.i18n.localize(right.label);
+      if (a < b) return -1;
+      if (a > b) return 1;
+      return 0;
+    });
+  });
 
   /**
    * Set an initiative formula for the system
