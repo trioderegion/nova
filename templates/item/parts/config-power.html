@@ -1,30 +1,51 @@
-<section class="grid grid-5col align-center">
-          {{!-- As you add new fields, add them in here! --}}
-          <div class="flexrow">
-            <label for="data.type" class="resource-label">{{localize "NOVA.Type"}}</label>
-          </div>
-          <div class="flexrow grid-span-4">
-          {{#if canAttachFlare}}
-          <label for="data.mods" class="resource-label">{{localize "NOVA.FlareMods"}}</label>
-          {{/if}}
-          </div>
-          <div class="flexrow">
-            <select name="data.type">
-              {{#select data.type}}
-              {{#each subTypes as |name type|}}
-              <option value="{{type}}">{{localize name}}</option>
-              {{/each}}
-              {{/select}}
-            </select>
-          </div>
-          {{#each data.mods}}
-          <div class="flexrow grid-span-2">
-          {{#if ../canAttachFlare}} 
-          <select name="data.mods">
-            {{selectOptions ../modInfo selected=this inverted=false}}
-          </select>
-          {{/if}}
-          </div>
-          {{/each}}
-      </section>
+<ol class="items-list effects-list" data-category="{{data.type}}">
+  <li class="flexrow items-header flex-between">
+    <div class="item-name effect-name">{{localize configLabel}}</div>
+    <div class="item-header-controls">
+      <a class="effect-control" title="{{localize 'EFFECT.MODE_ADD'}}" data-action="create"><i class="fas fa-plus"></i> {{localize 'EFFECT.MODE_ADD'}}</a>
+    </div>
+  </li>
+  {{#unless canBeAttached}}
+  {{#each data.harm as |harm|}}
+  <li class="item effect flexrow" data-harm-index="{{@index}}">
+    <div class="item-controls effect-controls flexrow" style="max-width: fit-content;">
+      <a class="effect-control" data-action="toggle-lock" data-harm-index="{{@index}}" title="{{novaLookup ../lockTitle harm.locked ../lockTitle.default}}"><i class="{{novaLookup ../lockCSS harm.locked ../lockCSS.default}}"></i></a>
+    </div>
+    <div class="item-name effect-name flexrow">
+      <a class="effect-control" data-action="edit" data-harm-index="{{@index}}" title="{{localize 'NOVA.Harm.Edit'}}"><h4>{{harm.name}}</h4></a>
+    </div>
+    <div class="item-controls effect-controls flexrow" >
+      <a class="effect-control" data-action="delete" data-harm-index="{{@index}}" title="{{localize 'NOVA.Harm.Delete'}}"><i class="fas fa-trash"></i></a>
+    </div>
+  </li>
+  {{/each}}
+  {{else}} {{!-- is a flare mod, add in modification dropdowns --}}
+  {{#each data.changes as |change|}}
+  <li class="item effect flexrow" data-change-index="{{@index}}">
+    <div class="item-name effect-name flexrow">
+      <select class="change-field" data-field="target">
+        {{selectOptions ../flareChanges.targets selected=change.target inverted=true localize=true}}
+      </select> 
+      <select class="change-field" data-field="mode" data-dtype="Number">
+        {{#if (novaLookup ../isRestricted change.target false)}}
+        {{selectOptions ../restrictedMode selected=change.mode inverted=true localize=true}}
+        {{else}}
+        {{selectOptions ../flareChanges.mode selected=change.mode inverted=true localize=true}}
+        {{/if}}
+      </select>
+      {{#if (novaLookup ../isRestricted change.target false)}}
+      <select class="change-field" data-field="value">
+        {{selectOptions ../restrictedValues selected=change.value inverted=false localize=true}}
+      </select>
+      {{else}}
+      <input type="text" class="change-field" data-field="value" placeholder="(change)" value="{{change.value}}"/> 
+      {{/if}}
+    </div>
+    <div class="item-controls effect-controls flexrow">
+      <a class="effect-control" data-action="delete" data-change-index="{{@index}}" title="{{localize 'NOVA.Change.Delete'}}"><i class="fas fa-trash"></i></a>
+    </div>
+  </li>
+  {{/each}}
+  {{/unless}}
+</ol>
 

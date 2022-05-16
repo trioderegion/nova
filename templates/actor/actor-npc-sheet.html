@@ -4,7 +4,7 @@
   <header class="sheet-header">
     <div class="profile-img-col flex-group-center">
       <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
-      <button type="drop" class="drop-button" {{#if data.health.value}}style="visibility: hidden;"{{/if}}>Roll Drop</button> 
+      <button type="drop" class="drop-button" {{#if (gt data.health.value 0)}}style="visibility: hidden;"{{/if}}>{{localize "NOVA.RollDrop"}}</button> 
     </div>
     <div class="header-fields">
       <section class="grid grid-5col">

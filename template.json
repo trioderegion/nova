@@ -43,7 +43,7 @@
     },
     "npc": {
       "templates": ["base"],
-      "harm": [],
+      "harm": [[]],
       "moves": [],
       "variants": [],
       "keywords": "",
@@ -58,18 +58,23 @@
     "templates": {
       "base": {
         "description": ""
+      },
+      "active": {
+        "harm": [],
+        "type": "passive",
+        "mods": [null, null]
+      },
+      "mod": {
+        "changes": [],
+        "type": "persistent",
+        "affects": "spark"
       }
     },
     "flare": {
-      "templates": ["base"],
-      "type": "persistent",
-      "affects": "none"
-      
+      "templates": ["base", "mod"]
     },
     "power": {
-      "templates": ["base"],
-      "type": "passive",
-      "mods": [null, null]
+      "templates": ["base", "active"]
     }
   }
 }

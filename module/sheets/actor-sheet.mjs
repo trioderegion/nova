@@ -34,7 +34,7 @@ export class NovaActorSheet extends ActorSheet {
     const context = super.getData();
 
     // Use a safe clone of the actor data for further operations.
-    const actorData = context.actor.data;
+    let actorData = context.actor.data;
 
     // Add the actor's data to context.data for easier access, as well as flags.
     context.data = actorData.data;
@@ -57,6 +57,11 @@ export class NovaActorSheet extends ActorSheet {
     // Prepare active effects
     context.effects = prepareActiveEffectCategories(this.actor.effects);
 
+    // Add pre-translated strings
+    context.i18n = {
+      none: game.i18n.localize('NOVA.None'),
+    }
+
     return context;
   }
 
@@ -64,7 +69,7 @@ export class NovaActorSheet extends ActorSheet {
     let npcActions = [];
 
     /* all npcs have harm and move */
-    npcActions.push(NovaActorSheet._createNpcActionSet(context.data.harm, "harm", "NOVA.Harm.Label", "NOVA.Harm.Use"));
+
     npcActions.push(NovaActorSheet._createNpcActionSet(context.data.moves, "moves", "NOVA.Moves.Label", "NOVA.Move.Use"));
 
     /* elites have a few more */
@@ -73,13 +78,35 @@ export class NovaActorSheet extends ActorSheet {
       npcActions.push(NovaActorSheet._createNpcActionSet(context.data.lair, "lair", "NOVA.Lair.Label", "NOVA.Lair.Use"));
     }
 
+    /* any NPC can have a variant */
     npcActions.push(NovaActorSheet._createNpcActionSet(context.data.variants, "variants", "NOVA.Variants.Label", "NOVA.Variant.Use"));
 
+    /* but only Elites have followers */
     if (context.data.elite) {
       npcActions.push(NovaActorSheet._createNpcActionSet(context.data.followers, "followers", "NOVA.Followers.Label", "NOVA.Follower.Use"));
     }
 
     context.npcActions = npcActions;
+    context.npcHarm = NovaActorSheet._createNpcActionSet(context.data.harm, "harm", "NOVA.Harm.Label", "NOVA.Harm.Use")
+
+    /* migration from 1.0 to 1.1 data structure -- harm for NPCs is a 2 entry array */
+    //if (typeof context.npcHarm.entries == 'object') {
+    //  //handlebars mangled arrays somehow got through, correct this
+    //  context.npcHarm.entries = Object.values(context.npcHarm.entries);
+    //}
+
+    context.npcHarm.entries = context.npcHarm.entries.map( entry => {
+      if (typeof entry == 'string') {
+        //1.0 version, make into 2d array grabbing the first number, hoping its the Harm value
+        const regex = /\d+/;
+        const result = entry.match(regex)[0];
+        return [result ?? "0", entry, ''];
+      }
+
+      return entry;
+    })
+
+    context.statusList = CONFIG.statusEffects;
     return;
   }
 
@@ -128,24 +155,40 @@ export class NovaActorSheet extends ActorSheet {
 
     mergeObject(context, itemTypes); 
 
-    context.powerLayout = {'passive': 'NOVA.AddPassive', 'supernova': 'NOVA.AddSupernova', 'active': 'NOVA.AddPower', };
+    context.powerLayout = {'passive': 'NOVA.PowerPassive', 'supernova': 'NOVA.PowerSupernova', 'active': 'NOVA.FlarePower', };
 
     context.persistentInfo = [{
-      id: "",
-      name: "None",
+      id: '',
+      name: game.i18n.localize("NOVA.None"),
+      img: false
+    }];
+
+    context.freePersistants = [{
+      id: '',
+      name: game.i18n.localize("NOVA.None"),
       img: false
     }];
 
     context.powerModInfo = [{
-      id: "",
-      name: "None",
+      id: '',
+      name: game.i18n.localize("NOVA.None"),
       img: false
     }];
 
     //sort the two subtypes of flare mods
     context.flare.forEach( (mod) => {
       if (mod.data.data.type == 'persistent') {
-        context.persistentInfo.push({id: mod.id, img: mod.img, name: mod.name})
+        const modInfo = {id: mod.id, img: mod.img, name: mod.name};
+
+        /* add to the overall info array */
+        context.persistentInfo.push(modInfo)
+
+        /* if this mod isn't attached, add it to the list
+         * of available persistant's to attach */
+        if( !context.actor.data.data.mods.includes(modInfo.id) ){
+          context.freePersistants.push(modInfo); 
+        }
+
       } else if (mod.data.data.type == 'power') {
         context.powerModInfo.push({id: mod.id, img: mod.img, name: mod.name});
       }
@@ -185,6 +228,7 @@ export class NovaActorSheet extends ActorSheet {
     // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));
 
+    html.keypress( (event)=>{ if(event.which == '13') event.preventDefault(); } );
     html.find('.drop-button').click(this._onRollDrop.bind(this));
 
     // Drag events for macros.
@@ -196,6 +240,11 @@ export class NovaActorSheet extends ActorSheet {
         li.addEventListener("dragstart", handler, false);
       });
     }
+
+    /* disable any fields that are targeted by AEs */
+    Object.keys(flattenObject(this.object.overrides)).forEach( key => {
+      this.element.find(`[name="${key}"]`).prop('disabled', true);
+    });
   }
 
   async _onItemDelete(event) {
@@ -267,23 +316,30 @@ export class NovaActorSheet extends ActorSheet {
     const npcData = $(event.currentTarget).parents(".item");
 
     // Handle rolls.
-    if (dataset.rollType) {
-      if (dataset.rollType == 'item') {
+    switch (dataset.rollType) {
+      case 'item': {
         const itemId = element.closest('.item').dataset.itemId;
         const item = this.actor.items.get(itemId);
         if (item) return item.roll();
-      } else if (dataset.rollType == "attribute") {
+        break;
+      } 
+      case "attribute": {
         return attributeRoll( dataset.attribute, this.actor );  
-      } else {
+      } 
+      case 'harm': {
+        const index = npcData.data('index');
+        const harm = this.actor.data.data.harm[index]; 
+        return this.actor.harmRoll(harm[0], harm[1], harm[2]);
+      }
+      default:
         /* it must be a 'plain' action */
         const index = npcData.data('index');
         const flavor = npcData.data('flavor'); 
         return npcRoll(index, this.actor, this.actor.data.data[dataset.rollType], flavor);
-      }
     }
   }
 
-  _onRollDrop(/*event*/) {
+  _onRollDrop(event, ...args) {
     switch (this.actor.type) {
       case 'npc':
         return this.actor.rollDrop();
@@ -297,11 +353,11 @@ export class NovaActorSheet extends ActorSheet {
    * @param {Event} event   Triggering event.
    * @private
    */
-  _onItemSummary(event) {
+  async _onItemSummary(event) {
     event.preventDefault();
     const li = $(event.currentTarget).parents(".item");
     const item = this.actor.items.get(li.data("item-id"));
-    const chatData = item.getChatData({secrets: this.actor.isOwner});
+    const chatData = await item.getItemChatData({embedHarm: false, /*secrets: this.actor.isOwner*/});
 
     // Toggle summary
     if ( li.hasClass("expanded") ) {

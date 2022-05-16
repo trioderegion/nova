@@ -1,16 +1,24 @@
 import { MODULE } from '../helpers/module.mjs'
 
-export async function attributeRoll(attribute, actor) {
+export async function attributeRoll(attribute, actor = undefined, {createMsg = true, bonusDie = 0} = {}) {
 
-  const rollData = actor.getRollData();
-  const attributeData = rollData.attributes[attribute];
-  const rollString = `${attributeData.value + attributeData.bonus}d6kh`;
+  const rollData = actor?.getRollData() ?? {};
+  let attributeData = {};
+
+  if (typeof attribute == 'number') attributeData = {value: attribute, bonus: 0, total: attribute};
+  else attributeData = getProperty(rollData.attributes ?? {}, attribute) ?? {value: 0, bonus: 0, total: 0};
+
+  const rollString = bonusDie == 0 ? `${attributeData.total}d6kh` : `(${attributeData.total} + ${bonusDie})d6kh`;
   const roll = await (new game.nova.NovaRoll(rollString, rollData ).evaluate({async:true}));
-  await roll.toMessage({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    flavor: attributeData.label,
-    rollMode: game.settings.get('core', 'rollMode'),
-  });
+
+  if (createMsg) {
+    await roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor }),
+      flavor: attributeData.label,
+      rollMode: game.settings.get('core', 'rollMode'),
+    });
+  }
+
   return roll;
 
 }
@@ -120,10 +128,12 @@ export class DropRoll extends Roll {
 
   static _claimListener(html) {
     html.on("click", ".drop-button", this._handleClaim.bind(this)); 
+    html.on("contextmenu", ".drop-button", this._handleClaim.bind(this)); 
   }
 
   static _handleClaim(event){
     event.preventDefault();
+    event.stopPropagation();
     const button = event.currentTarget;
     const dropInfo = button.dataset;
     const messageId = button.closest(".chat-message").dataset.messageId;
@@ -138,8 +148,18 @@ export class DropRoll extends Roll {
         return;
       }
 
-      /* claim the drop */
-      return actor.claimDrop(messageId, dropInfo);
+      switch(event.type) {
+        case 'contextmenu':
+          /* right click, modify prompt and fallthrough */
+          /* TODO implement dialog for modifications.
+           * for now, just invert the dropInfo type
+           */
+          dropInfo.dropType = {'fuel': 'health', 'health': 'fuel'}[dropInfo.dropType] ?? dropInfo.dropType;
+          dropInfo.dropName = `&nbsp;<del>${dropInfo.dropName}</del>&nbsp;${game.i18n.format(CONFIG.NOVA.drops[dropInfo.dropType], {quantity: dropInfo.dropCount})}`;
+        case 'click':
+          /* left click, default claim */
+          return actor.claimDrop(messageId, dropInfo);
+      }
     }
 
   }

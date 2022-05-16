@@ -1,0 +1,43 @@
+<form class="{{cssClass}} grid grid-6col" autocomplete="off">
+
+  {{!-- subgrid to arrange data field input --}}
+  <label class="resource-label" for="name">{{localize "Name"}}</label>
+  <input class="grid-span-2" type="text" value="{{name}}" name="name" placeholder="Name">
+  <label class="align-right resource-label" for="harm">{{localize "NOVA.Harm.Label"}}</label>
+  <input class="at-end grid-span-2" type="text" value="{{harm.value}}" name="harm" placeholder="Harm">
+  <span class="grid-span-6"><hr/></span>
+  <span class="grid-span-2 resource-label">
+    {{localize "NOVA.Cost"}}
+  </span>
+  <input class="at-end grid-span-2" type="text" value="{{cost.value}}" name="cost" placeholder="Cost">
+  <select class="grid-span-2" name="resource">
+    {{selectOptions costResource selected=cost.source localize=true}}
+  </select>
+  <span class="grid-span-2 resource-label">
+    {{localize "NOVA.Target"}}
+  </span>
+  <input class="at-end grid-span-2" type="text" value="{{target.value}}" name="quantity" placeholder="Qty.">
+  <select class="grid-span-2" name="target">
+    {{selectOptions targetSelect selected=target.type localize=true}}
+  </select>
+  <span class="grid-span-2 resource-label">
+    {{localize "NOVA.Range"}}
+  </span>
+  <select class="grid-span-2" name="range-min" data-dtype="Number">
+    {{selectOptions rangeSelect selected=range.min localize=true blank=localLabels.min}}
+  </select>
+  <select class="grid-span-2" name="range-max" data-dtype="Number">
+    {{selectOptions rangeSelect selected=range.max localize=true blank=localLabels.max}}
+  </select>
+  <span class="grid-span-2 resource-label">
+    {{localize "NOVA.AppliesStatus"}}
+  </span>
+  <select class="grid-span-2" name="status-self">
+    {{selectOptions statusSelect selected=status.self localize=true blank=localLabels.self}}
+  </select>
+  <select class="grid-span-2" name="status-target">
+    {{selectOptions statusSelect selected=status.target localize=true blank=localLabels.target}}
+  </select>
+  <span class="grid-span-6"><hr/></span>
+  <input class="grid-span-6" type="text" value="{{special}}" name="special" placeholder="Special">
+</form>

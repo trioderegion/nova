@@ -4,7 +4,7 @@
   <header class="sheet-header">
     <div class="profile-img-col flex-group-center">
       <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
-      <button type="revive" class="drop-button" {{#if data.health.value}}style="visibility: hidden;"{{/if}}>Revive</button> 
+      <button type="revive" class="drop-button" {{#if (gt data.health.value 0)}}style="visibility: hidden;"{{/if}}>{{localize "NOVA.Revive"}}</button> 
     </div>
     <div class="header-fields">
       <section class="grid grid-5col">
@@ -95,7 +95,16 @@
             </div>
             <div class="flexrow grid-span-3">
               <select name="data.mods">
-                {{selectOptions ../persistentInfo selected=this nameAttr="id" labelAttr="name"}}
+                {{#select this}}
+                {{#each ../freePersistants }}
+                  <option value={{this.id}}>{{this.name}}</option>
+                {{/each}}
+
+                {{!-- add ourself to the list --}}
+                {{#unless (novaNullOrEmpty this)}}
+                  <option value={{this}} selected>{{novaNameFromId ../persistentInfo this}}</option>
+                {{/unless}}
+                {{/select}}
               </select>
             </div>
           {{/each}}

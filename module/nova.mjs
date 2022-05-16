@@ -10,7 +10,7 @@ import { NovaItemSheet } from "./sheets/item-sheet.mjs";
 
 // Import helper/utility classes and constants.
 import { preloadHandlebarsTemplates } from "./helpers/templates.mjs";
-import { NOVA } from "./helpers/config.mjs";
+import { NOVA, statusEffects } from "./helpers/config.mjs";
 import { DropRoll, NovaRoll } from "./helpers/dice.mjs";
 
 // Import UI Classes
@@ -34,6 +34,18 @@ Hooks.once('init', async function() {
 
   // Add custom constants for configuration.
   CONFIG.NOVA = NOVA;
+
+
+  // Add custom status effects after translations are ready
+  Hooks.once('setup', () => {
+    CONFIG.statusEffects = statusEffects.sort( (left, right) => {
+      const a = game.i18n.localize(left.label);
+      const b = game.i18n.localize(right.label);
+      if (a < b) return -1;
+      if (a > b) return 1;
+      return 0;
+    });
+  });
 
   /**
    * Set an initiative formula for the system
@@ -61,9 +73,20 @@ Hooks.once('init', async function() {
   Items.unregisterSheet("core", ItemSheet);
   Items.registerSheet("nova", NovaItemSheet, { makeDefault: true });
 
-  /* init hooks */
-  Hooks.on('renderChatLog', (app, html)=>{DropRoll._claimListener(html)});
-  Hooks.on('createChatMessage', (msg) => {DropRoll._updateClaimed(msg)});
+  /*************
+  * init hooks 
+  *************/
+
+  /* chat log listeners */
+  Hooks.on('renderChatLog', (app, html) => {
+    DropRoll._claimListener(html);
+    NovaItem._chatListeners(html);
+  });
+
+  /* drop claim message monitor and drop message modifier */
+  Hooks.on('createChatMessage', (msg) => {
+    DropRoll._updateClaimed(msg)
+  });
   
   // Preload Handlebars templates.
   return preloadHandlebarsTemplates();
@@ -97,6 +120,20 @@ Handlebars.registerHelper('imgFromId', function(collection, id) {
   return null;
 });
 
+Handlebars.registerHelper('novaNameFromId', function(collection, id) {
+  const result = collection.find( entry => entry.id === id )
+  if (result) {
+    return result.name;
+  }
+
+  return null;
+});
+
+Handlebars.registerHelper('novaNullOrEmpty', function(element) {
+  return element == undefined || element == '';
+});
+
+
 Handlebars.registerHelper('descFromId', function(collection, id) {
   const result = collection.find( entry => entry.id === id )
   if (result) {
@@ -106,6 +143,13 @@ Handlebars.registerHelper('descFromId', function(collection, id) {
   return null;
 });
 
+Handlebars.registerHelper('novaLookup', function (object, propertyName, defaultValue, options) {
+    const result = options.lookupProperty(object, propertyName)
+    if (result != null) {
+        return result
+    }
+    return defaultValue
+})
 
 /* -------------------------------------------- */
 /*  Ready Hook                                  */

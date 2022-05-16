@@ -1,6 +1,44 @@
 import { MODULE } from '../helpers/module.mjs'
+import { attributeRoll } from '../helpers/dice.mjs'
 
-const ActorData = foundry.data.ActorData
+const ActorData = foundry.data.ActorData;
+
+export async function applyUseChange(path, targets, change) {
+
+  if(typeof targets == 'string') targets = [targets];
+
+  const promises = targets.map( async (targetUuid) => {
+    let target = await fromUuid(targetUuid);
+    target = target instanceof TokenDocument ? target.actor : target;
+    if (target.isOwner) {
+      const original = getProperty(target.data, path);
+      return target.update({[path]: original + change}, {change, source: game.i18n.localize(CONFIG.NOVA.costResource[path])});
+    }
+
+    return false;
+  })
+
+  return Promise.all(promises);
+}
+
+export async function applyStatus(targets, status, {active = true, overlay = false} = {}) {
+
+  if(typeof targets == 'string') targets = [targets];
+
+  const promises = targets.map( async (targetUuid) => {
+    let target = await fromUuid(targetUuid);
+    target = target instanceof Actor ? target.token ? target.token.object : target.getActiveTokens()[0] : target.object;
+    if (target?.isOwner) {
+      return target.toggleEffect(status, {active, overlay});
+    }
+
+    return false;
+  })
+
+  return Promise.all(promises);
+
+}
+
 
 class NovaActorData extends ActorData {
   static defineSchema() {
@@ -32,6 +70,7 @@ export class NovaActor extends Actor {
     return NovaActorData;
   }
 
+
   /** @override */
   prepareData() {
     // Prepare data for the actor. Calling the super version of this executes
@@ -55,11 +94,13 @@ export class NovaActor extends Actor {
    * (such as ability modifiers rather than ability scores) and should be
    * available both inside and outside of character sheets (such as if an actor
    * is queried and has a roll executed directly from it).
+   *
+   * AEs have already been applied by this stage (this.overrides)
    */
   prepareDerivedData() {
     const actorData = this.data;
-    const data = actorData.data;
-    const flags = actorData.flags.nova || {};
+    //const data = actorData.data;
+    //const flags = actorData.flags.nova || {};
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
@@ -71,16 +112,59 @@ export class NovaActor extends Actor {
    * Prepare Character type specific data
    */
   _prepareCharacterData(actorData) {
-    if (actorData.type !== 'character') return;
+    if (actorData.type !== 'spark') return;
 
     // Make modifications to data here. For example:
-    const data = actorData.data;
-
-    // Loop through ability scores, and add their modifiers to our sheet output.
-    for (let [key, ability] of Object.entries(data.abilities)) {
-      // Calculate the modifier using d20 rules.
-      ability.mod = Math.floor((ability.value - 10) / 2);
+    //const data = actorData.data;
+    
+    /* combine current and bonus values for ability scores */
+    for (let [key, {value, bonus}] of Object.entries(actorData.data.attributes)) {
+      actorData.data.attributes[key].total = value + bonus;
     }
+
+    /* gather persistent mod changes */
+    const changes = this.data.data.mods.flatMap( modId => {
+
+      if(modId == undefined) return [];
+
+      const mod = this.items.get(modId);
+
+      if (mod?.data.data.affects == 'spark') {
+        return mod.data.data.changes ?? []
+      }
+
+      return [];
+    });
+
+    changes.forEach( change => {
+
+      if (change.value == undefined || change.value.length == 0) return;
+      const value = getProperty(actorData, change.target);
+
+      let expression;
+      switch(change.mode) {
+      case CONST.ACTIVE_EFFECT_MODES.ADD:
+        expression = `${value} + ${change.value}`;
+        break;
+      case CONST.ACTIVE_EFFECT_MODES.MULTIPLY:
+        expression = `(${value}) * ${change.value}`;
+      case CONST.ACTIVE_EFFECT_MODES.OVERRIDE:
+        expression = `${change.value}`;
+      }
+
+      expression = Roll.replaceFormulaData(expression, actorData.data)
+      const result = Roll.safeEval(expression)
+
+      setProperty(actorData, change.target, result);
+
+      /* are we already overriding this from an AE?
+       * if not, add to overrides so the sheet will
+       * disable its input */
+      if(!hasProperty(this.overrides, change.target)) {
+        setProperty(this.overrides, change.target, value);
+      } 
+
+    })
   }
 
   /**
@@ -92,6 +176,68 @@ export class NovaActor extends Actor {
     // Make modifications to data here. For example:
     //const data = actorData.data;
     //data.xp = (data.cr * data.cr) * 100;
+  }
+
+  /*
+   * If an attached flare mod is deleted, ensure its removed
+   * from any referencing spark or power mods
+   */
+  _onDeleteEmbeddedDocuments(type, documents, result, ...args){
+    super._onDeleteEmbeddedDocuments(type, documents, result, ...args);
+
+    /* grab any flare mod IDs */
+    if(this.type == 'spark') {
+
+      let actorUpdates = {};
+      let itemUpdates = [];
+
+      const flareIds = documents.reduce( (acc, curr) => {
+        if (curr.data.type == 'flare') {
+          let category = curr.data.data.type == 'persistent' ? 'persistent' : 'power';
+          acc[category].push(curr.id)
+        }
+
+        return acc;
+
+      },{persistent: [], power: []});
+
+      if (flareIds.persistent.length > 0) {
+
+        /* remove attachments to the spark */
+        const updatedMods = this.data.data.mods.map( id => {
+          return flareIds.persistent.includes(id) ? '' : id;
+        });
+
+        const undefOrEmpty = e => (e == undefined || e == '');
+
+        /* if there was a change */
+        if (updatedMods.filter(undefOrEmpty).length != this.data.data.mods.filter(undefOrEmpty).length){
+          mergeObject(actorUpdates, {data: {mods: updatedMods}}); 
+        }
+      }
+
+      /* remove attachments to other powers */
+      if (flareIds.power.length > 0){
+        
+        itemUpdates = flareIds.power.reduce( (acc, curr) => {
+          const attachedItem = this.items.find( item => (getProperty(item.data.data, 'mods') ?? []).includes(curr) );
+
+          if (attachedItem) {
+            const modUpdate = attachedItem.data.data.mods.map( id => id == curr ? null : id)
+            acc.push({_id: attachedItem.id, 'data.mods': modUpdate});
+          }
+
+          return acc;
+        }, [])
+      }
+
+      /* try to batch these updates together, at least a little */
+      (async () => {
+        await this.update(actorUpdates);
+        await this.updateEmbeddedDocuments("Item", itemUpdates);
+      })();
+    }
+    
   }
 
   /**
@@ -107,17 +253,59 @@ export class NovaActor extends Actor {
     return data;
   }
 
+  /* @param {String|Number}
+  /* @param {Object} options
+   * @param {Boolean} [options.createMsg]
+   * @param {Number} [options.bonusDie]
+  /* @return {NovaRoll}
+   */
+  async rollTest(attribute, options ){
+    
+    const roll = attributeRoll(attribute, this, options);
+
+    return roll;
+
+  }
+
+  async harmRoll(rollExpression, description = '', statusId = '', {createChatMessage = true, rollMode = game.settings.get('core','rollMode')} = {}) {
+    const rollData = this.getRollData();
+
+    const roll = await new Roll(rollExpression, rollData).evaluate({async: true});
+
+    let targets = [];
+    game.user.targets.forEach( target => targets.push(target.actor.uuid) );
+
+    // Initialize chat data.
+    let speaker = ChatMessage.getSpeaker({ token: this.token ?? this.getActiveTokens()[0]?.document, actor: this });
+
+    speaker.alias += `: ${game.i18n.localize('NOVA.Harm.Label')}`
+
+    const harmProxy = mergeObject(CONFIG.NOVA.DEFAULTS.HARM_DATA, {special: description, harm: {value: roll.total}, status: {target: statusId}});
+
+    let data = {
+      harmInfo: harmProxy,
+      targets,
+      harmLabel: game.i18n.format("NOVA.ApplyHarm", {num: roll.total}),
+      proxy: true,
+    }
+
+    const html = await renderTemplate("systems/nova/templates/chat/harm-roll.html", data);
+
+    return ChatMessage.create({speaker, rollMode, content: html}, {temporary: !createChatMessage});
+
+  }
+
   /**
    * Prepare character roll data.
    */
   _getCharacterRollData(data) {
-    if (this.data.type !== 'character') return;
+    if (this.data.type == 'npc') return;
 
     // Copy the ability scores to the top level, so that rolls can use
     // formulas like `@str.mod + 4`.
     if (data.attributes) {
       for (let [k, v] of Object.entries(data.attributes)) {
-        data[k] = foundry.utils.deepClone(v);
+        data[k] = v.total;
       }
     }
   }
@@ -126,26 +314,51 @@ export class NovaActor extends Actor {
   /* @override */
   async update(data, options) {
 
-    /* check for mangled harm/moves for NPCs */
-    const ensureArray = (path) => {
-      const value = data[path];
-      if (!!value && typeof value == 'string') {
-        data[path] = [value];
-      }
-    }
-
-    ensureArray('data.harm');
-    ensureArray('data.moves');
-    ensureArray('data.variants');
-    ensureArray('data.followers');
-    ensureArray('data.lair');
-    ensureArray('data.commands');
-
     /* update locally and refresh tracker */
     const result = await super.update(data, options);
     ui.combat.render();
 
     return result;
+  }
+
+  _onUpdate(data, options, userId) {
+    super._onUpdate(data, options, userId);
+    this._showScrollingText(options.change, options.source);
+  }
+
+  async _preUpdate(changed, options, user) {
+    await super._preUpdate(changed,options,user);
+
+    /* ensure NPC harm comes in as an array */
+    if ('harm' in changed.data) {
+      changed.data.harm = Object.values(changed.data.harm);
+    }
+  }
+
+  /*
+   * Displays change on all token's owned by this actor
+   *
+   *
+   * LICENSE: Body of showScrollingText taken from
+   * Actor5e#_displayScrollingDamage.
+   * MIT Copyright 2021 Andrew Clayton
+   * https://gitlab.com/foundrynet/dnd5e/-/blob/master/LICENSE.txt
+   */
+  _showScrollingText(change, label) {
+
+    if ( !change ) return;
+    change = Number(change);
+    const tokens = this.isToken ? [this.token?.object] : this.getActiveTokens(true);
+    for ( let t of tokens ) {
+      t.hud.createScrollingText(`${change.signedString()} ${label}`, {
+        anchor: CONST.TEXT_ANCHOR_POINTS.TOP,
+        fontSize: 48, // Range between [16, 48]
+        fill: CONFIG.NOVA.changeColors[change < 0 ? "neg" : "pos"],
+        stroke: 0x000000,
+        strokeThickness: 4,
+        jitter: 0.25
+      });
+    }
   }
 
   /**
@@ -161,8 +374,8 @@ export class NovaActor extends Actor {
     /* get current list */
     let current = duplicate(this.data.data[type]);
     if ( current instanceof Array) {
-      current.push(CONFIG.NOVA.DEFAULTS[type]);
-    } else current = [current, CONFIG.NOVA.DEFAULTS[type]]
+      current.push(CONFIG.NOVA.DEFAULTS.NPC_ACTION[type]);
+    } else current = [["0", current, ''], CONFIG.NOVA.DEFAULTS.NPC_ACTION[type]]
     return this.update({[`data.${type}`]: current});
   }
 
@@ -207,7 +420,7 @@ export class NovaActor extends Actor {
       flags: {nova: {claim: messageId}}
     });
 
-    return this.update({[updateField]: {value: Math.min(field.value + 1, field.max)}})
+    return this.update({[updateField]: {value: Math.min(field.value + Number(dropInfo.dropCount), field.max)}})
   }
 
   get hp() {

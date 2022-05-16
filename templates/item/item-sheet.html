@@ -1,22 +1,28 @@
 <form class="{{cssClass}}" autocomplete="off">
-  <header class="sheet-header">
-    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
-    <div class="header-fields">
-      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
-    </div>
-  </header>
+
+  {{!-- Header --}}
+  {{> "systems/nova/templates/item/parts/header.html"}}
 
   {{!-- Sheet Body --}}
-  <section class="sheet-body">
-    {{log this}}
-    {{#if (eq item.type "power")}}
-    {{> "systems/nova/templates/item/parts/config-power.html"}} 
+      
+    {{#if canBeAttached}}
+    <section class="sheet-body flexcol">
+    <div class="harm-summary">
+      {{> "systems/nova/templates/item/parts/config-power.html"}} 
+    </div>
+    <div class="main editor">
+      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+    </div>
     {{else}}
-    {{> "systems/nova/templates/item/parts/config-flare.html"}} 
+    <section class="sheet-body grid grid-5col">
+    <aside class="sidebar harm-summary grid-span-2">
+      {{> "systems/nova/templates/item/parts/config-power.html"}} 
+    </aside>
+    <section class="main editor grid-span-3">
+      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+    </section>
     {{/if}}
-      <div class="editor flexrow">
-        {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
-      </div>
-  </section>
+
+  </section> 
 
 </form>

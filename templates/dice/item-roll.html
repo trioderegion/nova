@@ -1,0 +1,25 @@
+{{#*inline "modInfo"}}
+<hr/>
+<div class="flexrow attached-mod">
+  <img class="mod-icon" name="perImg" src="{{img}}"/>
+  <div class="flexcol">
+    <span class="resource-label">{{name}}</span>
+    <span style="margin-top:-5px;">{{{description}}}</span>
+  </div>
+</div>
+{{/inline}}
+
+<div class="nova">
+  {{{description}}}
+  {{#each mods}}
+  {{> modInfo}}
+  {{/each}}
+
+  {{#if embedHarm}}
+  <div class="harm-button" data-item-uuid="{{uuid}}">
+    {{#each harm}}
+    <button data-harm-index="{{@index}}">{{this}}</button>
+    {{/each}}
+  </div>
+  {{/if}}
+</div>

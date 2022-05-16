@@ -11,6 +11,7 @@
   "NOVA.Description": "Description",
   "NOVA.Name": "Name",
   "NOVA.Turn": "Turn",
+  "NOVA.Source": "Source",
 
   "NOVA.RollFailure": "Failure",
   "NOVA.RollSuccess": "Success",
@@ -21,14 +22,30 @@
   "NOVA.AttributeMoon": "Moon",
   "NOVA.AttributeShade": "Shade",
 
+  "NOVA.Cost": "Cost",
+  "NOVA.MaximumAbbr": "Max",
+
+  "NOVA.Range": "Range",
+  "NOVA.RangeMax": "Max Range",
   "NOVA.RangeClose": "Close",
   "NOVA.RangeNear": "Near",
   "NOVA.RangeFar": "Far",
   "NOVA.RangeBeyond": "Beyond",
 
+  "NOVA.Target": "Target",
+  "NOVA.Targets": "Targets",
+  "NOVA.TargetSelf": "Self",
+  "NOVA.TargetAlly": "Ally",
+  "NOVA.TargetEnemy": "Enemy",
+  "NOVA.TargetObject": "Object",
+  "NOVA.TargetAny": "Any",
+
   "NOVA.PowerPassive": "Passive",
   "NOVA.PowerActive": "Active",
   "NOVA.PowerSupernova": "Supernova",
+
+  "NOVA.SpendResource": "Spend {num} {resource}",
+  "NOVA.ApplyHarm": "Apply {num} Harm",
 
   "NOVA.FlareMods": "Flare Mods",
   "NOVA.Type": "Type",
@@ -36,6 +53,8 @@
   "NOVA.FlarePersistent": "Persistent",
   "NOVA.PersistentMods": "Persistent Mods",
   "NOVA.Affects": "Affects",
+
+  "NOVA.Modifications": "Modifications",
 
   "NOVA.Effects": "Effects",
   "NOVA.EffectCreate": "Create Effect",
@@ -56,8 +75,21 @@
 
   "NOVA.Keywords": "Keywords",
 
+  "NOVA.NPCActions.Harm": "0 Harm",
+  "NOVA.NPCActions.Moves": "New Move",
+  "NOVA.NPCActions.Variants": "New Variant",
+  "NOVA.NPCActions.Followers": "New Follower",
+  "NOVA.NPCActions.Lair": "New Property",
+  "NOVA.NPCActions.Commands": "New Command",
+
   "NOVA.Harm.Label": "Harm",
   "NOVA.Harm.Use": "Inflicts harm",
+  "NOVA.HarmConfigTitle": "Configure Harm Entry: {name}",
+  "NOVA.Harm.LockInfo": "Not currently affected by Flare Mods",
+  "NOVA.Harm.UnlockInfo": "Accepts Flare Mod changes",
+  "NOVA.Harm.Delete": "Delete Harm entry",
+
+  "NOVA.Change.Delete": "Delete modification",
 
   "NOVA.Moves.Label": "Moves",
   "NOVA.Move.Use": "Uses a move",
@@ -81,12 +113,14 @@
   "NOVA.DropNone": "No Drop",
   "NOVA.DropFuel": "{quantity} Fuel",
   "NOVA.DropHealth": "{quantity} Health",
+  "NOVA.Revive": "Revive",
   
   "NOVA.AllSparksEndTurn": "End turn for all Sparks",
   "NOVA.ResetRound": "Reset round",
   "NOVA.EndTurn": "End turn",
   "NOVA.ResetTurn": "Reset turn",
 
+  "NOVA.RollDrop": "Roll Drop",
   "NOVA.CombatDropTracker": "Drops to Roll",
   "NOVA.RollAllDrops": "Roll all drops",
   "NOVA.ClaimDropLabel": "Claim Drop",
@@ -95,7 +129,34 @@
   "NOVA.ClaimNoActor": "You must claim a drop from a token or assigned character.",
 
   "NOVA.Error.ClaimNoGM": "You cannot claim a drop without an active GM.",
-  "NOVA.Error.DropResourceFull": "Actor resource for drop is already full! Drop will be discarded." 
+  "NOVA.Error.DropResourceFull": "Actor resource for drop is already full! Drop will be discarded.",
 
+  "NOVA.AppliesStatus": "Applies Status",
+  "NOVA.StatusSelf": "Self Status",
+  "NOVA.StatusTarget": "Target Status",
 
+  "NOVA.StatusAura":"Aura",
+  "NOVA.StatusBerserk": "Berserk",
+  "NOVA.StatusDisrupted": "Disrupted",
+  "NOVA.StatusFlight": "Flight",
+  "NOVA.StatusImmune": "Immune",
+  "NOVA.StatusLock": "Locked",
+  "NOVA.StatusProtect": "Protected",
+  "NOVA.StatusWeaken": "Weakened",
+  "NOVA.StatusMarked": "Marked",
+  "NOVA.StatusStunned": "Stunned",
+  "NOVA.StatusInfected": "Infected",
+  "NOVA.StatusFear": "Fear",
+  "NOVA.StatusDamned": "Damned",
+  "NOVA.StatusDormant": "Dormant",
+  "NOVA.StatusBleeding": "Bleeding",
+  "NOVA.StatusBlind": "Blind",
+  "NOVA.StatusTaunted": "Taunted",
+  "NOVA.StatusHidden": "Hidden",
+  "NOVA.StatusExposed": "Exposed",
+  "NOVA.StatusBurning": "Burning",
+  "NOVA.StatusFrozen": "Frozen",
+  "NOVA.StatusAlerted": "Alerted",
+  "NOVA.StatusImmobilized": "Immobilized",
+  "NOVA.StatusEmpowered": "Empowered"
 }

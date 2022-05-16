@@ -4,8 +4,6 @@
   font-family: "Roboto", sans-serif;
 }
 
-
-
 .end-turn:hover{
   color: #FFFFFF;
   text-shadow: 0 0 10px green;
@@ -290,23 +288,30 @@
 
 .nova .inactive-turn {
   margin-top: 5px;
-  padding: 5px
+  padding: 5px;
+}
+
+.nova .trans50 {
+  opacity: 50%;
 }
 
 .chat-message .message-header {
   font-style: normal;
   font-size: 12px;
 }
+
 .chat-message .message-header .flavor-text {
   padding: 3px 0;
   border-top: 2px groove #FFF;
   border-bottom: 2px groove #FFF;
   display: flex;
 }
+
 .chat-message .message-header .flavor-text img {
   flex: 0 0 36px;
   margin-right: 5px;
 }
+
 .chat-message .message-header .flavor-text h3 {
   flex: 1;
   margin: 0;
@@ -316,6 +321,7 @@
   font-weight: 700;
   color: #4b4a44;
 }
+
 .attached-mod {
   display: flex;
   text-align: center;
@@ -323,17 +329,14 @@
 }
 
 .attached-mod .mod-icon {
- display:flex;
- flex-grow: 0;
- flex-direction: column;
  font-weight: bold;
- flex-wrap: nowrap;
- align-items: center;
+ align-items: left;
+ flex: 0 0 auto;
 }
 
-.attached-mod .mod-icon img {
+.attached-mod .mod-icon {
   object-fit: contain; 
-  width: 24px;
+  height: 32px;
 }
 
 .nova .item-summary {
@@ -345,6 +348,17 @@
   border-top: 1px solid #c9c7b8;
 }
 
+.nova .harm-apply {
+  padding-bottom: 10px;
+}
+
+.nova .harm-footer {
+  padding: 3px 0 0;
+  border-top: 2px groove #FFF;
+  font-style: normal;
+  font-size: 12px;
+  color: var(--color-text-dark-secondary);
+}
 
 .nova .drop-claim {
   display: flex;
@@ -363,6 +377,12 @@
   max-width: 30px;
   margin-left: 5px;
   margin-right: 5px;
+  text-align: center;
+}
+
+.nova .at-end {
+  place-self: flex-end;
+  text-align-last: end;
 }
 
 .nova .drop-button {
@@ -370,6 +390,77 @@
   justify-content: center;
   margin-bottom: 5px;
 }
+
+.nova button {
+  background-color: #fbeee0;
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  /*font-size: 18px;*/
+  /*padding: 0 18px;*/
+  line-height: auto;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.nova select {
+  border-radius: 15px;
+  text-align: center;
+  margin-right: 5px;
+}
+
+.nova .items-list select {
+  font-size: 12px;
+  max-width: fit-content;
+}
+
+.nova button:hover {
+  background-color: #fff;
+}
+
+.nova button:active {
+  box-shadow: #422800 2px 2px 0 0;
+  transform: translate(2px, 2px);
+}
+
+/*
+.nova button {
+  /*font-family: "Open Sans", sans-serif;*
+  /*font-size: 16px;*
+  /*letter-spacing: 2px;*
+  text-decoration: none;
+  /*text-transform: uppercase;*
+  color: #000;
+  cursor: pointer;
+  border: 3px solid;
+  padding: 0.25em 0.5em;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.nova button:active {
+  box-shadow: 0px 0px 0px 0px;
+  top: 5px;
+  left: 5px;
+}
+
+@media (min-width: 768px) {
+  .nova button{
+    padding: 0.25em 0.75em;
+  }
+}
+*/
+
 .nova .item-form {
   font-family: "Roboto", sans-serif;
 }
@@ -436,7 +527,9 @@
 }
 
 .nova .sheet-body,
-.nova .sheet-body .tab,
+.nova .sheet-body .tab {
+  height: 100%;
+}
 .nova .sheet-body .tab .editor {
   height: 100%;
 }
@@ -452,8 +545,14 @@
   padding: 0 8px;
 }
 
+.nova .sheet-body .harm-summary {
+  flex: 0;
+  padding-bottom: 10px;
+}
+
 .nova .resource-label {
   font-weight: bold;
+  align-self: center;
 }
 
 .nova .items-header {
@@ -497,7 +596,7 @@
   padding: 0;
 }
 
-.nova .items-list .item-name {
+.nova .items-list .item-name, .nova .items-list .effect-name {
   -webkit-box-flex: 2;
   -ms-flex: 2;
   flex: 2;
@@ -513,7 +612,7 @@
   display: flex;
 }
 
-.nova .items-list .item-name h3, .nova .items-list .item-name h4 {
+.nova .items-list .item-name h3, .nova .items-list .item-name h4, .nova .items-list .effect-name h4 {
   margin: 0;
   white-space: nowrap;
   overflow-x: hidden;
@@ -524,8 +623,9 @@
   display: -ms-flexbox;
   display: flex;
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 136px;
-  flex: 0 0 136px;
+  -ms-flex: 1;
+  flex: 1;
+  flex-wrap: no-wrap;
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   justify-content: flex-end;
@@ -535,6 +635,7 @@
   font-size: 12px;
   text-align: center;
   margin: 0 6px;
+  flex-shrink: 0;
 }
 
 .nova .items-list .item-controls {
@@ -542,8 +643,8 @@
   display: -ms-flexbox;
   display: flex;
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 50px;
-  flex: 0 0 50px;
+  -ms-flex: 0;
+  flex: inherit;
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   justify-content: flex-end;
@@ -567,16 +668,16 @@
   border-bottom: none;
 }
 
-.nova .items-list .item .item-name {
+.nova .items-list .item .item-name, .nova .items-list .effect .effect-name {
   color: #191813;
 }
 
-.nova .items-list .item .item-name .item-image {
+.nova .items-list .item .item-name .item-image, .nova .items-list .effect .effect-name .effect-image {
   -webkit-box-flex: 0;
   -ms-flex: 0 0 30px;
-  flex: 0 0 30px;
-  height: 30px;
-  background-size: 30px;
+  flex: 0 0 24px;
+  height: 24px;
+  background-size: 24px;
   border: none;
   margin-right: 5px;
 }
