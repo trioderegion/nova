@@ -59,6 +59,7 @@ export class NovaItemSheet extends ItemSheet {
       true: game.i18n.localize('NOVA.Harm.LockInfo')
     }
 
+
     let actor = this.object?.parent ?? null;
 
     /* need an actor to grab any possible flare mods to attach */
@@ -91,6 +92,20 @@ export class NovaItemSheet extends ItemSheet {
         /* populate available change targets, modes, expressions */
         context.flareChanges = this._createChangeOptions();
 
+        context.isRestricted = {
+          'status.self': true,
+          'status.target': true,
+        }
+
+        context.restrictedMode = {
+          'EFFECT.MODE_OVERRIDE': CONFIG.NOVA.changeModes['EFFECT.MODE_OVERRIDE'] 
+        }
+
+        context.restrictedValues = CONFIG.statusEffects.reduce( (acc, effect) => {
+          acc[effect.id] = effect.label;
+          return acc;
+        }, {})
+          
         break;
 
     }

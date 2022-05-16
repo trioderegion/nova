@@ -274,6 +274,12 @@ export class NovaItem extends Item {
           }
 
           break;
+        case 'status.self':
+        case 'status.target':
+          /* due to how we force the form fields, we may get an 'add' mode for this.
+           * All status modifications, currently, operate as override and fall through
+           */
+          change.mode = CONST.ACTIVE_EFFECT_MODES.OVERRIDE;
         default:
           /* all others are simple maf roll expressions */
           value = NovaItem._applyExpression(value, change.value, change.mode);

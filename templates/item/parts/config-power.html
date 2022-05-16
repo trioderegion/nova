@@ -27,9 +27,19 @@
         {{selectOptions ../flareChanges.targets selected=change.target inverted=true localize=true}}
       </select> 
       <select class="change-field" data-field="mode" data-dtype="Number">
+        {{#if (novaLookup ../isRestricted change.target false)}}
+        {{selectOptions ../restrictedMode selected=change.mode inverted=true localize=true}}
+        {{else}}
         {{selectOptions ../flareChanges.mode selected=change.mode inverted=true localize=true}}
+        {{/if}}
       </select>
+      {{#if (novaLookup ../isRestricted change.target false)}}
+      <select class="change-field" data-field="value">
+        {{selectOptions ../restrictedValues selected=change.value inverted=false localize=true}}
+      </select>
+      {{else}}
       <input type="text" class="change-field" data-field="value" placeholder="(change)" value="{{change.value}}"/> 
+      {{/if}}
     </div>
     <div class="item-controls effect-controls flexrow">
       <a class="effect-control" data-action="delete" data-change-index="{{@index}}" title="{{localize 'NOVA.Change.Delete'}}"><i class="fas fa-trash"></i></a>
