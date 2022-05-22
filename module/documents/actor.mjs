@@ -1,5 +1,6 @@
 import { MODULE } from '../helpers/module.mjs'
 import { attributeRoll } from '../helpers/dice.mjs'
+import { NovaItem } from './item.mjs'
 
 const ActorData = foundry.data.ActorData;
 
@@ -282,11 +283,23 @@ export class NovaActor extends Actor {
 
     const harmProxy = mergeObject(CONFIG.NOVA.DEFAULTS.HARM_DATA, {special: description, harm: {value: roll.total}, status: {target: statusId}});
 
+    let footEntries = NovaItem.footerEntries(harmProxy);
+
+    if(this.data.data.keywords.length > 0) {
+      footEntries.push(`${game.i18n.localize('NOVA.Keywords')}: ${this.data.data.keywords}`);        
+    }
+
+    const harmFooter = footEntries.reduce( (acc, entry) => {
+      return acc += `${acc.length == 0 ? '' : ' |'} ${entry}` 
+    },"");
+
+
     let data = {
       harmInfo: harmProxy,
       targets,
       harmLabel: game.i18n.format("NOVA.ApplyHarm", {num: roll.total}),
       proxy: true,
+      harmFooter,
     }
 
     const html = await renderTemplate("systems/nova/templates/chat/harm-roll.html", data);
@@ -330,8 +343,28 @@ export class NovaActor extends Actor {
     await super._preUpdate(changed,options,user);
 
     /* ensure NPC harm comes in as an array */
-    if ('harm' in changed.data) {
+    if ('harm' in (changed.data ?? {})) {
       changed.data.harm = Object.values(changed.data.harm);
+    }
+
+    if (options.change == undefined) {
+      /* check if this is a resource update we can display */
+      const flattened = flattenObject(changed);
+      const updatedPath = Object.keys(CONFIG.NOVA.costResource).find( path => {
+        const update = flattened[path];
+        if (update) {
+          /* a field we can display is in this update, is there a delta? */
+          const display = getProperty(this.data, path) != update;
+          return display;
+        }
+
+        return false;
+      });
+
+      if (updatedPath) {
+        options.change = flattened[updatedPath] - getProperty(this.data, updatedPath);
+        options.source = game.i18n.localize(CONFIG.NOVA.costResource[updatedPath])
+      }
     }
   }
 

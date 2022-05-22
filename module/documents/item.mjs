@@ -79,7 +79,7 @@ export class NovaItem extends Item {
     const item = this.data;
     
     // Initialize chat data.
-    const speaker = ChatMessage.getSpeaker({ token: this.actor.token ?? this.actor.getActiveTokens()[0].document, actor: this.actor });
+    const speaker = ChatMessage.getSpeaker({ token: this.actor.token ?? this.actor.getActiveTokens()[0]?.document, actor: this.actor });
     const label = `<img src="${item.img}" width="36" heigh="36"/><h3>${item.name}</h3>`;
 
     let description = item.data.description ?? '';
@@ -155,14 +155,20 @@ export class NovaItem extends Item {
   async roll({rollModeOverride, createMessage=true} = {}) {
 
     const {speaker, rollMode, label, description} = await this.getItemChatData({rollMode: rollModeOverride});
-
-    //send chat message
-    return ChatMessage.create({
+    const chatData = {
       speaker: speaker,
       rollMode: rollMode,
       flavor: label,
       content: description
-    });
+    }
+    
+    if (createMessage) {
+      //send chat message
+      return ChatMessage.create(chatData);
+    }
+
+    return chatData;
+    
   }
 
   getHarmInfo(identifier) {
@@ -455,8 +461,9 @@ export class NovaItem extends Item {
 
   static footerEntries(harmInfo) {
     let entries = [];
+
+    /* add target info, if provided */
     if( (harmInfo.target?.type ?? 'none') !== 'none'){
-      /* add target info */
       entries.push(`${game.i18n.localize('NOVA.Target')}: ${harmInfo.target.value.length == 0 ? '' : harmInfo.target.value + ' '}${game.i18n.localize(CONFIG.NOVA.target[harmInfo.target.type])}`);
     }
 
@@ -475,6 +482,19 @@ export class NovaItem extends Item {
         entry += `${max} (${game.i18n.localize('NOVA.MaximumAbbr').toLowerCase()})`
         entries.push(entry);
       }
+    }
+
+    const statusName = (id) => {
+      const name = CONFIG.statusEffects.find( e => e.id == id )?.label ?? id;
+      return game.i18n.localize(name);
+    }
+
+    if(!!harmInfo.status.self) {
+      entries.push(`${game.i18n.localize('NOVA.StatusSelf')}: ${statusName(harmInfo.status.self)}`);
+    }
+
+    if( !!harmInfo.status.target){
+      entries.push(`${game.i18n.localize('NOVA.StatusTarget')}: ${statusName(harmInfo.status.target)}`);
     }
 
     return entries;
