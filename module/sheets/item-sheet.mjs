@@ -27,12 +27,12 @@ export class NovaItemSheet extends ItemSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  getData() {
+  async getData() {
     // Retrieve base data structure.
-    const context = super.getData();
+    const context = await super.getData();
 
     // Use a safe clone of the item data for further operations.
-    const itemData = context.item.data;
+    const itemData = context.item;
 
     // Retrieve the roll data for TinyMCE editors.
     context.rollData = {};
@@ -66,13 +66,13 @@ export class NovaItemSheet extends ItemSheet {
     switch (itemData.type) {
 
       case 'power': {
-        context.canAttachFlare = !!actor && itemData.data.type == 'active';
+        context.canAttachFlare = !!actor && itemData.system.type == 'active';
         context.configLabel = "NOVA.Harm.Label";
 
         if(actor) {
           /* collect all flare mods that we could attach to a power (i.e. not persistant and not already in use) */
-          const compatibleMods = actor.items.filter( item => item.type == 'flare' && item.data.data.type == 'power' 
-            && (item.data.data.affects == 'any' || item.data.data.affects == context.item.id) )
+          const compatibleMods = actor.items.filter( item => item.type == 'flare' && item.system.type == 'power' 
+            && (item.system.affects == 'any' || item.system.affects == context.item.id) )
 
           /* populate information for display */
           compatibleMods.forEach( (mod) => {
@@ -113,18 +113,22 @@ export class NovaItemSheet extends ItemSheet {
 
     // Add the actor's data to context.data for easier access, as well as flags.
     context.rollData = this.object.getRollData();
-    context.data = duplicate(itemData.data);
+    
+    context.system = duplicate(itemData.system);
+
     context.flags = duplicate(itemData.flags);
+
+    context.description = await TextEditor.enrichHTML(context.system.description, {async: true, rollData: context.rollData, secrets: context.owner});
 
     context.config = CONFIG.NOVA;
     return context;
   }
 
   _createChangeOptions() {
-    switch (this.object.data.data.type) {
+    switch (this.object.system.type) {
       case 'persistent':
 
-        if (this.object.data.data.affects == 'spark') {
+        if (this.object.system.affects == 'spark') {
           /* this mod affects the sparks stats directly */
           return {
             mode: CONFIG.NOVA.changeModes,
@@ -148,14 +152,14 @@ export class NovaItemSheet extends ItemSheet {
     
     let affectInfo = {};
 
-    switch (this.object.data.data.type) {
+    switch (this.object.system.type) {
       case 'power' :
         /* can affect [any power, specific power] */
         affectInfo = {'none': game.i18n.localize('NOVA.None'), 'any': game.i18n.localize('NOVA.Any')};
 
         if (this.object.actor) {
           /* collect all powers attached to the parent actor */
-          const powers = this.object.actor.items.filter( item => item.type == 'power' && item.data.data.type == 'active' );
+          const powers = this.object.actor.items.filter( item => item.type == 'power' && item.system.type == 'active' );
           powers.forEach( power => {
             affectInfo[power.id] = power.name;
           })
@@ -214,9 +218,9 @@ export class NovaItemSheet extends ItemSheet {
     switch (action) {
       case 'create':
         await this.object.addHarm(CONFIG.NOVA.DEFAULTS.HARM_DATA);
-        index = this.object.data.data.harm.length-1;
+        index = this.object.system.harm.length-1;
       case 'edit':
-        const harmData = await HarmConfig.create(this.object, this.object.data.data.harm[index] );
+        const harmData = await HarmConfig.create(this.object, this.object.system.harm[index] );
         if(!harmData) return;
         return this.object.updateHarm(index, harmData);
       case 'delete':

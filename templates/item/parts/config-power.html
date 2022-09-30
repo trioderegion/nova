@@ -1,4 +1,4 @@
-<ol class="items-list effects-list" data-category="{{data.type}}">
+<ol class="items-list effects-list" data-category="{{system.type}}">
   <li class="flexrow items-header flex-between">
     <div class="item-name effect-name">{{localize configLabel}}</div>
     <div class="item-header-controls">
@@ -6,7 +6,7 @@
     </div>
   </li>
   {{#unless canBeAttached}}
-  {{#each data.harm as |harm|}}
+  {{#each system.harm as |harm|}}
   <li class="item effect flexrow" data-harm-index="{{@index}}">
     <div class="item-controls effect-controls flexrow" style="max-width: fit-content;">
       <a class="effect-control" data-action="toggle-lock" data-harm-index="{{@index}}" title="{{novaLookup ../lockTitle harm.locked ../lockTitle.default}}"><i class="{{novaLookup ../lockCSS harm.locked ../lockCSS.default}}"></i></a>
@@ -20,7 +20,7 @@
   </li>
   {{/each}}
   {{else}} {{!-- is a flare mod, add in modification dropdowns --}}
-  {{#each data.changes as |change|}}
+  {{#each system.changes as |change|}}
   <li class="item effect flexrow" data-change-index="{{@index}}">
     <div class="item-name effect-name flexrow">
       <select class="change-field" data-field="target">

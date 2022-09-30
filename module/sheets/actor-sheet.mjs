@@ -20,24 +20,28 @@ export class NovaActorSheet extends ActorSheet {
 
   /** @override */
   get template() {
-    return `systems/nova/templates/actor/actor-${this.actor.data.type}-sheet.html`;
+    return `systems/nova/templates/actor/actor-${this.actor.type}-sheet.html`;
   }
 
   /* -------------------------------------------- */
 
   /** @override */
-  getData() {
+  async getData() {
     // Retrieve the data structure from the base sheet. You can inspect or log
     // the context variable to see the structure, but some key properties for
     // sheets are the actor object, the data object, whether or not it's
     // editable, the items array, and the effects array.
-    const context = super.getData();
+    const context = await super.getData();
 
     // Use a safe clone of the actor data for further operations.
-    let actorData = context.actor.data;
+    let actorData = context.actor;
 
     // Add the actor's data to context.data for easier access, as well as flags.
-    context.data = actorData.data;
+
+    /** @deprecated */
+    context.data = actorData.system;
+
+    context.system = actorData.system;
     context.flags = actorData.flags;
 
     // Prepare character data and items.
@@ -61,6 +65,8 @@ export class NovaActorSheet extends ActorSheet {
     context.i18n = {
       none: game.i18n.localize('NOVA.None'),
     }
+
+    context.bio = await TextEditor.enrichHTML(actorData.system.biography, {async:true, secrets: context.owner, rollData: context.rollData})
 
     return context;
   }
@@ -150,8 +156,8 @@ export class NovaActorSheet extends ActorSheet {
     /* sort and insert our item types at root for convienence */
     let {itemTypes} = context.actor;
 
-    //for each item type to be inserted at root, sort its internal array of items according to its `data.sort` value
-    Object.keys(itemTypes).forEach( (key) => { itemTypes[key] = itemTypes[key].sort( (a,b) => (a.data.sort ?? 0) - (b.data.sort ?? 0) )});
+    //for each item type to be inserted at root, sort its internal array of items according to its `sort` value
+    Object.keys(itemTypes).forEach( (key) => { itemTypes[key] = itemTypes[key].sort( (a,b) => (a.sort ?? 0) - (b.sort ?? 0) )});
 
     mergeObject(context, itemTypes); 
 
@@ -177,7 +183,7 @@ export class NovaActorSheet extends ActorSheet {
 
     //sort the two subtypes of flare mods
     context.flare.forEach( (mod) => {
-      if (mod.data.data.type == 'persistent') {
+      if (mod.system.type == 'persistent') {
         const modInfo = {id: mod.id, img: mod.img, name: mod.name};
 
         /* add to the overall info array */
@@ -185,11 +191,11 @@ export class NovaActorSheet extends ActorSheet {
 
         /* if this mod isn't attached, add it to the list
          * of available persistant's to attach */
-        if( !context.actor.data.data.mods.includes(modInfo.id) ){
+        if( !context.actor.system.mods.includes(modInfo.id) ){
           context.freePersistants.push(modInfo); 
         }
 
-      } else if (mod.data.data.type == 'power') {
+      } else if (mod.system.type == 'power') {
         context.powerModInfo.push({id: mod.id, img: mod.img, name: mod.name});
       }
     });
@@ -289,13 +295,13 @@ export class NovaActorSheet extends ActorSheet {
     const itemData = {
       name: name,
       type: type,
-      data: {
+      system: {
         type: subType
       }
     };
 
     // Finally, create the item!
-    return await Item.create(itemData, {parent: this.actor});
+    return await CONFIG.Item.documentClass.create(itemData, {parent: this.actor});
   }
 
   static _isNpcAction(type) {
@@ -328,7 +334,7 @@ export class NovaActorSheet extends ActorSheet {
       } 
       case 'harm': {
         const index = npcData.data('index');
-        const harm = this.actor.data.data.harm[index]; 
+        const harm = this.actor.system.harm[index]; 
         return this.actor.harmRoll(harm[0], harm[1], harm[2]);
       }
       default:
@@ -365,9 +371,6 @@ export class NovaActorSheet extends ActorSheet {
       summary.slideUp(200, () => summary.remove());
     } else {
       let div = $(`<div class="item-summary">${chatData.description}</div>`);
-      //let props = $('<div class="item-properties"></div>');
-      //chatData.properties.forEach(p => props.append(`<span class="tag">${p}</span>`));
-      //div.append(props);
       li.append(div.hide());
       div.slideDown(200);
     }

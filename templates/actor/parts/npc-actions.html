@@ -12,8 +12,8 @@
         <div class="item-image">
           <a class="rollable" data-roll-type="{{../npcHarm.listField}}"><img src="icons/svg/d20-black.svg" title="{{../npcHarm.rollLabel}}" width="24" height="24"/></a>
         </div>
-        <input type="text" name="data.{{../npcHarm.listField}}.{{index}}" value="{{entry.[0]}}" data-dtype="String"/>
-        <input type="text" name="data.{{../npcHarm.listField}}.{{index}}" value="{{entry.[1]}}" data-dtype="String" placeholder="Special"/>
+        <input type="text" name="system.{{../npcHarm.listField}}.{{index}}" value="{{entry.[0]}}" data-dtype="String"/>
+        <input type="text" name="system.{{../npcHarm.listField}}.{{index}}" value="{{entry.[1]}}" data-dtype="String" placeholder="Special"/>
         <select name="data.{{../npcHarm.listField}}.{{index}}">
           {{selectOptions ../statusList selected=entry.[2] nameAttr="id" labelAttr="label" localize=true blank="NOVA.StatusTarget"}}
         </select>
@@ -38,7 +38,7 @@
         <div class="item-image">
           <a class="rollable" data-roll-type="{{../listField}}"><img src="icons/svg/d20-black.svg" title="{{../rollLabel}}" width="24" height="24"/></a>
         </div>
-        <input type="text" name="data.{{../listField}}.{{@index}}" value="{{this}}" data-dtype="String"/>
+        <input type="text" name="system.{{../listField}}.{{@index}}" value="{{this}}" data-dtype="String"/>
       </div>
       <div class="item-controls">
         <a class="item-control item-delete" title="{{../deleteLabel}}"><i class="fas fa-trash"></i></a>

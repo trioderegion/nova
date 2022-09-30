@@ -8,8 +8,8 @@
     {{!-- item subtype --}}
     <div class="grid-span-2 flexcol">
       <label class="resource-label">{{localize "NOVA.Type"}}</label>
-      <select name="data.type">
-        {{#select data.type}}
+      <select name="system.type">
+        {{#select system.type}}
         {{#each subTypes as |name type|}}
         <option value="{{type}}">{{localize name}}</option>
         {{/each}}
@@ -21,8 +21,8 @@
     {{#if canAttachFlare}}
     <div class="grid-span-6 flexrow">
       <label class="resource-label">{{localize "NOVA.FlareMods"}}</label>
-      {{#each data.mods}}
-      <select name="data.mods">
+      {{#each system.mods}}
+      <select name="system.mods">
         {{selectOptions ../modInfo selected=this inverted=false}}
       </select>
       {{/each}}
@@ -31,12 +31,10 @@
     {{#if canBeAttached}}
     <div class="flexrow grid-span-6">
       <label class="resource-label grid-span-2">{{localize "NOVA.Affects"}}</label>
-      <select name="data.affects">
-        {{selectOptions affectInfo selected=data.affects inverted=false}}
+      <select name="system.affects">
+        {{selectOptions affectInfo selected=system.affects inverted=false}}
       </select>
     </div>
     {{/if}}
-    
-
   </div>
 </header>

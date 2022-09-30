@@ -1,12 +1,14 @@
 import { applyUseChange, applyStatus } from './actor.mjs'
 
-const ItemData = foundry.data.ItemData;
-
-class NovaItemData extends ItemData {
+/**
+ * Extend the basic Item with some very simple modifications.
+ * @extends {Item}
+ */
+export class NovaItem extends Item {
 
   static defineSchema() {
     let schema = super.defineSchema();
-    schema.img.default = (data) => this.DEFAULT_ICON[data.type];
+    schema.img.initial = (data) => this.DEFAULT_ICON[data.type];
     return schema;
   }
 
@@ -14,18 +16,6 @@ class NovaItemData extends ItemData {
     power: 'icons/magic/symbols/symbol-lightning-bolt.webp',
     flare: 'icons/magic/symbols/cog-glowing-green.webp'
   }
-}
-
-/**
- * Extend the basic Item with some very simple modifications.
- * @extends {Item}
- */
-export class NovaItem extends Item {
-
-  static get schema() {
-    return NovaItemData;
-  }
-
   /**
    * Augment the basic Item data model with additional dynamic data.
    */
@@ -45,7 +35,7 @@ export class NovaItem extends Item {
     // If present, return the actor's roll data.
     if ( this.actor ) rollData = this.actor.getRollData();
 
-    rollData.item = foundry.utils.deepClone(this.data.data);
+    rollData.item = foundry.utils.deepClone(this.system);
 
     return rollData;
   }
@@ -58,31 +48,30 @@ export class NovaItem extends Item {
   _preUpdate(change, ...args) {
     super._preUpdate(change, ...args);
 
-    const affectsChanged = hasProperty(change, 'data.affects');
+    const affectsChanged = hasProperty(change, 'system.affects');
 
     if(affectsChanged) {
       /* double check transition */
-      const current = getProperty(this.data, 'data.affects');
-      const updated = getProperty(change, 'data.affects');
+      const current = getProperty(this.data, 'system.affects');
+      const updated = getProperty(change, 'system.affects');
 
       /* if there is an actual change AND we are going to or coming from a 'spark' mod */
       const transitioned = (current !== updated) && ( current === 'spark' || updated === 'spark' );
       if (transitioned) {
         /* wipe current changes data */
-        change.data.changes = [];
+        change.system.changes = [];
       }
     }
     
   }
 
   async getItemChatData({embedHarm = true, rollMode = game.settings.get('core', 'rollMode') } = {}) {
-    const item = this.data;
     
     // Initialize chat data.
     const speaker = ChatMessage.getSpeaker({ token: this.actor.token ?? this.actor.getActiveTokens()[0]?.document, actor: this.actor });
-    const label = `<img src="${item.img}" width="36" heigh="36"/><h3>${item.name}</h3>`;
+    const label = `<img src="${this.img}" width="36" heigh="36"/><h3>${this.name}</h3>`;
 
-    let description = item.data.description ?? '';
+    let description = this.system.description ?? '';
     let mods = [];
     let harm = []
 
@@ -91,28 +80,28 @@ export class NovaItem extends Item {
       if (this.type == 'power') {
 
         /* construct info about attached flare mods */
-        switch (this.data.data.type) {
+        switch (this.system.type) {
           case 'active':
-            this.data.data.mods.forEach( modId => {
+            this.system.mods.forEach( modId => {
               const mod = this.actor.items.get(modId);
               if (mod) {
-                mods.push({name: mod.data.name, img: mod.data.img, description: mod.data.data.description});
+                mods.push({name: mod.name, img: mod.img, description: mod.system.description});
               }
             });
             break;
           case 'passive':
           case 'supernova':
-            this.actor.data.data.mods.forEach( persistentMod => {
+            this.actor.system.mods.forEach( persistentMod => {
               const mod = this.actor.items.get(persistentMod);
-              if (mod?.data.data.affects == this.data.data.type){
-                mods.push({name: mod.data.name, img: mod.data.img, description: mod.data.data.description});
+              if (mod?.system.affects == this.system.type){
+                mods.push({name: mod.name, img: mod.img, description: mod.system.description});
               }
             });
             break;
         }
 
         /* construct info about available Harm */
-        harm = this.data.data.harm?.map( harm => harm.name ) ?? [];
+        harm = this.system.harm?.map( harm => harm.name ) ?? [];
       }
     }
 
@@ -129,7 +118,7 @@ export class NovaItem extends Item {
     const casters = [this.actor.uuid];
 
     // Initialize chat data.
-    let speaker = ChatMessage.getSpeaker({ token: this.actor.token ?? this.actor.getActiveTokens()[0].document, actor: this.actor });
+    let speaker = ChatMessage.getSpeaker({ token: this.actor.token ?? this.actor.getActiveTokens()[0]?.document, actor: this.actor });
 
     speaker.alias += `: ${this.name} - ${harmInfo.name}`
 
@@ -183,7 +172,7 @@ export class NovaItem extends Item {
 
     /* accounting for 1.0 -> 1.1 migration where harm was added
      * to items */
-    const currentHarm = this.data.data.harm ?? [];
+    const currentHarm = this.system.harm ?? [];
 
     if(index > currentHarm.length) {
       ui.notifications.error('Invalid harm index provided');
@@ -236,22 +225,22 @@ export class NovaItem extends Item {
     /* collect *all* changes */
     let changes = [];
 
-    switch(this.data.data.type) {
+    switch(this.system.type) {
       case 'active':
         /* active powers have mods attached directly */
-        changes = this.data.data.mods.flatMap( modId => {
+        changes = this.system.mods.flatMap( modId => {
           if(modId == undefined) return [];
-          return this.actor.items.get(modId)?.data.data.changes ?? []
+          return this.actor.items.get(modId)?.system.changes ?? []
         });
         break;
 
       case 'passive':
       case 'supernova':
         /* others derive from persistent mods attached to spark */
-        changes = this.actor.data.data.mods.flatMap( modId => {
+        changes = this.actor.system.mods.flatMap( modId => {
           if(modId == undefined) return [];
           const mod = this.actor.items.get(modId);
-          return mod?.data.data.affects == this.data.data.type ? mod.data.data.changes : [];
+          return mod?.system.affects == this.system.type ? mod.system.changes : [];
 
         });
         break;
@@ -314,7 +303,7 @@ export class NovaItem extends Item {
    */
   async addHarm(harmData = CONFIG.NOVA.DEFAULTS.HARM_DATA){
 
-    return this._updateArray('data.harm', harmData);
+    return this._updateArray('system.harm', harmData);
   }
 
   /**
@@ -326,14 +315,14 @@ export class NovaItem extends Item {
     const harmInfo = this.getHarmInfo(identifier);
     if(!harmInfo) return false;
 
-    return this._removeArrayElement('data.harm', harmInfo.index);
+    return this._removeArrayElement('system.harm', harmInfo.index);
   }
 
   async updateHarm(identifier, harmData) {
     const harmInfo = this.getHarmInfo(identifier);
     if(!harmInfo) return false;
 
-    return this._updateArray('data.harm', harmData, harmInfo.index);
+    return this._updateArray('system.harm', harmData, harmInfo.index);
   }
 
   async toggleHarmLock(identifier, forceState = undefined) {
@@ -365,25 +354,25 @@ export class NovaItem extends Item {
    *
    */
   async addChange(changeData = CONFIG.NOVA.DEFAULTS.CHANGE_DATA) {
-    if(this.data.data.affects == 'spark' && changeData.target == CONFIG.NOVA.DEFAULTS.CHANGE_DATA.target) {
+    if(this.system.affects == 'spark' && changeData.target == CONFIG.NOVA.DEFAULTS.CHANGE_DATA.target) {
       changeData.target = CONFIG.NOVA.persistTargets['NOVA.Fuel'];
     }
-    return this._updateArray('data.changes', changeData);
+    return this._updateArray('system.changes', changeData);
   }
 
   async updateChange(index, changeData) {
-    return this._updateArray('data.changes', changeData, index);
+    return this._updateArray('system.changes', changeData, index);
   }
 
   async deleteChange(index) {
-    return this._removeArrayElement('data.changes', index);
+    return this._removeArrayElement('system.changes', index);
   }
 
   async _updateArray(path, data, index = null) {
 
     /* accounting for 1.0 -> 1.1 migration where harm/change was added
      * to items */
-    let currentArray = duplicate(getProperty(this.data, path) ?? []);
+    let currentArray = duplicate(getProperty(this, path) ?? []);
 
     if(index == undefined) {
       /* add new */

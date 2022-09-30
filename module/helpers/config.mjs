@@ -116,8 +116,8 @@ NOVA.DEFAULTS = {
       get name() {
         return game.i18n.localize("NOVA.Harm.Label"); 
       },
-      cost: {value: "1", source: 'data.fuel.value'},
-      harm: {value: '0', source: 'data.health.value'},
+      cost: {value: "1", source: 'system.fuel.value'},
+      harm: {value: '0', source: 'system.health.value'},
       target: {type: 'none', value: ''},
       range: {min: 0, max: 0},
       special: "",
@@ -155,11 +155,11 @@ NOVA.range = {
 }
 
 NOVA.costResource = {
-  'data.fuel.value': "NOVA.Fuel",
-  'data.health.value': "NOVA.Health",
-  'data.attributes.sun.value': "NOVA.AttributeSun",
-  'data.attributes.moon.value': "NOVA.AttributeMoon",
-  'data.attributes.shade.value': "NOVA.AttributeShade"
+  'system.fuel.value': "NOVA.Fuel",
+  'system.health.value': "NOVA.Health",
+  'system.attributes.sun.value': "NOVA.AttributeSun",
+  'system.attributes.moon.value': "NOVA.AttributeMoon",
+  'system.attributes.shade.value': "NOVA.AttributeShade"
 }
 
 NOVA.modTargets = {
@@ -179,11 +179,11 @@ NOVA.changeModes = {
 }
 
 NOVA.persistTargets = {
-  'NOVA.Health': 'data.health.max',
-  'NOVA.Fuel': 'data.fuel.max',
-  'NOVA.AttributeSun': 'data.attributes.sun.bonus',
-  'NOVA.AttributeMoon': 'data.attributes.moon.bonus',
-  'NOVA.AttributeShade': 'data.attributes.shade.bonus',
+  'NOVA.Health': 'system.health.max',
+  'NOVA.Fuel': 'system.fuel.max',
+  'NOVA.AttributeSun': 'system.attributes.sun.bonus',
+  'NOVA.AttributeMoon': 'system.attributes.moon.bonus',
+  'NOVA.AttributeShade': 'system.attributes.shade.bonus',
 }
 
 NOVA.changeColors = {

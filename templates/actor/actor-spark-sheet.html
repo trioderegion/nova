@@ -9,7 +9,7 @@
     <div class="header-fields">
       <section class="grid grid-5col">
         <h1 class="charname grid-span-3"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
-        <h1 class="charname grid-span-2"><input name="data.details.class" type="text" value="{{data.details.class}}" placeholder="{{localize 'NOVA.Spark'}}"/></h1>
+        <h1 class="charname grid-span-2"><input name="system.details.class" type="text" value="{{data.details.class}}" placeholder="{{localize 'NOVA.Spark'}}"/></h1>
       </section>
       {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
       use both the "grid" and "grid-Ncol" class where "N" can be any number
@@ -22,30 +22,30 @@
         <div class="resource flex-group-center">
           <label for="data.health.value" class="resource-label">{{localize "NOVA.Health"}}</label>
           <div class="resource-content flexrow align-center">
-            <input type="text" class="small-input" name="data.health.value" value="{{data.health.value}}" data-dtype="Number"/>
+            <input type="text" class="small-input" name="system.health.value" value="{{data.health.value}}" data-dtype="Number"/>
             /
-            <input type="text" class="small-input" name="data.health.max" value="{{data.health.max}}" data-dtype="Number"/>
+            <input type="text" class="small-input" name="system.health.max" value="{{data.health.max}}" data-dtype="Number"/>
           </div>
         </div>
 
         <div class="resource flex-group-center">
           <label for="data.fuel.value" class="resource-label">{{localize "NOVA.Fuel"}}</label>
           <div class="resource-content flexrow align-center">
-          <input type="text" class="small-input" name="data.fuel.value" value="{{data.fuel.value}}" data-dtype="Number"/>
+          <input type="text" class="small-input" name="system.fuel.value" value="{{data.fuel.value}}" data-dtype="Number"/>
           /
-          <input type="text" class="small-input" name="data.fuel.max" value="{{data.fuel.max}}" data-dtype="Number"/>
+          <input type="text" class="small-input" name="system.fuel.max" value="{{data.fuel.max}}" data-dtype="Number"/>
           </div>
         </div>
         <div class="resource flex-group-center grid-span-2">
           <label for="data.details.pilotname" class="resource-label">{{localize "NOVA.PilotName"}}</label>
           <div class="resource-content flexrow align-center">
-            <input type="text" name="data.details.pilotname" value="{{data.details.pilotname}}" data-dtype="String"/>
+            <input type="text" name="system.details.pilotname" value="{{data.details.pilotname}}" data-dtype="String"/>
           </div>
         </div>
         <div class="resource flex-group-center">
           <label for="data.details.pronouns" class="resource-label">{{localize "NOVA.Pronouns"}}</label>
           <div class="resource-content flexrow align-center">
-            <input type="text" name="data.details.pronouns" value="{{data.details.pronouns}}" data-dtype="String"/>
+            <input type="text" name="system.details.pronouns" value="{{data.details.pronouns}}" data-dtype="String"/>
           </div>
         </div>
       </div>
@@ -76,9 +76,9 @@
             {{#each data.attributes as |attribute key|}}
             <div class="ability flexrow flex-group-center">
               <label for="data.attributes.{{key}}.value" class="resource-label rollable flexlarge align-left" data-attribute="{{key}}" data-roll-type="attribute" data-label="{{attribute.label}}">{{attribute.label}}</label>
-              <input type="text" class="small-input" name="data.attributes.{{key}}.value" value="{{attribute.value}}" data-dtype="Number"/>
+              <input type="text" class="small-input" name="system.attributes.{{key}}.value" value="{{attribute.value}}" data-dtype="Number"/>
               +
-              <input type="text" class="small-input" name="data.attributes.{{key}}.bonus" value="{{attribute.bonus}}" data-dtype="Number" />
+              <input type="text" class="small-input" name="system.attributes.{{key}}.bonus" value="{{attribute.bonus}}" data-dtype="Number" />
             </div>
             {{/each}}
           </div>
@@ -94,7 +94,7 @@
               {{/if}}
             </div>
             <div class="flexrow grid-span-3">
-              <select name="data.mods">
+              <select name="system.mods">
                 {{#select this}}
                 {{#each ../freePersistants }}
                   <option value={{this.id}}>{{this.name}}</option>
@@ -124,7 +124,7 @@
     {{!-- Biography Tab --}}
     <div class="tab biography" data-group="primary" data-tab="description">
       {{!-- If you want TinyMCE editors to output inline rolls when rendered, you need to pass the actor's roll data to the rollData property. --}}
-      {{editor content=data.biography target="data.biography" rollData=rollData button=true owner=owner editable=editable}}
+      {{editor bio target="system.biography" button=true owner=owner editable=editable}}
     </div>
 
     {{!-- Owned Items Tab --}}
