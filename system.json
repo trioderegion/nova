@@ -1,28 +1,37 @@
 {
-  "name": "nova",
   "title": "Nova",
-  "description": "The Nova system for FoundryVTT!",
-  "version": "0.1.0",
-  "minimumCoreVersion": "0.8.5",
-  "compatibleCoreVersion": "9",
-  "author": "trioderegion",
-  "esmodules": ["module/nova.mjs"],
-  "styles": ["css/nova.css"],
-  "scripts": [],
-  "packs": [],
+  "description": "The Nova RPG system for FoundryVTT!",
+  "version": "1.0.0",
+  "esmodules": [
+    "module/nova.mjs"
+  ],
+  "styles": [
+    "css/nova.css"
+  ],
   "languages": [
     {
       "lang": "en",
       "name": "English",
-      "path": "lang/en.json"
+      "path": "lang/en.json",
+      "flags": {}
     }
   ],
   "gridDistance": 1,
   "gridUnits": "sq",
   "primaryTokenAttribute": "health",
   "secondaryTokenAttribute": "fuel",
-  "url": "",
-  "manifest": "",
-  "download": "",
-  "license": "LICENSE"
+  "license": "LICENSE",
+  "id": "nova",
+  "authors": [
+    {
+      "name": "trioderegion",
+      "flags": {}
+    }
+  ],
+  "compatibility": {
+    "minimum": "10",
+    "verified": "10.286"
+  },
+  "name": "nova",
+  "minimumCoreVersion": "10"
 }

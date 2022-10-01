@@ -11,7 +11,7 @@
       {{> "systems/nova/templates/item/parts/config-power.html"}} 
     </div>
     <div class="main editor">
-      {{editor content=data.description target="data.description" rollData=rollData button=true owner=owner editable=editable}}
+      {{editor description target="system.description" rollData=rollData button=true owner=owner editable=editable}}
     </div>
     {{else}}
     <section class="sheet-body grid grid-5col">

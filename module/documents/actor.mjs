@@ -127,7 +127,7 @@ export class NovaActor extends Actor {
     changes.forEach( change => {
 
       if (change.value == undefined || change.value.length == 0) return;
-      const value = getProperty(actorData, change.target);
+      const value = getProperty(this, change.target);
 
       let expression;
       switch(change.mode) {
