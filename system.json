@@ -33,5 +33,8 @@
     "verified": "10.286"
   },
   "name": "nova",
-  "minimumCoreVersion": "10"
+  "minimumCoreVersion": "10",
+  "url": "",
+  "manifest": "",
+  "download": ""
 }
