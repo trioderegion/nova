@@ -368,9 +368,9 @@ export class NovaActor extends Actor {
     change = Number(change);
     const tokens = this.isToken ? [this.token?.object] : this.getActiveTokens(true);
     for ( let t of tokens ) {
-      t.hud.createScrollingText(`${change.signedString()} ${label}`, {
+      canvas.interface.createScrollingText(t.center, `${change.signedString()} ${label}`, {
         anchor: CONST.TEXT_ANCHOR_POINTS.TOP,
-        fontSize: 48, // Range between [16, 48]
+        fontSize: 48, 
         fill: CONFIG.NOVA.changeColors[change < 0 ? "neg" : "pos"],
         stroke: 0x000000,
         strokeThickness: 4,
