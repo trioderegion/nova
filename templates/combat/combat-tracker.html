@@ -62,53 +62,61 @@
             <a class="combat-button combat-create" data-tooltip="{{localize 'COMBAT.Create'}}">
                 <i class="fas fa-plus"></i>
             </a>
-            {{#if combatCount}}
             <a class="combat-button combat-cycle" data-tooltip="{{localize 'COMBAT.EncounterPrevious'}}"
-               {{#if previousId}}data-combat-id="{{previousId}}"{{else}}disabled{{/if}}>
+               {{#if previousId}}data-document-id="{{previousId}}" {{else}}disabled{{/if}} style="padding-left:2em">
                 <i class="fas fa-caret-left"></i>
             </a>
-            <h4 class="encounter">{{localize "COMBAT.Encounter"}} {{currentIndex}} / {{combatCount}}</h4>
+            <h4 class="encounter">
+              {{#if combatCount}}
+              {{localize "COMBAT.Encounter"}} {{currentIndex}} / {{combatCount}}
+              {{else}}
+              {{localize 'COMBAT.None'}}
+              {{/if}}
+            </h4>
             <a class="combat-button combat-cycle" data-tooltip="{{localize 'COMBAT.EncounterNext'}}"
-               {{#if nextId}}data-combat-id="{{nextId}}"{{else}}disabled{{/if}}>
+               {{#if nextId}}data-document-id="{{nextId}}"{{else}}disabled{{/if}} style="padding-right:2em">
                 <i class="fas fa-caret-right"></i>
-            </a>
-            {{/if}}
-            <a class="combat-button combat-control" data-tooltip="{{localize 'NOVA.Delete'}}" data-control="endCombat" {{#unless combatCount}}disabled{{/unless}}>
-                <i class="fas fa-trash"></i>
-            </a>
-        </nav>
-        {{/if}}
-
-        <nav class="encounters flexrow">
-            {{#if user.isGM}}
-            <a class="combat-button combat-control" title="{{localize 'NOVA.AllSparksEndTurn'}}" data-control="allEndTurn" {{#unless turns}}disabled{{/unless}}>
-                <i class="far fa-check-circle"></i>
-            </a>
-            <a class="combat-button combat-control" title="{{localize 'NOVA.RollAllDrops'}}" data-control="rollAllDrops" {{#unless turns}}disabled{{/unless}}>
-                <i class="fas fa-dice"></i>
-            </a>
-            {{/if}}
-
-            {{#if combatCount}}
-            {{#if combat.round}}
-            <h3 class="encounter-title noborder">{{localize 'COMBAT.Round'}} {{combat.round}}</h3>
-            {{else}}
-            <h3 class="encounter-title noborder">{{localize 'COMBAT.NotStarted'}}</h3>
-            {{/if}}
-            {{else}}
-            <h3 class="encounter-title noborder">{{localize "COMBAT.None"}}</h3>
-            {{/if}}
-
-            {{#if user.isGM}}
-            <a class="combat-button combat-control" title="{{localize 'NOVA.ResetRound'}}" data-control="resetAll"
-                {{#unless hasCombat}}disabled{{/unless}}>
-                <i class="fas fa-undo"></i>
             </a>
             <a class="combat-button combat-settings" title="{{localize 'COMBAT.Settings'}}" data-control="trackerSettings">
                 <i class="fas fa-cog"></i>
             </a>
+            
+        </nav>
+        {{/if}}
+
+        {{#if combatCount}}
+        <nav class="encounters flexrow">
+            {{#if user.isGM}}
+            <a class="combat-button combat-control" title="{{localize 'NOVA.AllSparksEndTurn'}}" data-control="allEndTurn" {{#unless combat.round}}disabled{{/unless}}>
+                <i class="far fa-check-circle"></i>
+            </a>
+            <a class="combat-button combat-control" title="{{localize 'NOVA.RollAllDrops'}}" data-control="rollAllDrops" {{#unless combat.round}}disabled{{/unless}}>
+                <i class="fas fa-dice"></i>
+            </a>
+            {{/if}}
+
+            {{#if combat.round}}
+            <h3 class="encounter-title noborder">
+              <a class="combat-control" title="{{localize 'COMBAT.RoundPrev'}}" data-control="previousRound" style="padding-right:0.5em"><i class="fas fa-step-backward"></i></a>
+              {{localize 'COMBAT.Round'}} {{combat.round}}
+              <a class="combat-control" title="{{localize 'COMBAT.RoundNext'}}" data-control="nextRound" style="padding-left:0.5em"><i class="fas fa-step-forward"></i></a>
+            </h3>
+            {{else}}
+            <h3 class="encounter-title noborder"><a class="combat-control center" title="{{localize 'COMBAT.Begin'}}" data-control="startCombat">{{localize 'COMBAT.Begin'}}</a></h3>
+            {{/if}}
+
+            {{#if user.isGM}}
+            {{#if combat.round}}
+            <a class="combat-button combat-control" title="{{localize 'NOVA.ResetRound'}}" data-control="resetAll">
+                <i class="fas fa-undo"></i>
+            </a>
+            {{/if}}
+            <a class="combat-button combat-control" data-tooltip="{{localize 'NOVA.Delete'}}" data-control="endCombat">
+              <i class="fas fa-trash"></i>
+            </a>
             {{/if}}
         </nav>
+        {{/if}}
     </header>
 
     <ol id="combat-tracker" class="directory-list">
@@ -133,19 +141,4 @@
         </div>
       {{/if}}
     </ol>
-
-    {{#if user.isGM}}
-    <nav id="combat-controls" class="directory-footer flexrow">
-    {{#if hasCombat}}
-            {{#if round}}
-            <a class="combat-control" title="{{localize 'COMBAT.RoundPrev'}}" data-control="previousRound"><i class="fas fa-step-backward"></i></a>
-            <a class="combat-control center" title="{{localize 'COMBAT.End'}}" data-control="endCombat">{{localize 'COMBAT.End'}}</a>
-            <a class="combat-control" title="{{localize 'COMBAT.RoundNext'}}" data-control="nextRound"><i class="fas fa-step-forward"></i></a>
-            {{else}}
-            <a class="combat-control center" title="{{localize 'COMBAT.Begin'}}" data-control="startCombat">{{localize 'COMBAT.Begin'}}</a>
-            {{/if}}
-        {{else if control}}
-    {{/if}}
-    {{/if}}
-    </nav>
-</section>
+    </section>
