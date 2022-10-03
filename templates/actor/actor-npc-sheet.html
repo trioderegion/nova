@@ -4,15 +4,15 @@
   <header class="sheet-header">
     <div class="profile-img-col flex-group-center">
       <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
-      <button type="drop" class="drop-button" {{#if (gt data.health.value 0)}}style="visibility: hidden;"{{/if}}>{{localize "NOVA.RollDrop"}}</button> 
+      <button type="drop" class="drop-button" {{#if (gt system.health.value 0)}}style="visibility: hidden;"{{/if}}>{{localize "NOVA.RollDrop"}}</button> 
     </div>
     <div class="header-fields">
       <section class="grid grid-5col">
         <h1 class="charname grid-span-4"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
         <div class="resource flex-group-center">
-          <label for="data.elite" class="resource-label">{{localize "NOVA.Elite"}}</label>
+          <label for="system.elite" class="resource-label">{{localize "NOVA.Elite"}}</label>
           <div class="resource-content flexrow align-center">
-            <input type="checkbox" name="data.elite" data-dtype="Boolean" {{checked data.elite}}/>
+            <input type="checkbox" name="system.elite" data-dtype="Boolean" {{checked system.elite}}/>
           </div>
         </div>
       </section>
@@ -25,17 +25,17 @@
         and it will add a small amount of padding, a border, and will
         center all of its child elements content and text. --}}
         <div class="resource flex-group-center">
-          <label for="data.health.value" class="resource-label">{{localize "NOVA.Health"}}</label>
+          <label for="system.health.value" class="resource-label">{{localize "NOVA.Health"}}</label>
           <div class="resource-content flexrow align-center">
-            <input class="small-input" type="text" name="data.health.value" value="{{data.health.value}}" data-dtype="Number"/>
+            <input class="small-input" type="text" name="system.health.value" value="{{system.health.value}}" data-dtype="Number"/>
             /
-            <input class="small-input" type="text" name="data.health.max" value="{{data.health.max}}" data-dtype="Number"/>
+            <input class="small-input" type="text" name="system.health.max" value="{{system.health.max}}" data-dtype="Number"/>
           </div>
         </div>
         <div class="resource flex-group-center grid-span-4">
-          <label for="data.keywords" class="resource-label rollable" data-roll-type="keywords" data-content="{{data.keywords}}">{{localize "NOVA.Keywords"}}</label>
+          <label for="system.keywords" class="resource-label rollable" data-roll-type="keywords" data-content="{{system.keywords}}">{{localize "NOVA.Keywords"}}</label>
           <div class="resource-content align-center">
-            <textarea style="min-height:40px" type="text" name="data.keywords" data-dtype="String">{{data.keywords}}</textarea>
+            <textarea style="min-height:40px" type="text" name="system.keywords" data-dtype="String">{{system.keywords}}</textarea>
           </div>
         </div>
       </div>
@@ -61,7 +61,7 @@
     {{!-- Biography Tab --}}
     <div class="tab biography" data-group="primary" data-tab="description">
       {{!-- If you want TinyMCE editors to output inline rolls when rendered, you need to pass the actor's roll data to the rollData property. --}}
-      {{editor content=data.biography target="data.biography" rollData=rollData button=true owner=owner editable=editable}}
+      {{editor bio target="system.biography" button=true owner=owner editable=editable}}
     </div>
 
     {{!-- Active Effects Tab --}}

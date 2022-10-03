@@ -30,8 +30,8 @@ export class NovaCombat extends Combat {
     const turns = this.combatants.contents.sort(this._sortCombatants);
 
     this.current = {
-      round: this.data.round,
-      turn: this.data.turn,
+      round: this.round,
+      turn: this.turn,
     }
 
     return this.turns = turns;
@@ -125,14 +125,14 @@ export class NovaCombat extends Combat {
 
     /* count number of new active NPCs (as opposed to NPCs added
      * for drop tracking */
-    const turn = this.data.turn + NovaCombat._activeNpcs(documents);    
+    const turn = this.turn + NovaCombat._activeNpcs(documents);    
 
     /* update the turn in the DB or update it locally */
     if ( game.user.id === userId ) this.update({turn});
-    else this.data.update({turn});
+    else this.updateSource({turn});
 
     // Render the collection
-    if ( this.data.active ) this.collection.render();
+    if ( this.active ) this.collection.render();
   }
 
   /** @inheritdoc */
@@ -147,13 +147,13 @@ export class NovaCombat extends Combat {
 
     this.setupTurns();
 
-    const turn = this.data.turn - NovaCombat._activeNpcs(documents);
+    const turn = this.turn - NovaCombat._activeNpcs(documents);
 
     // Update database or perform a local override
     if ( game.user.id === userId ) this.update({turn});
-    else this.data.update({turn});
+    else this.updateSource({turn});
 
     // Render the collection
-    if ( this.data.active ) this.collection.render();
+    if ( this.active ) this.collection.render();
   }
 }

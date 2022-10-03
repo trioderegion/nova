@@ -30,12 +30,12 @@ export class NovaCombatTracker extends CombatTracker {
       turn.effects = new Set();
       if ( combatant.token ) {
         combatant.token.actor.effects.forEach(e => turn.effects.add(e));
-        if ( combatant.token.data.overlayEffect ) turn.effects.add(combatant.token.data.overlayEffect);
+        if ( combatant.token.overlayEffect ) turn.effects.add(combatant.token.overlayEffect);
       }
 
       turn.css = "";
       turn.ended = combatant?.turnEnded ?? true;
-      turn.zeroHp = combatant.actor.data.data.health.value === 0 ? true : false;
+      turn.zeroHp = combatant.actor.system.health.value === 0 ? true : false;
       acc[combatant.actor.type].push(turn);
 
       return acc;
@@ -125,7 +125,7 @@ export class NovaCombatTracker extends CombatTracker {
       return this.viewed.handleRollDrop(combatant);
     } else if ( token.object ) {
       token.object?.control({releaseOthers: true});
-      return canvas.animatePan({x: token.data.x, y: token.data.y});
+      return canvas.animatePan({x: token.x, y: token.y});
     }
   }
 }

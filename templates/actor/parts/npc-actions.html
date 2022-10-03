@@ -14,7 +14,7 @@
         </div>
         <input type="text" name="system.{{../npcHarm.listField}}.{{index}}" value="{{entry.[0]}}" data-dtype="String"/>
         <input type="text" name="system.{{../npcHarm.listField}}.{{index}}" value="{{entry.[1]}}" data-dtype="String" placeholder="Special"/>
-        <select name="data.{{../npcHarm.listField}}.{{index}}">
+        <select name="system.{{../npcHarm.listField}}.{{index}}">
           {{selectOptions ../statusList selected=entry.[2] nameAttr="id" labelAttr="label" localize=true blank="NOVA.StatusTarget"}}
         </select>
       </div>

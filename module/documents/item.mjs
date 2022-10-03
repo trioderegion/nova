@@ -52,7 +52,7 @@ export class NovaItem extends Item {
 
     if(affectsChanged) {
       /* double check transition */
-      const current = getProperty(this.data, 'system.affects');
+      const current = getProperty(this, 'system.affects');
       const updated = getProperty(change, 'system.affects');
 
       /* if there is an actual change AND we are going to or coming from a 'spark' mod */

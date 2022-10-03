@@ -11,7 +11,7 @@
     {{/if}}
     <div class="token-effects">
       {{#each this.effects}}
-      <img class="token-effect" src="{{this.data.icon}}"/>
+      <img class="token-effect" src="{{this.icon}}"/>
       {{/each}}
     </div>
   </div>
@@ -90,8 +90,8 @@
             {{/if}}
 
             {{#if combatCount}}
-            {{#if combat.data.round}}
-            <h3 class="encounter-title noborder">{{localize 'COMBAT.Round'}} {{combat.data.round}}</h3>
+            {{#if combat.round}}
+            <h3 class="encounter-title noborder">{{localize 'COMBAT.Round'}} {{combat.round}}</h3>
             {{else}}
             <h3 class="encounter-title noborder">{{localize 'COMBAT.NotStarted'}}</h3>
             {{/if}}
@@ -117,7 +117,7 @@
         {{#each turns.spark}}
         {{> sparkEntry isGM=../user.isGM}}
         {{/each}}
-        <h4 class="flexrow {{gmStyle}}">{{localize 'NOVA.GM'}} {{#unless playerTurn}}{{#if combat.data.turn}}{{localize 'NOVA.Turn'}} {{combat.data.turn}}{{/if}}{{/unless}}</h4>
+        <h4 class="flexrow {{gmStyle}}">{{localize 'NOVA.GM'}} {{#unless playerTurn}}{{#if combat.turn}}{{localize 'NOVA.Turn'}} {{combat.turn}}{{/if}}{{/unless}}</h4>
         {{#each turns.npc}}
         {{#unless this.zeroHp}}
         {{> npcEntry isGM=../user.isGM}}
