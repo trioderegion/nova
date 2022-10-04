@@ -53,9 +53,9 @@ export const statusEffects = [
     label: 'NOVA.StatusDamned',
     icon: 'icons/svg/bones.svg',
   },{
-    id: 'dormant',
+    id: 'dead',
     label: 'NOVA.StatusDormant',
-    icon: 'icons/svg/unconscious.svg',
+    icon: 'icons/svg/sleep.svg',
   },{
     id: 'bleeding',
     label: 'NOVA.StatusBleeding',
@@ -69,9 +69,9 @@ export const statusEffects = [
     label: 'NOVA.StatusTaunted',
     icon: 'icons/svg/combat.svg',
   },{
-    id: 'hidden',
+    id: 'invisible',
     label: 'NOVA.StatusHidden',
-    icon: 'icons/svg/cowled.svg',
+    icon: 'icons/svg/invisible.svg',
   },{
     id: 'exposed',
     label: 'NOVA.StatusExposed',
