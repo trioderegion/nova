@@ -1,7 +1,7 @@
 {
     "title": "Nova",
     "description": "The Nova RPG system for FoundryVTT!",
-    "version": "2.0.!5",
+    "version": "2.0.!6",
     "esmodules": [
         "module/nova.mjs"
     ],
@@ -36,5 +36,5 @@
     "minimumCoreVersion": "10",
     "url": "https://github.com/trioderegion/nova",
     "manifest": "https://raw.githubusercontent.com/trioderegion/nova/next/system.json",
-    "download": "https://github.com/trioderegion/nova/releases/download/2.0.!5/system.zip"
+    "download": "https://github.com/trioderegion/nova/releases/download/2.0.!6/system.zip"
 }
