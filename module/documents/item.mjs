@@ -387,7 +387,7 @@ export class NovaItem extends Item {
   
   async _removeArrayElement(path, index) {
 
-    let currentArray = getProperty(this.data, path);
+    let currentArray = getProperty(this, path) ?? [];
 
     if(index > currentArray.length - 1) return false;
 

@@ -320,6 +320,7 @@
   font-size: 20px;
   font-weight: 700;
   color: #4b4a44;
+  border-bottom:none;
 }
 
 .attached-mod {
@@ -613,10 +614,11 @@
   display: flex;
 }
 
-.nova .items-list .item-name h3, .nova .items-list .item-name h4, .nova .items-list .effect-name h4 {
+.nova .items-list h3.item-name, .nova .items-list h4.item-name, .nova .items-list h4.effect-name {
   margin: 0;
   white-space: nowrap;
   overflow-x: hidden;
+  border-bottom:none;
 }
 
 .nova .items-list .item-header-controls {

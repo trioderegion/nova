@@ -9,7 +9,7 @@ export async function applyUseChange(path, targets, change) {
   const promises = targets.map( async (targetUuid) => {
     let target = await fromUuid(targetUuid);
     target = target instanceof TokenDocument ? target.actor : target;
-    if (target.isOwner) {
+    if (target?.isOwner) {
       const original = getProperty(target, path);
       return target.update({[path]: original + change}, {change, source: game.i18n.localize(CONFIG.NOVA.costResource[path])});
     }

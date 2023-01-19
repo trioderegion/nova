@@ -362,15 +362,16 @@ export class NovaActorSheet extends ActorSheet {
   async _onItemSummary(event) {
     event.preventDefault();
     const li = $(event.currentTarget).parents(".item");
-    const item = this.actor.items.get(li.data("item-id"));
-    const chatData = await item.getItemChatData({embedHarm: false, /*secrets: this.actor.isOwner*/});
 
     // Toggle summary
     if ( li.hasClass("expanded") ) {
       let summary = li.children(".item-summary");
       summary.slideUp(200, () => summary.remove());
     } else {
-      let div = $(`<div class="item-summary">${chatData.description}</div>`);
+      const item = this.actor.items.get(li.data("item-id"));
+      const chatData = await item.getItemChatData({embedHarm: false, /*secrets: this.actor.isOwner*/});
+      const desc = await TextEditor.enrichHTML(chatData.description, {async:true});
+      let div = $(`<div class="item-summary">${desc}</div>`);
       li.append(div.hide());
       div.slideDown(200);
     }
