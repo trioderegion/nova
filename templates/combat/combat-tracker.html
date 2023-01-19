@@ -11,7 +11,7 @@
     {{/if}}
     <div class="token-effects">
       {{#each this.effects}}
-      <img class="token-effect" src="{{this.data.icon}}"/>
+      <img class="token-effect" src="{{this.icon}}"/>
       {{/each}}
     </div>
   </div>
@@ -55,60 +55,68 @@
   </li>
 {{/inline}}
 
-<section class="tab sidebar-tab directory flexcol nova" id="combat" data-tab="combat">
-    <header id="combat-round">
+<section class="tab sidebar-tab directory flexcol combat-sidebar nova" id="combat" data-tab="combat">
+    <header id="combat-round" class="combat-tracker-header">
         {{#if user.isGM}}
-        <nav class="encounters flexrow">
-            <a class="combat-create" title="{{localize 'COMBAT.Create'}}">
+        <nav class="encounters flexrow" aria-label="COMBAT.NavLabel">
+            <a class="combat-button combat-create" data-tooltip="{{localize 'COMBAT.Create'}}">
                 <i class="fas fa-plus"></i>
             </a>
-            {{#if combatCount}}
-            <a class="combat-cycle" title="{{localize 'COMBAT.EncounterPrevious'}}"
-               {{#if previousId}}data-combat-id="{{previousId}}"{{else}}disabled{{/if}}>
+            <a class="combat-button combat-cycle" data-tooltip="{{localize 'COMBAT.EncounterPrevious'}}"
+               {{#if previousId}}data-document-id="{{previousId}}" {{else}}disabled{{/if}} style="padding-left:2em">
                 <i class="fas fa-caret-left"></i>
             </a>
-            <h4 class="encounter">{{localize "COMBAT.Encounter"}} {{currentIndex}} / {{combatCount}}</h4>
-            <a class="combat-cycle" title="{{localize 'COMBAT.EncounterNext'}}"
-               {{#if nextId}}data-combat-id="{{nextId}}"{{else}}disabled{{/if}}>
+            <h4 class="encounter">
+              {{#if combatCount}}
+              {{localize "COMBAT.Encounter"}} {{currentIndex}} / {{combatCount}}
+              {{else}}
+              {{localize 'COMBAT.None'}}
+              {{/if}}
+            </h4>
+            <a class="combat-button combat-cycle" data-tooltip="{{localize 'COMBAT.EncounterNext'}}"
+               {{#if nextId}}data-document-id="{{nextId}}"{{else}}disabled{{/if}} style="padding-right:2em">
                 <i class="fas fa-caret-right"></i>
             </a>
-            {{/if}}
-            <a class="combat-control" title="{{localize 'NOVA.Delete'}}" data-control="endCombat" {{#unless combatCount}}disabled{{/unless}}>
-                <i class="fas fa-trash"></i>
+            <a class="combat-button combat-settings" title="{{localize 'COMBAT.Settings'}}" data-control="trackerSettings">
+                <i class="fas fa-cog"></i>
             </a>
+            
         </nav>
         {{/if}}
 
+        {{#if combatCount}}
         <nav class="encounters flexrow">
             {{#if user.isGM}}
-            <a class="combat-control" title="{{localize 'NOVA.AllSparksEndTurn'}}" data-control="allEndTurn" {{#unless turns}}disabled{{/unless}}>
+            <a class="combat-button combat-control" title="{{localize 'NOVA.AllSparksEndTurn'}}" data-control="allEndTurn" {{#unless combat.round}}disabled{{/unless}}>
                 <i class="far fa-check-circle"></i>
             </a>
-            <a class="combat-control" title="{{localize 'NOVA.RollAllDrops'}}" data-control="rollAllDrops" {{#unless turns}}disabled{{/unless}}>
+            <a class="combat-button combat-control" title="{{localize 'NOVA.RollAllDrops'}}" data-control="rollAllDrops" {{#unless combat.round}}disabled{{/unless}}>
                 <i class="fas fa-dice"></i>
             </a>
             {{/if}}
 
-            {{#if combatCount}}
-            {{#if combat.data.round}}
-            <h3>{{localize 'COMBAT.Round'}} {{combat.data.round}}</h3>
+            {{#if combat.round}}
+            <h3 class="encounter-title noborder">
+              <a class="combat-control" title="{{localize 'COMBAT.RoundPrev'}}" data-control="previousRound" style="padding-right:0.5em"><i class="fas fa-step-backward"></i></a>
+              {{localize 'COMBAT.Round'}} {{combat.round}}
+              <a class="combat-control" title="{{localize 'COMBAT.RoundNext'}}" data-control="nextRound" style="padding-left:0.5em"><i class="fas fa-step-forward"></i></a>
+            </h3>
             {{else}}
-            <h3>{{localize 'COMBAT.NotStarted'}}</h3>
-            {{/if}}
-            {{else}}
-            <h3>{{localize "COMBAT.None"}}</h3>
+            <h3 class="encounter-title noborder"><a class="combat-control center" title="{{localize 'COMBAT.Begin'}}" data-control="startCombat">{{localize 'COMBAT.Begin'}}</a></h3>
             {{/if}}
 
             {{#if user.isGM}}
-            <a class="combat-control" title="{{localize 'NOVA.ResetRound'}}" data-control="resetAll"
-                {{#unless hasCombat}}disabled{{/unless}}>
+            {{#if combat.round}}
+            <a class="combat-button combat-control" title="{{localize 'NOVA.ResetRound'}}" data-control="resetAll">
                 <i class="fas fa-undo"></i>
             </a>
-            <a class="combat-settings" title="{{localize 'COMBAT.Settings'}}" data-control="trackerSettings">
-                <i class="fas fa-cog"></i>
+            {{/if}}
+            <a class="combat-button combat-control" data-tooltip="{{localize 'COMBAT.Delete'}}" data-control="endCombat">
+              <i class="fas fa-trash"></i>
             </a>
             {{/if}}
         </nav>
+        {{/if}}
     </header>
 
     <ol id="combat-tracker" class="directory-list">
@@ -117,7 +125,7 @@
         {{#each turns.spark}}
         {{> sparkEntry isGM=../user.isGM}}
         {{/each}}
-        <h4 class="flexrow {{gmStyle}}">{{localize 'NOVA.GM'}} {{#unless playerTurn}}{{#if combat.data.turn}}{{localize 'NOVA.Turn'}} {{combat.data.turn}}{{/if}}{{/unless}}</h4>
+        <h4 class="flexrow {{gmStyle}}">{{localize 'NOVA.GM'}} {{#unless playerTurn}}{{#if combat.turn}}{{localize 'NOVA.Turn'}} {{combat.turn}}{{/if}}{{/unless}}</h4>
         {{#each turns.npc}}
         {{#unless this.zeroHp}}
         {{> npcEntry isGM=../user.isGM}}
@@ -133,19 +141,4 @@
         </div>
       {{/if}}
     </ol>
-
-    {{#if user.isGM}}
-    <nav id="combat-controls" class="directory-footer flexrow">
-    {{#if hasCombat}}
-            {{#if round}}
-            <a class="combat-control" title="{{localize 'COMBAT.RoundPrev'}}" data-control="previousRound"><i class="fas fa-step-backward"></i></a>
-            <a class="combat-control center" title="{{localize 'COMBAT.End'}}" data-control="endCombat">{{localize 'COMBAT.End'}}</a>
-            <a class="combat-control" title="{{localize 'COMBAT.RoundNext'}}" data-control="nextRound"><i class="fas fa-step-forward"></i></a>
-            {{else}}
-            <a class="combat-control center" title="{{localize 'COMBAT.Begin'}}" data-control="startCombat">{{localize 'COMBAT.Begin'}}</a>
-            {{/if}}
-        {{else if control}}
-    {{/if}}
-    {{/if}}
-    </nav>
-</section>
+    </section>

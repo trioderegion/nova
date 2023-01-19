@@ -19,13 +19,13 @@
       <li class="item effect flexrow" data-effect-id="{{effect.id}}">
         <div class="item-controls effect-controls flexrow">
           <a class="effect-control" data-action="toggle" title="{{localize 'NOVA.EffectToggle'}}">
-            <i class="fas {{#if effect.data.disabled}}fa-check trans50{{else}}fa-times{{/if}}"></i>
+            <i class="fas {{#if effect.disabled}}fa-check trans50{{else}}fa-times{{/if}}"></i>
           </a>
         </div>
         <div class="effect-name flexrow">
-          <img class="effect-image" src="{{effect.data.icon}}"/>
+          <img class="effect-image" src="{{effect.icon}}"/>
           <a class="effect-control" data-action="edit" title="{{localize 'NOVA.EffectEdit'}}">
-            <h4>{{effect.data.label}}</h4>
+            <h4>{{effect.label}}</h4>
           </a>
         </div>
         <div class="effect-source">{{effect.sourceName}}</div>

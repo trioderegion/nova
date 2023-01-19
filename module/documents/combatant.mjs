@@ -3,7 +3,7 @@ export class NovaCombatant extends Combatant {
 
   get category() {
     const npc = this.actor.type == 'npc';
-    const zeroHp = this.actor.data.data.health.value === 0;
+    const zeroHp = this.actor.system.health.value === 0;
 
     return {npc, zeroHp, activeNpc: npc && !zeroHp, dropNpc: npc && zeroHp };
   }
@@ -21,7 +21,7 @@ export class NovaCombatant extends Combatant {
     await super._onCreateDocuments(documents, context);
     const numMoved = documents.reduce( (acc, combatant) => {
       if (combatant.actor.type == 'npc'
-          && combatant.actor.data.data.health.value > 0) {
+          && combatant.actor.system.health.value > 0) {
         acc++; 
       }
 
@@ -37,7 +37,7 @@ export class NovaCombatant extends Combatant {
     /* our turn is over this round if we have ended item
      * or have been marked defeated */
     const ended = this.getFlag('nova', 'turnEnded') ?? false;
-    const dead = this.data.defeated;
+    const dead = this.defeated;
     const isNpc = this.actor.type == 'npc';
     return ended || dead || isNpc;
   }

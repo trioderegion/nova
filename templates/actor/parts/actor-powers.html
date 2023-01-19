@@ -7,7 +7,7 @@
     </div>
   </li>
   {{#each ../power as |item|}}
-    {{#if (eq item.data.data.type subType)}}
+    {{#if (eq item.system.type subType)}}
     <li class="item flexrow" data-item-id="{{item.id}}">
       <div class="item-name">
         <div class="item-image">

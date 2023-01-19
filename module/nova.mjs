@@ -69,9 +69,9 @@ Hooks.once('init', async function() {
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("nova", NovaActorSheet, { makeDefault: true });
+  Actors.registerSheet("nova", NovaActorSheet, { makeDefault: true, label: 'NOVA.SheetClass' });
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("nova", NovaItemSheet, { makeDefault: true });
+  Items.registerSheet("nova", NovaItemSheet, { makeDefault: true, label: 'NOVA.SheetClass' });
 
   /*************
   * init hooks 
