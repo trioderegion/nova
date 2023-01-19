@@ -30,7 +30,7 @@
   ],
   "compatibility": {
     "minimum": "10",
-    "verified": "10.286"
+    "verified": "10.291"
   },
   "name": "nova",
   "minimumCoreVersion": "10",
