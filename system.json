@@ -1,40 +1,46 @@
 {
-  "title": "Nova",
-  "description": "The Nova RPG system for FoundryVTT!",
-  "version": "1.0.0",
-  "esmodules": [
-    "module/nova.mjs"
-  ],
-  "styles": [
-    "css/nova.css"
-  ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json",
-      "flags": {}
-    }
-  ],
-  "gridDistance": 1,
-  "gridUnits": "sq",
-  "primaryTokenAttribute": "health",
-  "secondaryTokenAttribute": "fuel",
-  "license": "LICENSE",
-  "id": "nova",
-  "authors": [
-    {
-      "name": "trioderegion",
-      "flags": {}
-    }
-  ],
-  "compatibility": {
-    "minimum": "10",
-    "verified": "10.291"
-  },
-  "name": "nova",
-  "minimumCoreVersion": "10",
-  "url": "",
-  "manifest": "",
-  "download": ""
+    "title": "Nova",
+    "description": "The Nova RPG system for FoundryVTT!",
+    "version": "2.0.0",
+    "esmodules": [
+        "module/nova.mjs"
+    ],
+    "styles": [
+        "css/nova.css"
+    ],
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "lang/en.json",
+            "flags": {}
+        },
+        {
+            "lang": "ko",
+            "name": "Korean",
+            "path": "lang/ko.json",
+            "flags": {}
+        }
+    ],
+    "gridDistance": 1,
+    "gridUnits": "sq",
+    "primaryTokenAttribute": "health",
+    "secondaryTokenAttribute": "fuel",
+    "license": "LICENSE",
+    "id": "nova",
+    "authors": [
+        {
+            "name": "trioderegion",
+            "flags": {}
+        }
+    ],
+    "compatibility": {
+        "minimum": "10",
+        "verified": "10.291"
+    },
+    "name": "nova",
+    "minimumCoreVersion": "10",
+    "url": "https://github.com/trioderegion/nova",
+    "manifest": "https://github.com/trioderegion/nova/releases/latest/download/system.json",
+    "download": "https://github.com/trioderegion/nova/releases/download/2.0.0/system.zip"
 }
