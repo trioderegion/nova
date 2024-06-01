@@ -1,0 +1,163 @@
+{
+  "NOVA.SheetClass": "기본값 시스템 시트",
+  "NOVA.Health": "체력",
+  "NOVA.Fuel": "연료",
+  "NOVA.PilotName": "파일럿 이름",
+  "NOVA.Pronouns": "대명사",
+
+  "NOVA.Spark": "스파크",
+  "NOVA.Sparks": "스파크",
+  "NOVA.GM": "GM",
+  "NOVA.Elite": "정예",
+  "NOVA.Description": "설명",
+  "NOVA.Name": "이름",
+  "NOVA.Turn": "턴",
+  "NOVA.Source": "원천출처",
+
+  "NOVA.RollFailure": "실패",
+  "NOVA.RollSuccess": "성공",
+  "NOVA.RollTotalSuccess": "완벽한 성공",
+
+  "NOVA.Attributes": "능력치",
+  "NOVA.AttributeSun": "태양",
+  "NOVA.AttributeMoon": "달",
+  "NOVA.AttributeShade": "그늘",
+
+  "NOVA.Cost": "소모량",
+  "NOVA.MaximumAbbr": "최대치",
+
+  "NOVA.Range": "거리",
+  "NOVA.RangeMax": "최대 거리",
+  "NOVA.RangeClose": "인접",
+  "NOVA.RangeNear": "근거리",
+  "NOVA.RangeFar": "원거리",
+  "NOVA.RangeBeyond": "저너머",
+
+  "NOVA.Target": "대상",
+  "NOVA.Targets": "대상",
+  "NOVA.TargetSelf": "자기자신",
+  "NOVA.TargetAlly": "동료",
+  "NOVA.TargetEnemy": "적",
+  "NOVA.TargetObject": "사물",
+  "NOVA.TargetAny": "자유",
+
+  "NOVA.PowerPassive": "자동 파워",
+  "NOVA.PowerActive": "발동 파워",
+  "NOVA.PowerSupernova": "초신성",
+
+  "NOVA.SpendResource": "{resource} {num}점 소모",
+  "NOVA.ApplyHarm": "피해 {num}점 적용",
+
+  "NOVA.FlareMods": "플레어",
+  "NOVA.Type": "종류",
+  "NOVA.FlarePower": "발동 파워",
+  "NOVA.FlarePersistent": "지속 플레어",
+  "NOVA.PersistentMods": "지속 플레어",
+  "NOVA.Affects": "영향",
+
+  "NOVA.Modifications": "수정치",
+
+  "NOVA.Effects": "효과",
+  "NOVA.EffectCreate": "효과 생성",
+  "NOVA.EffectToggle": "효과 토글",
+  "NOVA.EffectEdit": "효과 편집",
+  "NOVA.EffectDelete": "효과 삭제",
+
+  "NOVA.Add": "추가",
+  "NOVA.AddEntry": "엔트리 추가",
+  "NOVA.AddPower": "파워 추가",
+  "NOVA.AddPassive": "자동 파워 추가",
+  "NOVA.AddSupernova": "초신성 추가",
+
+  "NOVA.AddPersistentFlare": "지속 플레어 추가",
+  "NOVA.AddPowerFlare": "파워 플레어 추가",
+  "NOVA.None": "없음",
+  "NOVA.Any": "상관없음",
+
+  "NOVA.Keywords": "키워드",
+
+  "NOVA.NPCActions.Harm": "0 피해",
+  "NOVA.NPCActions.Moves": "새 액션",
+  "NOVA.NPCActions.Variants": "새 변형",
+  "NOVA.NPCActions.Followers": "새 추종자",
+  "NOVA.NPCActions.Lair": "새 본거지",
+  "NOVA.NPCActions.Commands": "새 지휘",
+
+  "NOVA.Harm.Label": "피해",
+  "NOVA.Harm.Use": "피해를 가합니다",
+  "NOVA.HarmConfigTitle": "{name}의 피해 엔트리 설정",
+  "NOVA.Harm.LockInfo": "당장은 플레어 시스템의 효과를 적용하지 않습니다.",
+  "NOVA.Harm.UnlockInfo": "플레어 시스템의 변경사항을 적용합니다.",
+  "NOVA.Harm.Delete": "피해 엔트리를 삭제합니다",
+
+  "NOVA.Change.Delete": "변동사항 삭제",
+
+  "NOVA.Moves.Label": "액션",
+  "NOVA.Move.Use": "액션 사용",
+
+  "NOVA.Variants.Label": "변형",
+  "NOVA.Variant.Use": "변경 사항이 드러납니다",
+
+  "NOVA.Followers.Label": "추종자",
+  "NOVA.Follower.Use": "추종자가 드러납니다",
+
+  "NOVA.Lair.Label": "본거지",
+  "NOVA.Lair.Use": "본거지가 드러납니다",
+
+  "NOVA.Commands.Label": "지휘",
+  "NOVA.Command.Use": "지휘를 내립니다.",
+
+  "NOVA.ActionList.Add": "{label} 추가",
+  "NOVA.ActionList.Delete": "{label} 삭제",
+  "NOVA.ActionList.Show": "{label} 보이기",
+
+  "NOVA.DropNone": "전리품 없음",
+  "NOVA.DropFuel": "연료 {quantity}점",
+  "NOVA.DropHealth": "체력 {quantity}점",
+  "NOVA.Revive": "되살리기",
+  
+  "NOVA.AllSparksEndTurn": "모든 스파크의 턴을 종료합니다",
+  "NOVA.ResetRound": "라운드 초기화",
+  "NOVA.EndTurn": "턴 종료",
+  "NOVA.ResetTurn": "턴 초기화",
+
+  "NOVA.RollDrop": "전리품 생성",
+  "NOVA.CombatDropTracker": "전리품 생성",
+  "NOVA.RollAllDrops": "모든 전리품을 생성합니다",
+  "NOVA.ClaimDropLabel": "전리품 받기",
+  "NOVA.ClaimedDropLabel": "받음",
+  "NOVA.ClaimText": "{drop} {name}을 받습니다",
+  "NOVA.ClaimNoActor": "토큰이나 선택한 캐릭터로만 전리품을 받을 수 있습니다.",
+
+  "NOVA.Error.ClaimNoGM": "활성화된 GM이 없을 시 전리품을 받을 수 없습니다.",
+  "NOVA.Error.DropResourceFull": "터의 자원이 꽉 차 전리품을 받을 수 없습니다. 전리품을 버려야 합니다.",
+
+  "NOVA.AppliesStatus": "효과 적용",
+  "NOVA.StatusSelf": "자신 효과",
+  "NOVA.StatusTarget": "대상 효과",
+
+  "NOVA.StatusAura":"오라",
+  "NOVA.StatusBerserk": "광폭",
+  "NOVA.StatusDisrupted": "방해",
+  "NOVA.StatusFlight": "비행",
+  "NOVA.StatusImmune": "면역",
+  "NOVA.StatusLock": "봉쇄",
+  "NOVA.StatusProtect": "보호",
+  "NOVA.StatusWeaken": "약화",
+  "NOVA.StatusMarked": "표식",
+  "NOVA.StatusStunned": "기절",
+  "NOVA.StatusInfected": "감염",
+  "NOVA.StatusFear": "공포",
+  "NOVA.StatusDamned": "저주",
+  "NOVA.StatusDormant": "휴면",
+  "NOVA.StatusBleeding": "출혈",
+  "NOVA.StatusBlind": "눈멂",
+  "NOVA.StatusTaunted": "도발",
+  "NOVA.StatusHidden": "감춰짐",
+  "NOVA.StatusExposed": "노출됨",
+  "NOVA.StatusBurning": "불탊",
+  "NOVA.StatusFrozen": "얼어붙음",
+  "NOVA.StatusAlerted": "경계함",
+  "NOVA.StatusImmobilized": "기동불능",
+  "NOVA.StatusEmpowered": "강화됨"
+}
