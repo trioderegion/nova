@@ -109,7 +109,7 @@
 
   "NOVA.ActionList.Add": "{label} 추가",
   "NOVA.ActionList.Delete": "{label} 삭제",
-  "NOVA.ActionList.Show": "{label} 보이기",
+  "NOVA.ActionList.Show": "{label} 보기",
 
   "NOVA.DropNone": "전리품 없음",
   "NOVA.DropFuel": "연료 {quantity}점",
