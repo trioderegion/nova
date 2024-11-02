@@ -1,4 +1,9 @@
 # Nova for Foundry VTT (Unofficial)
+
+### DISCONTINUED - Not looking for maintainer/transfer
+
+<details><summary>Features</summary>
+
 Simple implementation of the [Nova RPG written by Spencer Campbell of Gila RPGs](https://gilarpgs.itch.io/nova)
 
 This is a 3rd party, unofficial fan project. 
@@ -20,4 +25,4 @@ https://user-images.githubusercontent.com/14878515/144682088-fb332ddf-df4c-43bc-
 https://user-images.githubusercontent.com/14878515/144682112-8d2cf335-da22-4776-b2a2-ed73b530eb4c.mp4
 
 
-
+</details>
